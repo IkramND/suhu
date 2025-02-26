@@ -19,14 +19,14 @@
                  {{ $errors->first() }}
             </div>
             @endif
-            <h2 class="sr-only">Login Form</h2>
             <div class="illustration"><i class="icon ion-ios-locked-outline"></i></div>
             <div class="form-group"><input class="form-control" type="text" name="name" placeholder="Username" required></div>
             <div class="form-group"><input class="form-control" type="password" name="password" placeholder="Password" required></div>
-            <div class="form-group"><button class="btn btn-primary btn-block">Log In</button>
+            <div class="form-group"><button class="btn btn-primary btn-block" style="background-color:blue">Log In</button>
             </div>
             <br>
-            <a class="forgot" href="/changePassPage" style="float:right;">Ganti password?</a>
+            <a class ="ForgotPassword" href="{{route ('forgot.password')}}" style="float: right">Forgot Password?</a>
+            {{-- <a class="ChangePasswordd" href="/change-password" style="float:right;">Ganti password?</a> --}}
         </form>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -56,7 +56,7 @@
   text-align: center;
   padding: 15px 0 20px;
   font-size: 100px;
-  color: #2980ef;
+  color: blue;
 }
 
 .login-dark form .form-control {
@@ -85,7 +85,7 @@
   outline: none;
 }
 
-.login-dark form .forgot {
+.login-dark form .ChangePasswordd,.login-dark form .ForgotPassword {
   display: block;
   text-align: center;
   font-size: 12px;

@@ -1,18 +1,9 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grafik Suhu & Kelembaban ROB1</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
-<body style="padding: 30px; text-align: center;">
-
+    @extends('component.dashboard')
+    @section('main')
     <h2>Grafik Suhu & Kelembaban ROB1</h2>
 
     <!-- Form Filter Tanggal -->
-    <div style="margin-bottom: 20px;">
+    <div style="margin-bottom: 20px;text-align:center;margin-top:3%">
         {{-- <label for="start_date">Dari Tanggal:</label> --}}
         <input type="date" id="start_date">
 
@@ -22,6 +13,11 @@
 
     <!-- Container Grafik -->
     <div id="chartContainer" style="width: 500px; padding: 30px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); margin: 0 auto;">
+        <!-- Tempat untuk menampilkan Last Update -->
+<div id="lastUpdateContainer" style="text-align: center; margin-top: 20px;">
+    {{-- <strong>Last Update:</strong> <span id="lastUpdateText">Memuat...</span> --}}
+</div>
+
         <canvas id="temperatureChart"></canvas>
         <hr id="chartDivider" style="border: solid black 1px; display: none;">
         <canvas id="humidityChart" style="margin-top: 30px;"></canvas>
@@ -35,29 +31,30 @@
         let tempChart, humChart;
 
         function fetchDataHistoryROB1(startDate = '', endDate = '') {
-            $.ajax({
-                url: '/sensor/fetch-data-rob1',
-                method: 'GET',
-                data: { start_date: startDate, end_date: endDate },
-                dataType: 'json',
-                success: function(data) {
-                    if (data.length === 0) {
-                        alert("Tidak ada data dalam rentang waktu yang dipilih.");
-                        return;
-                    }
+    $.ajax({
+        url: '/sensor/fetch-data-rob1',
+        method: 'GET',
+        data: { start_date: startDate, end_date: endDate },
+        dataType: 'json',
+        success: function(data) {
+            if (data.length === 0) {
+                alert("Tidak ada data dalam rentang waktu yang dipilih.");
+                return;
+            }
 
-                    const labels = data.map(item => item.waktu);
-                    const tempData = data.map(item => item.suhu);
-                    const humData = data.map(item => item.kelembaban);
+            const labels = data.map(item => `${item.hari}, ${item.tanggal}`); // Format: Senin, 2024-02-26
+            const tempData = data.map(item => parseFloat(item.rata_rata_suhu)); // Konversi string ke angka
+            const humData = data.map(item => parseFloat(item.rata_rata_kelembaban));
 
-                    updateCharts(labels, tempData, humData);
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error fetching data:", error);
-                    alert("Gagal memperbarui data");
-                }
-            });
+            updateCharts(labels, tempData, humData);
+        },
+        error: function(xhr, status, error) {
+            console.error("Error fetching data:", error);
+            alert("Gagal memperbarui data");
         }
+    });
+}
+
 
         function updateCharts(labels, tempData, humData) {
             chartDivider.style.display = labels.length > 0 ? 'block' : 'none';
@@ -113,6 +110,5 @@
         // Load semua data saat pertama kali halaman dibuka
         fetchDataHistoryROB1();
     </script>
+@endsection
 
-</body>
-</html>

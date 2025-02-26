@@ -1,0 +1,11 @@
+<?php
+namespace App\Models;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Sensor extends Model
+{
+    use HasFactory;
+    protected $table = 'data_sensor'; // Sesuaikan dengan nama tabel di database
+    protected $fillable = ['id', 'suhu', 'kelembaban', 'waktu', 'lokasi', 'ip_address'];
+}

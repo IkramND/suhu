@@ -32,11 +32,15 @@
         }
         .navbar-menu a {
             text-decoration: none;
-            color: blue;
+            color: blue    ;
             transition: opacity 0.3s;
+            cursor: pointer;
+            font-weight: bold;
+
         }
         .navbar-menu a:hover {
             opacity: 0.8;
+
         }
         .menu-toggle {
             display: none;
@@ -61,9 +65,10 @@
         <div class="navbar-container">
             <a class="navbar-logo">MyWebsite</a>
             <ul class="navbar-menu">
-                <li><a>>Home</a></li>
+                <a onclick="onLogout()">Logout</a>
+                {{-- <li><a>>Home</a></li>
                 <li><a >About</a></li>
-                <li><a >Contact</a></li>
+                <li><a >Contact</a></li> --}}
             </ul>
             <button id="menu-toggle" class="menu-toggle">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -82,5 +87,21 @@
         document.getElementById('menu-toggle').addEventListener('click', function() {
             document.getElementById('mobile-menu').classList.toggle('hidden');
         });
+        function onLogout() {
+            fetch("{{ route('logout') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: JSON.stringify({})
+        }).then(response => {
+            if (response.ok) {
+                window.location.href = "/";
+            } else {
+                alert("Logout failed");
+            }
+        }).catch(error => console.error("Error:", error));
+        }
     </script>
 

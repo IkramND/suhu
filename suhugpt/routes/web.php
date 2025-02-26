@@ -3,11 +3,26 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SensorController;
 use App\Http\Controllers\AuthController;
+use Faker\Guesser\Name;
+use Illuminate\Container\Attributes\Auth;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\LokasiAlatController;
+
 
 // Route yang bisa diakses tanpa login
+
+// Route::post('/sensor', [SensorController::class, 'store']);
+
+// Route::get('/change-password', [AuthController::class, 'changePassword'])->middleware('auth')->name('change.password.page');
+// Route::post('/change-password', [AuthController::class, 'update'])->middleware('auth')->name('change.password');
+
 Route::get('/register', function () {
     return view('auth.register');
 })->name('register');
+
+Route::get('/history-page', [SensorController::class, 'SensorPage'])->name('History.page');
 
 Route::post('/register', [AuthController::class, 'register']);
 
@@ -15,44 +30,46 @@ Route::get('/login', function () {
     return view('auth.login');
 })->name('login');
 
-
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
-
-Route::post('/sendOtp', function (Request $request) {
-    // Validasi email
-    $request->validate(['email' => 'required|email']);
-
-    // Generate OTP (6 digit angka acak)
-    $otp = rand(100000, 999999);
-    $email = $request->email;
-
-    // Logging untuk debug
-    Log::info("Sending OTP: $otp to $email");
-
-    // Kirim email OTP
-    Mail::raw("Your OTP is: $otp", function ($message) use ($email) {
-        $message->to($email)->subject("Your OTP Code");
-    });
-
-    // Return response JSON
-    return response()->json([
-        'success' => true,
-        'message' => 'OTP sent successfully',
-        'email' => $email
-    ]);
-})->name('sendOtp');
+Route::get('/forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('forgot.password');
+// Route::post('/forgot-password', [AuthController::class, 'processForgotPassword']);
+Route::post('/validate-user', [AuthController::class, 'validateUser'])->name('validate.user');
+Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('reset.password');
 
 
-Route::post('/changePass', [AuthController::class, 'changePass']);
+// Route::post('/sendOtp', function (Request $request) {
+//     // Validasi email
+//     $request->validate(['email' => 'required|email']);
 
-Route::post('/sendEmail', [AuthController::class, 'sendEmail'])->name('sendEmail');
+//     // Generate OTP (6 digit angka acak)
+//     $otp = rand(100000, 999999);
+//     $email = $request->email;
+
+//     // Logging untuk debug
+//     Log::info("Sending OTP: $otp to $email");
+
+//     // Kirim email OTP
+//     Mail::raw("Your OTP is: $otp", function ($message) use ($email) {
+//         $message->to($email)->subject("Your OTP Code");
+//     });
+
+//     // Return response JSON
+//     return response()->json([
+//         'success' => true,
+//         'message' => 'OTP sent successfully',
+//         'email' => $email
+//     ]);
+// })->name('sendOtp');
+// Route::post('/sendOtp', [AuthController::class, 'sendotp'])->name('sendOtp');
+
+
+// Route::post('/changePass', [AuthController::class, 'changePass']);
+
+// Route::post('/sendEmail', [AuthController::class, 'sendEmail'])->name('sendEmail');
 
 Route::post('/login', [AuthController::class, 'login']) ->name('login');
 
 Route::get('/changePassPage', function () {
-    return view('auth.changePass');
+    return view('auth.changePassword');
 });
 
 
@@ -73,14 +90,54 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/history/ROB2', [SensorController::class, 'fetchDataHistory_ROB2']);
     Route::get('/history/ROB3', [SensorController::class, 'fetchDataHistory_ROB3']);
 
+
+    // Route::get('/sensor/fetch-data/{id_mesin}', [SensorController::class, 'fetchDatas']);
+    // Route::get('/sensor/fetch-data/{id_mesin}', [SensorController::class, 'fetchDataHistory'])->name('fetchDataHistory');
+    Route::get('/sensor/fetch-data/{id_mesin}', [SensorController::class, 'fetchDataHistory'])->where('id_mesin', '[A-Za-z0-9]+')->name('fetchDataHistory');
+
     Route::get('/sensor/fetch-data', [SensorController::class, 'fetchData']);
     Route::get('/sensor/fetch-data-lokasi', [SensorController::class, 'fetchDataLokasi']);
     Route::get('/sensor/fetch-data-rob1', [SensorController::class,'fetchDataHistoryROB1']);
     Route::get('/sensor/fetch-data-rob2', [SensorController::class,'fetchDataHistoryROB2']);
 
+
+    Route::get('/change-password', [AuthController::class, 'showChangePasswordForm'])->name('password.change');
+    Route::post('/change-password', [AuthController::class, 'updatePassword'])->name('password.update');
+
     // Route::get('/dashboard', function () {
     //     return view('utama');
     // })->name('dashboard');
+
+    // Route::get('/sensor/fetch-all', [SensorController::class, 'fetchAllData']);
+
+
+
+
+// Route::get('/dashboard', [LokasiAlatController::class, 'index'])->name('dashboard');
+// Route::get('/lokasi/{id}', [LokasiAlatController::class, 'show'])->name('lokasi.show');
+// Route::get('/tambah-lokasi', [LokasiAlatController::class, 'create'])->name('lokasi.create');
+// Route::post('/tambah-lokasi', [LokasiAlatController::class, 'store'])->name('lokasi.store');
+
+
+
+
+
+
+
+
+
+
+
+    Route::get('/sensor/ip-address', [SensorController::class, 'getIpAddress']);
+    Route::get('/sensor/lokasi', [SensorController::class, 'getLokasiAlat']);
+
+    // Route::get('/alat/{id}', [SensorController::class, 'show'])->name('alat.show');
+
+
+
+
+
+    Route::get('/chose', [SensorController::class, 'chose'])->name('chose');
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 

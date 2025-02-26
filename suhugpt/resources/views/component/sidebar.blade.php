@@ -12,7 +12,7 @@
             top: 0;
             width: 100px;
             height: 100vh;
-            background-color: grey;
+            background-color: blue;
             color: white;
             padding: 16px;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
@@ -28,40 +28,46 @@
             color: white;
             transition: opacity 0.3s;
             cursor: pointer;
+            font-weight: bold;
         }
         .sidebar-menu a:hover {
             opacity: 0.8;
         }
     </style>
     <script>
-        function onLogout() {
-            fetch("{{ route('logout') }}", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-TOKEN": "{{ csrf_token() }}"
-            },
-            body: JSON.stringify({})
-        }).then(response => {
-            if (response.ok) {
-                window.location.href = "/";
-            } else {
-                alert("Logout failed");
-            }
-        }).catch(error => console.error("Error:", error));
+        function goToDashboard() {
+            window.location.href = "/"; // Mengarahkan ke halaman Dashboard
         }
+
+        // function onLogout() {
+        //     fetch("{{ route('logout') }}", {
+        //         method: "POST",
+        //         headers: {
+        //             "Content-Type": "application/json",
+        //             "X-CSRF-TOKEN": "{{ csrf_token() }}"
+        //         },
+        //         body: JSON.stringify({})
+        //     }).then(response => {
+        //         if (response.ok) {
+        //             window.location.href = "/";
+        //         } else {
+        //             alert("Logout failed");
+        //         }
+        //     }).catch(error => console.error("Error:", error));
+        // }
     </script>
 </head>
 
 <body>
     <aside class="sidebar">
         <div class="sidebar-menu">
-            <a>Dashboard</a>
+            <a onclick="goToDashboard()">Dashboard</a>
             <a>Profile</a>
+            {{-- <a onclick="onLogout()">Logout</a> --}}
             <a>Settings</a>
-            <a onclick="onLogout()">Logout</a>
+            <a href="/change-password">ChangePass</a>
+            <a href="{{route ('chose')}}">History</a>
         </div>
     </aside>
-
 </body>
 </html>
