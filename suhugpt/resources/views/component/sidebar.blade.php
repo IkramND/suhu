@@ -69,6 +69,7 @@
             <a href="{{route ('chose')}}">History</a>
             <a href="{{route ('Editalat')}}">Edit Alat</a>
             <a href="{{route ('admin.create')}}">Tambah Alat</a>
+
         </div>
     </aside>
 </body>
