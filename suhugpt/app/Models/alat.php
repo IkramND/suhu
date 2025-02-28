@@ -9,15 +9,16 @@ class alat extends Model
 {    use HasFactory;
 
     protected $table = 'alat'; // Pastikan ini sesuai dengan nama tabel di database
-    protected $primaryKey = 'id_mesin'; // Jika primary key bukan 'id', ubah sesuai tabel
+    protected $primaryKey = 'id'; // Jika primary key bukan 'id', ubah sesuai tabel
 
     // Tentukan kolom yang bisa diisi (fillable)
     protected $fillable = [
-        'alat_id',
         'id_mesin',
-        'ip_addres'
+        'ip_address',
+        'lokasi',
+        // 'ip_addres'
     ];
 
     // Jika tidak ada timestamps (created_at, updated_at), tambahkan:
-    public $timestamps = false;
+    // public $timestamps = false;
 }

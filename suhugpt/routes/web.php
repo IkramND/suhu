@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SensorController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CardController;
+use App\Http\Controllers\HistoryController;
 use Faker\Guesser\Name;
 use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
@@ -11,18 +13,35 @@ use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\LokasiAlatController;
 
 
-// Route yang bisa diakses tanpa login
 
-// Route::post('/sensor', [SensorController::class, 'store']);
+// Card alat
+Route::get('/admin/create', [CardController::class, 'create'])->name('admin.create');
+Route::post('/admin/store', [CardController::class, 'store'])->name('admin.store');
+Route::get('/alat', [CardController::class, 'index'])->name('card.index');
+Route::delete('/alat/{id}', [CardController::class, 'destroy'])->name('alats.destroy');
+Route::get('/alat/{id}/edit', [CardController::class, 'edit'])->name('alats.edit');
+Route::put('/alat/{id}', [CardController::class, 'update'])->name('alats.update');
 
-// Route::get('/change-password', [AuthController::class, 'changePassword'])->middleware('auth')->name('change.password.page');
-// Route::post('/change-password', [AuthController::class, 'update'])->middleware('auth')->name('change.password');
+Route::get('/history', [HistoryController::class, 'index'])->name('history');
+Route::get('/sensor/fetch-history', [HistoryController::class, 'fetchHistory']);
+Route::get('/admin/editalat/', [Cardcontroller::class, 'editalat'])->name('Editalat');
+
+
+
+
+Route::get('/Historys/{id}', [SensorController::class, ''])->name('Historys');
+
+
+
+// Route::get('/cards', [CardController::class, 'index'])->name('cards.index');
 
 Route::get('/register', function () {
     return view('auth.register');
 })->name('register');
 
 Route::get('/history-page', [SensorController::class, 'SensorPage'])->name('History.page');
+Route::get('/sensor/fetch-data/{id_mesin}', [SensorController::class, 'fetchDataByIdMesin']);
+
 
 Route::post('/register', [AuthController::class, 'register']);
 
@@ -109,18 +128,6 @@ Route::middleware(['auth'])->group(function () {
     // })->name('dashboard');
 
     // Route::get('/sensor/fetch-all', [SensorController::class, 'fetchAllData']);
-
-
-
-
-// Route::get('/dashboard', [LokasiAlatController::class, 'index'])->name('dashboard');
-// Route::get('/lokasi/{id}', [LokasiAlatController::class, 'show'])->name('lokasi.show');
-// Route::get('/tambah-lokasi', [LokasiAlatController::class, 'create'])->name('lokasi.create');
-// Route::post('/tambah-lokasi', [LokasiAlatController::class, 'store'])->name('lokasi.store');
-
-
-
-
 
 
 

@@ -294,6 +294,18 @@ public function sendEmail (Request $request)
 //     return back()->withErrors(['name' => 'Username atau password salah.']);
 // }
 
+
+
+
+
+
+
+
+
+
+
+
+
 // Logout
 public function logout(Request $request)
 {
@@ -303,5 +315,30 @@ public function logout(Request $request)
     $request->session()->regenerateToken();
 
     return redirect('/login')->with('success', 'Logout berhasil.');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 }

@@ -77,9 +77,9 @@
             // Format waktu menjadi "Hari, Jam:Menit" (contoh: "Sen, 14:30")
             const labels = data.map(item => {
                 const date = new Date(item.waktu);
-                const day = date.toLocaleDateString('id-ID', { weekday: 'short'}); // Sen, Sel, Rab, dst.
+                // const day = date.toLocaleDateString('id-ID', { weekday: 'short'}); // Sen, Sel, Rab, dst.
                 const time = date.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-                return `${day} , ${time}`;
+                return `${time}`;
             });
 
             const tempData = data.map(item => item.suhu);

@@ -1,10 +1,9 @@
 @extends('component.dashboard')
 @section('main')
-<h2 style="margin-top:20% ;text-align:center">Grafik Suhu & Kelembaban</h2>
-
+<h2 style="margin-top:10% ;text-align:center">Grafik Suhu & Kelembaban</h2>
 <!-- Form Input ID Mesin & Filter Tanggal -->
 <div style="margin-bottom: 20px; text-align: center; margin-top: 3%">
-
+{{-- <p id="ip">{{$id_mesin}}</p> --}}
     <input type="date" id="start_date">
     <label for="end_date" style="padding-left: 1%; padding-right: 1%"> - </label>
     <input type="date" id="end_date">
@@ -36,7 +35,7 @@
 
     const idMesin = getQueryParam("id_mesin");
 
-    function fetchDataHistory(startDate = '', endDate = '') {
+    function fetchDataHistory(startDate = '', endDate = '',) {
         // let idMesin = document.getElementById("id_mesin").value.trim();
         if (!idMesin) {
             alert("Masukkan ID Mesin terlebih dahulu!");

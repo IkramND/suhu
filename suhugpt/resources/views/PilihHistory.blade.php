@@ -29,6 +29,15 @@
 
     <button type="submit" class="btn btn-primary mt-2">Tampilkan Data</button>
 </form> --}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
 
 <form id="historyForm" action="{{ route('History.page') }}" method="GET">
     @csrf  <!-- Tambahkan jika diperlukan -->
@@ -53,6 +62,9 @@
 
     <button type="submit" class="btn btn-primary mt-2">Tampilkan Data</button>
 </form>
+
+</body>
+</html>
 
 
 <!-- Area untuk menampilkan data -->
