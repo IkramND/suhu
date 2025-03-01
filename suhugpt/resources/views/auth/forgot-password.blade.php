@@ -6,6 +6,9 @@
     <title>Lupa Password</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script>
+
+        let globalVarOTP = '';
+
         function validatePassword(){
             let password = document.getElementById("new_password").value;
             let confirmPassword = document.getElementById("confirm_password").value
@@ -17,6 +20,99 @@
             }
             return true;
         }
+
+        document.addEventListener("DOMContentLoaded", function () {
+        console.log("JavaScript Loaded!");
+
+        const form = document.getElementById("otpForm");
+        const formReset = document.getElementById("otpFormReset");
+
+        if (form) {
+            console.log("Form OTP ditemukan");
+
+            form.addEventListener("submit", function (event) {
+                event.preventDefault();
+                console.log("Form OTP Submitted");
+
+                const formData = new FormData(form);
+
+                fetch("{{ route('validate.user') }}", {
+                    method: "POST",
+                    headers: {
+                        "X-CSRF-TOKEN": document.querySelector('input[name="_token"]').value
+                    },
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Response dari backend:", data);
+
+                    if (data.success) {
+                        localStorage.setItem("otpCode", data.otp);
+                        localStorage.setItem("name", data.name);
+                        localStorage.setItem("email", data.email);
+                        // globalVarOTP = data.otp;
+                        console.log("OTP yang diterima:", globalVarOTP);
+                        window.location.href = '/reset-password';
+                    } else {
+                        alert("User not found!");
+                    }
+                })
+                .catch(error => alert("Invalid Login"));
+            });
+        }
+
+        if (formReset) {
+            console.log("Form Reset Password ditemukan");
+
+                formReset.addEventListener("submit", function (event) {
+                event.preventDefault();
+                console.log("Form Reset Password Submitted");
+
+                const newPassword = document.getElementById("new_password").value;
+                const confirmPassword = document.getElementById("confirm_password").value;
+                const otp = document.getElementById("otp").value;
+                const savedOtp = localStorage.getItem("otpCode");
+                const name = localStorage.getItem("name");
+                const email = localStorage.getItem("email");
+                // localStorage.removeItem("otpCode");
+
+                console.log("New Password:", newPassword);
+                console.log("Confirm Password:", confirmPassword);
+                console.log("OTP:", otp);
+                console.log("OTP OLD:", savedOtp);
+
+                if (otp != savedOtp) {
+                    alert("OTP Is Not Match!");
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append("new_password", newPassword);
+                formData.append("name", name);
+                formData.append("email", email);
+                formData.append("new_password_confirmation", confirmPassword);
+
+                fetch("{{ route('reset.password.func') }}", {
+                    method: "POST",
+                    headers: {
+                        "X-CSRF-TOKEN": document.querySelector('input[name="_token"]').value
+                    },
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.success)
+                    {
+                        window.location.href = '/login';
+                    }
+                })
+            });
+        }
+    });
+
+
+
     </script>
 </head>
 <body class="d-flex justify-content-center align-items-center vh-100">
@@ -46,15 +142,16 @@
 
         @if($step == 1)
         <!-- Step 1: Form Verifikasi Username & Email -->
-        <form action="{{ route('validate.user') }}" method="POST">
+        <form id="otpForm">
             @csrf
             <div class="mb-3">
                 <label for="name" class="form-label">Username :</label>
                 <input type="text" name="name" id="name" class="form-control" required>
             </div>
             <div class="mb-3">
-                <label for="email" class="form-label">Email :</label>
+                <label for="email"  class="form-label">Email :</label>
                 <input type="email" name="email" id="email" class="form-control" required>
+                {{-- <input type="text"  name="otp"   id="otp"    class="form-control" required style="display: none"> --}}
             </div>
             <button type="submit" class="btn btn-primary w-100">Verifikasi</button>
         </form>
@@ -63,21 +160,23 @@
 
         @if($step == 2)
         <!-- Step 2: Form Reset Password -->
-        <form action="{{ route('reset.password') }}" method="POST" id="resetPasswordForm" onsubmit="return validatePassword(event)">
+        <form id="otpFormReset">
             @csrf
-            <input type="hidden" name="name" value="{{ $name }}">
-            <input type="hidden" name="email" value="{{ $email }}">
-
             <div class="mb-3">
                 <label for="new_password" class="form-label">Password Baru:</label>
-                <input type="password" name="new_password" id="new_password" class="form-control" required>
+                <input type="password" name="new_password" id="new_password" class="form-control" required autocomplete="new-password">
             </div>
             <div class="mb-3">
                 <label for="confirm_password" class="form-label">Konfirmasi Password:</label>
-                <input type="password" name="new_password_confirmation" id="confirm_password" class="form-control" required>
+                <input type="password" name="new_password_confirmation" id="confirm_password" class="form-control" required autocomplete="new-password">
+            </div>
+            <div class="mb-3">
+                <label for="otp" class="form-label">OTP</label>
+                <input type="text" name="otp" id="otp" class="form-control" required autocomplete="one-time-code">
             </div>
             <button type="submit" class="btn btn-success w-100">Ganti Password</button>
         </form>
+
         @endif
     </div>
 </body>

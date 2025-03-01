@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Mail\OtpMail;
 use App\Models\Otp;
 use Carbon\Carbon;
+use Illuminate\Contracts\Mail\Mailer;
 
 use function Laravel\Prompts\select;
 
@@ -122,10 +123,13 @@ public function showForgotPasswordForm()
         return view('auth.forgot-password',['step' => 1]);
     }
 
+    public function showForgotPasswordForm2()
+    {
+        return view('auth.forgot-password',['step' => 2]);
+    }
+
     public function validateUser(Request $request)
     {
-
-
 
         $request->validate([
             'name' => 'required',
@@ -137,14 +141,25 @@ public function showForgotPasswordForm()
                     ->where('email', $request->email)
                     ->first();
 
+
                     // dd($request->method());
 
-        if ($user){
-            return view('auth.forgot-password',[
-            'name' => $request->name,
-            'email' => $request->email,
-            'step' => 2, // Step 2 untuk menampilkan form password baru
-        ]);
+        if ($user)
+        {
+            $otp = rand(1000000,9999999);
+            $userEmail = $request->email;
+            Mail::raw("Your Otp Code : $otp", function ($message) use ($userEmail) {
+                $message->to($userEmail)->subject('Testing Email');
+            });
+
+            return response()->json([
+                'success' => true,
+                'message' => 'OTP sent successfully',
+                'email' => $request->email,
+                'name' => $request->name,
+                'otp' => $otp
+            ]);
+
         } else {
             return back()->with('error', 'Username dan Email tidak cocok!');
         }
@@ -168,7 +183,11 @@ public function showForgotPasswordForm()
             $user->save();
 
 
-            return redirect()->route('login')->with('success', 'Password berhasil diperbarui! Silakan login.');
+            return response()->json([
+                'success' => true,
+                'message' => 'Change Password Success!'
+            ]);
+
         }if(!$user){
 
         return back()->with('error', 'Terjadi kesalahan, coba lagi.');

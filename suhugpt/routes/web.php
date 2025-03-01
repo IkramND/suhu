@@ -52,7 +52,10 @@ Route::get('/login', function () {
 Route::get('/forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('forgot.password');
 // Route::post('/forgot-password', [AuthController::class, 'processForgotPassword']);
 Route::post('/validate-user', [AuthController::class, 'validateUser'])->name('validate.user');
-Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('reset.password');
+Route::post('/reset-password-func', [AuthController::class, 'resetPassword'])->name('reset.password.func');
+
+Route::get('/reset-password', [AuthController::class, 'showForgotPasswordForm2'])->name('reset.password');
+
 
 
 // Route::post('/sendOtp', function (Request $request) {

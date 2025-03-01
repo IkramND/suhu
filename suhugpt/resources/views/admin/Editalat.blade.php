@@ -3,11 +3,16 @@
 
 <style>
     .container {
-        width: 100%;
+        width: 60%;
+        margin-left: 20%;
+
         display: flex;
+        /* flex-direction: column; */
         justify-content: center;
         flex-wrap: wrap;
         padding: 20px;
+
+        /* background-color: red; */
     }
     .card {
         width: 300px;
