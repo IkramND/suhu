@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lupa Password</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script>
+    <script type="text/javascript" src="{{ asset('js/script.js') }}">    <script>
 
         let globalVarOTP = '';
 
@@ -20,6 +20,35 @@
             }
             return true;
         }
+
+        async function myEncrypt(val) {
+              const text = val;
+              const key = "mysecretkey12345";
+
+              try {
+                  const encryptedResult = await encrypt(text, key);
+                  console.log("Encrypted Data:", encryptedResult);
+              } catch (error) {
+                  console.error("Encryption failed:", error);
+              }
+
+              return encryptedResult;
+          }
+
+          async function myDecrypt(val) {
+              const text = val;
+              const key = "mysecretkey12345";
+
+              try {
+                  const dencryptedResult = await decrypt(text, key);
+                  console.log("Encrypted Data:", encryptedResult);
+                  console.log("Decrypted Data:", encryptedResult);
+              } catch (error) {
+                  console.error("Encryption failed:", error);
+                  console.error("Decrypted failed:", error);
+              }
+
+              return dencryptedResult;
 
         document.addEventListener("DOMContentLoaded", function () {
         console.log("JavaScript Loaded!");
@@ -117,7 +146,7 @@
 </head>
 <body class="d-flex justify-content-center align-items-center vh-100">
     <div class="card p-4 shadow-lg" style="max-width: 400px;">
-        <h4 class="text-center">Lupa Password</h4>
+        <h4 class="text-center">Forgot Password</h4>
 
         <!-- Notifikasi Berhasil -->
         @if(session('success'))
@@ -145,15 +174,15 @@
         <form id="otpForm">
             @csrf
             <div class="mb-3">
-                <label for="name" class="form-label">Username :</label>
+                <label for="name" class="form-label">Username </label>
                 <input type="text" name="name" id="name" class="form-control" required>
             </div>
             <div class="mb-3">
-                <label for="email"  class="form-label">Email :</label>
+                <label for="email"  class="form-label">Email</label>
                 <input type="email" name="email" id="email" class="form-control" required>
                 {{-- <input type="text"  name="otp"   id="otp"    class="form-control" required style="display: none"> --}}
             </div>
-            <button type="submit" class="btn btn-primary w-100">Verifikasi</button>
+            <button type="submit" class="btn btn-primary w-100">Submit</button>
         </form>
 
         @endif
@@ -163,11 +192,11 @@
         <form id="otpFormReset">
             @csrf
             <div class="mb-3">
-                <label for="new_password" class="form-label">Password Baru:</label>
+                <label for="new_password" class="form-label">New Password</label>
                 <input type="password" name="new_password" id="new_password" class="form-control" required autocomplete="new-password">
             </div>
             <div class="mb-3">
-                <label for="confirm_password" class="form-label">Konfirmasi Password:</label>
+                <label for="confirm_password" class="form-label">Confirm Password</label>
                 <input type="password" name="new_password_confirmation" id="confirm_password" class="form-control" required autocomplete="new-password">
             </div>
             <div class="mb-3">

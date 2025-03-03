@@ -34,6 +34,12 @@ class CardController extends Controller
     return view('admin.indexing',compact('alats'));
     }
 
+    public function dashboard(){
+        $alats = Alat::all();
+        return view('TampilanUtama',compact('alats'));
+        }
+
+
     function edit($id){
         $alat = Alat::findOrFail($id);
 
@@ -62,7 +68,7 @@ class CardController extends Controller
 
     public function Editalat(){
         $alats = Alat::all();
-        return view('admin.editalat',compact('alats'));
+        return view('admin.Editalat',compact('alats'));
     }
 
     // public function index(){

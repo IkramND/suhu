@@ -37,7 +37,7 @@ public function register(Request $request)
         'password' => Hash::make($request->password)
     ]);
 
-    return redirect('/')->with('success', 'Registrasi berhasil! Silakan login.');
+    return redirect('/admin')->with('success', 'Registrasi berhasil! Silakan login.');
 }
 
 // Login
@@ -49,7 +49,7 @@ public function login(Request $request)
         session()->regenerate(); // Pastikan session diperbarui setelah login
 
         // Jika berhasil login, redirect ke dashboard
-        return redirect()->route('utama');
+        return redirect()->route('card.index');
     }
 
     // Jika gagal login, kembalikan ke halaman login dengan pesan error

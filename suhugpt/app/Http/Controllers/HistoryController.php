@@ -11,11 +11,13 @@ class HistoryController extends Controller
     public function index(Request $request)
     {
         $id_mesin = $request->query('id_mesin');
+        $ip_address = $request->query('ip_address');
+        // dd($id_mesin, $ip_address);
 
         // Ambil data sesuai id_mesin
         $historyData = DB::table('data_sensor')->where('id_mesin', $id_mesin)->orderBy('waktu', 'desc')->get();
 
-        return view('Historys', compact('historyData', 'id_mesin'));
+        return view('Historys', compact('historyData', 'id_mesin','ip_address'));
     }
 
     public function SensorPage(Request $request){
@@ -27,20 +29,7 @@ class HistoryController extends Controller
         return view('HistoryPage',compact('lokasi','ip','id_mesin'));
     }
 
-//     public function fetchHistory(Request $request)
-// {
-//     $id_mesin = $request->query('id_mesin');
-//     $start_date = $request->input('start_date');
-//     $end_date = $request->input('end_date');
 
-//     $data = DB::table('data_sensor')
-//         ->where('id_mesin', $id_mesin)
-//         ->whereBetween('waktu', [$start_date, $end_date])
-//         ->get();
-
-//     // Debugging untuk memastikan format JSON
-//     return response()->json($data);
-// }
 
 public function fetchHistory(Request $request)
 {

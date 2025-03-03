@@ -98,3 +98,55 @@ async function doChangePass() {
         console.error("Error changing password:", error);
     }
 }
+
+async function encrypt(text, key) {
+    const encoder = new TextEncoder();
+    const encodedText = encoder.encode(text);
+
+    // Generate IV (Initialization Vector)
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+
+    // Import Key
+    const cryptoKey = await crypto.subtle.importKey(
+      "raw",
+      encoder.encode(key),
+      { name: "AES-GCM" },
+      false,
+      ["encrypt"]
+    );
+
+    // Encrypt
+    const encryptedData = await crypto.subtle.encrypt(
+      { name: "AES-GCM", iv },
+      cryptoKey,
+      encodedText
+    );
+
+    return {
+      iv: Array.from(iv),
+      data: Array.from(new Uint8Array(encryptedData))
+    };
+  }
+
+  async function decrypt(encrypted, key) {
+    const encoder = new TextEncoder();
+    const cryptoKey = await crypto.subtle.importKey(
+      "raw",
+      encoder.encode(key),
+      { name: "AES-GCM" },
+      false,
+      ["decrypt"]
+    );
+
+    const iv = new Uint8Array(encrypted.iv);
+    const encryptedData = new Uint8Array(encrypted.data);
+
+    // Decrypt
+    const decryptedBuffer = await crypto.subtle.decrypt(
+      { name: "AES-GCM", iv },
+      cryptoKey,
+      encryptedData
+    );
+
+    return new TextDecoder().decode(decryptedBuffer);
+  }

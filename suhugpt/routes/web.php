@@ -11,26 +11,27 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\LokasiAlatController;
-
-
+use App\Http\Controllers\SettingController;
 
 // Card alat
 Route::get('/admin/create', [CardController::class, 'create'])->name('admin.create');
 Route::post('/admin/store', [CardController::class, 'store'])->name('admin.store');
-Route::get('/alat', [CardController::class, 'index'])->name('card.index');
 Route::delete('/alat/{id}', [CardController::class, 'destroy'])->name('alats.destroy');
-Route::get('/alat/{id}/edit', [CardController::class, 'edit'])->name('alats.edit');
-Route::put('/alat/{id}', [CardController::class, 'update'])->name('alats.update');
+Route::get('/alats/{id}/edit', [CardController::class, 'edit'])->name('alats.edit');
+
+Route::put('/alats/{id}', [CardController::class, 'update'])->name('alats.update');
 
 Route::get('/history', [HistoryController::class, 'index'])->name('history');
 Route::get('/sensor/fetch-history', [HistoryController::class, 'fetchHistory']);
 Route::get('/admin/editalat/', [Cardcontroller::class, 'editalat'])->name('Editalat');
 
 
+Route::get('/sensor/fetch-data', [SensorController::class, 'fetchData']);
 
 
 Route::get('/Historys/{id}', [SensorController::class, ''])->name('Historys');
 
+Route::get('/', [CardController::class, 'dashboard'])->name('dashboard');
 
 
 // Route::get('/cards', [CardController::class, 'index'])->name('cards.index');
@@ -39,11 +40,21 @@ Route::get('/register', function () {
     return view('auth.register');
 })->name('register');
 
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/add-configuration',[SettingController::class,'configuration'])->name('add.configuration');
+Route::get('/admin/configuration', [SettingController::class,'listconfiguration'])->name('configuration.list');
+Route::get('/alat/{id}/edit', [SettingController::class, 'edit'])->name('configuration.edit');
+Route::put('/alat/{id}', [SettingController::class, 'update'])->name('configuration.update');
+
+
+// Route::get('/admin')
+
 Route::get('/history-page', [SensorController::class, 'SensorPage'])->name('History.page');
 Route::get('/sensor/fetch-data/{id_mesin}', [SensorController::class, 'fetchDataByIdMesin']);
 
+Route::get('/setting', [SettingController::class, 'index'])->name('settings');
 
-Route::post('/register', [AuthController::class, 'register']);
+
 
 Route::get('/login', function () {
     return view('auth.login');
@@ -97,9 +108,9 @@ Route::get('/changePassPage', function () {
 
 // Middleware untuk memastikan user login sebelum mengakses routes berikutnya
 Route::middleware(['auth'])->group(function () {
-    Route::get('/', function () {
-        return view('utama');
-    })->name('utama');
+    Route::get('/admin', [CardController::class, 'index'])->name('card.index');
+
+
 
     Route::get('/history/ROB1', function () {
         return view('History.ROB1');
@@ -117,7 +128,6 @@ Route::middleware(['auth'])->group(function () {
     // Route::get('/sensor/fetch-data/{id_mesin}', [SensorController::class, 'fetchDataHistory'])->name('fetchDataHistory');
     Route::get('/sensor/fetch-data/{id_mesin}', [SensorController::class, 'fetchDataHistory'])->where('id_mesin', '[A-Za-z0-9]+')->name('fetchDataHistory');
 
-    Route::get('/sensor/fetch-data', [SensorController::class, 'fetchData']);
     Route::get('/sensor/fetch-data-lokasi', [SensorController::class, 'fetchDataLokasi']);
     Route::get('/sensor/fetch-data-rob1', [SensorController::class,'fetchDataHistoryROB1']);
     Route::get('/sensor/fetch-data-rob2', [SensorController::class,'fetchDataHistoryROB2']);

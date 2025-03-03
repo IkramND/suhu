@@ -6,20 +6,28 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <!-- Bootstrap & Ionicons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
 
-    <title>Ganti Password</title>
+    <title>Confoguration</title>
+
+    <style>
+         /* Menghilangkan spinner di input number */
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    </style>
 </head>
 <body>
-    <div class="login-dark">
-        <form method="POST" action="{{ route('password.update') }}">
-            @csrf
-            <div class="illustration"><i class="icon ion-ios-locked-outline"></i></div>
-            <h5 class="text-center mb-3">Ganti Password</h5>
 
-            <p class="text-center">Hello, <strong>{{ Auth::user()->name }}</strong>. Please change your password.</p>
+    <div class="login-dark">
+        <form method="POST" action="{{ route('add.configuration') }}">
+            @csrf
+            <div class="illustration"><i class="icon ion-settings"></i></div>
+            <h5 class="text-center mb-3">Configurations</h5>
 
             @if(session('success'))
                 <div class="alert alert-success text-center">
@@ -27,37 +35,45 @@
                 </div>
             @endif
 
+            @if ($errors->any())
+                <div class="alert alert-danger text-center">
+                    <ul class="list-unstyled mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <div class="form-group">
-                <input class="form-control" type="password" name="current_password" placeholder="Old Password" required>
-                @error('current_password') <span class="text-danger">{{ $message }}</span> @enderror
+                <input type="text" class="form-control" name="id_mesin" placeholder="id_mesin" required>
             </div>
 
             <div class="form-group">
-                <input class="form-control" type="password" name="new_password" placeholder="New Password" required>
-                @error('new_password') <span class="text-danger">{{ $message }}</span> @enderror
+                <input type="number" class="form-control" name="batas_atas_suhu" placeholder="Upper limit of temperature" required>
             </div>
 
             <div class="form-group">
-                <input class="form-control" type="password" name="new_password_confirmation" placeholder="Confirm New Password" required>
+                <input type="number" class="form-control" name="batas_bawah_suhu" placeholder="Lower limit of temperature" required>
             </div>
 
             <div class="form-group">
-                <button class="btn btn-primary btn-block" onclick="OnLogout()">Submit</button>
+                <input type="number" class="form-control" name="batas_atas_kelembaban" placeholder="Upper limit of humidity " required>
             </div>
 
-            <a class="ForgotPassword" href="{{route ('forgot.password')}}" style="float: right">Forgot Password?</a>
+            <div class="form-group">
+                <input type="number" class="form-control" name="batas_bawah_kelembaban" placeholder="Lower limit of humidity" required>
+            </div>
+
+            <div class="form-group">
+                <button type="number" class="btn btn-primary btn-block">SUBMIT</button>
+            </div>
         </form>
     </div>
 
     <!-- jQuery & Bootstrap JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-
-    <script>
-        function OnLogout() {
-            alert("Password berhasil diganti, silakan login ulang.");
-        }
-    </script>
 
     <!-- Styling -->
     <style>
@@ -94,6 +110,7 @@
             box-shadow: none;
             outline: none;
             color: inherit;
+            padding: 10px;
         }
 
         .login-dark .form-control::placeholder {
@@ -112,16 +129,10 @@
             background: darkblue;
         }
 
-        .login-dark .ForgotPassword {
-            display: block;
-            font-size: 12px;
-            color: #6f7a85;
-            text-decoration: none;
-            margin-top: 10px;
-        }
-
-        .login-dark .ForgotPassword:hover {
-            color: #fff;
+        .alert {
+            font-size: 14px;
+            border-radius: 4px;
+            padding: 10px;
         }
 
         body {
