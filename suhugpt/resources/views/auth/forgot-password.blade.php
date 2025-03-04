@@ -42,9 +42,9 @@
           
               try {
                   const dencryptedResult = await decrypt(text, key);
-                  console.log("Encrypted Data:", encryptedResult);
+                  console.log("Decrypted Data:", encryptedResult);
               } catch (error) {
-                  console.error("Encryption failed:", error);
+                  console.error("Decrypted failed:", error);
               }
 
               return dencryptedResult;
