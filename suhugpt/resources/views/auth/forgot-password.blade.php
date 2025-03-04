@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lupa Password</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script type="text/javascript" src="../resources/js/script.js"></script>
     <script>
 
         let globalVarOTP = '';
@@ -20,6 +21,34 @@
             }
             return true;
         }
+
+        async function myEncrypt(val) {
+              const text = val;
+              const key = "mysecretkey12345";
+          
+              try {
+                  const encryptedResult = await encrypt(text, key);
+                  console.log("Encrypted Data:", encryptedResult);
+              } catch (error) {
+                  console.error("Encryption failed:", error);
+              }
+
+              return encryptedResult;
+          }
+
+          async function myDecrypt(val) {
+              const text = val;
+              const key = "mysecretkey12345";
+          
+              try {
+                  const dencryptedResult = await decrypt(text, key);
+                  console.log("Encrypted Data:", encryptedResult);
+              } catch (error) {
+                  console.error("Encryption failed:", error);
+              }
+
+              return dencryptedResult;
+          }
 
         document.addEventListener("DOMContentLoaded", function () {
         console.log("JavaScript Loaded!");
@@ -48,9 +77,9 @@
                     console.log("Response dari backend:", data);
 
                     if (data.success) {
-                        localStorage.setItem("otpCode", data.otp);
-                        localStorage.setItem("name", data.name);
-                        localStorage.setItem("email", data.email);
+                        localStorage.setItem("otpCode", myEncrypt(data.otp));
+                        localStorage.setItem("name", myEncrypt(data.name));
+                        localStorage.setItem("email", myEncrypt(data.email));
                         // globalVarOTP = data.otp;
                         console.log("OTP yang diterima:", globalVarOTP);
                         window.location.href = '/reset-password';
@@ -72,9 +101,9 @@
                 const newPassword = document.getElementById("new_password").value;
                 const confirmPassword = document.getElementById("confirm_password").value;
                 const otp = document.getElementById("otp").value;
-                const savedOtp = localStorage.getItem("otpCode");
-                const name = localStorage.getItem("name");
-                const email = localStorage.getItem("email");
+                const savedOtp = myDecrypt(localStorage.getItem("otpCode"));
+                const name = myDecrypt(localStorage.getItem("name"));
+                const email = myDecrypt(localStorage.getItem("email"));
                 // localStorage.removeItem("otpCode");
 
                 console.log("New Password:", newPassword);
