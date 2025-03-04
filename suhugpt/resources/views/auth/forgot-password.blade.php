@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lupa Password</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script type="text/javascript" src="../resources/js/script.js"></script>
-    <script>
+    <script type="text/javascript" src="{{ asset('js/script.js') }}">
 
         let globalVarOTP = '';
 
