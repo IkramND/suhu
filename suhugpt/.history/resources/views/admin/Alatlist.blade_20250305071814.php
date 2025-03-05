@@ -62,7 +62,7 @@
             <p class="card-text">IP Address : <span style="color:solid black; font-weight:bold ">{{ $alat->ip_address }}</span></p>
             <p class="card-text">Location : <span style="color:solid black; font-weight:bold ">{{ $alat->lokasi }}</span></p>
 
-            <a href="{{ route('Editalat', $alat->id) }}" class="btn btn-warning">Edit</a>
+            <a href="{{ route(''Editalat'', $alat->id) }}" class="btn btn-warning">Edit</a>
             <form action="{{ route('alats.destroy', $alat->id) }}" method="POST" style="display:inline;">
                 @csrf
                 @method('DELETE')

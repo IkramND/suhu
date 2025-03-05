@@ -216,5 +216,9 @@ public function fetchDataHistoryROB1(Request $request)
         return view('PilihHistory');
     }
 
-
+//     public function show($id)
+// {
+//     $alat = Alat::findOrFail($id); // Ambil data alat berdasarkan ID
+//     return view('alat.show', compact('alat'));
+// }
 }

@@ -17,7 +17,7 @@ class Authenticate
     public function handle($request, Closure $next, ...$guards)
 {
     if (!Auth::check()) {
-        return redirect('/login')->withErrors(['error' => 'You must log in first.']);
+        return redirect('/login')->withErrors(['error' => 'Anda harus login terlebih dahulu.']);
     }
 
     return $next($request);

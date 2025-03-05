@@ -141,7 +141,7 @@
                 <a href="{{route('admin.create')}}">Add Tools</a>
 
             </div>
-            <a onclick="onLogout()">Logout</a>
+            <a href="#" onclick="onLogout()">Logout</a>
 
         </div>
     </aside>

@@ -9,7 +9,7 @@ class Sensor extends Model
 
 
     protected $table = 'data_sensor'; // Sesuaikan dengan nama tabel di database
-    protected $fillable = ['id', 'suhu', 'kelembaban', 'waktu'];
+    protected $fillable = ['id', 'suhu', 'kelembaban', 'waktu', 'lokasi'];
 
 
     public function configuration()

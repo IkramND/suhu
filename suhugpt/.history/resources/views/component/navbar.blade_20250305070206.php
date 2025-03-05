@@ -212,7 +212,7 @@
     <nav class="navbar">
         <div class="navbar-container">
             <a class="navbar-logo">
-                <i class="fas fa-waveform-path"></i>
+                <i class="fas fa-waveform-path" style="color: white"></i>
                 MyWebsite</a>
             <ul class="navbar-menu">
                 <a href="/admin" target="_blank">

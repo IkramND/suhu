@@ -20,7 +20,7 @@ class Configuration extends Model
 
     public function sensorData()
     {
-        return $this->hasMany(Sensor::class, 'id_mesin', 'id_mesin');
+        return $this->hasMany(SensorData::class, 'id_mesin', 'id_mesin');
     }
 
 

@@ -37,6 +37,7 @@ Route::get('/Historys/{id}', [SensorController::class, ''])->name('Historys');
 Route::get('/', [CardController::class, 'dashboard'])->name('dashboard');
 
 
+// Route::get('/cards', [CardController::class, 'index'])->name('cards.index');
 
 Route::get('/register', function () {
     return view('auth.register');
@@ -122,7 +123,7 @@ Route::middleware(['auth'])->group(function () {
 
 
 
-    // Route::get('/chose', [SensorController::class, 'chose'])->name('chose');
+    Route::get('/chose', [SensorController::class, 'chose'])->name('chose');
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 

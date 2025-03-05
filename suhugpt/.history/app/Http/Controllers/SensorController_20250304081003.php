@@ -160,6 +160,63 @@ public function fetchDataHistoryROB1(Request $request)
 }
 
 
+//     public function fetchDataHistory(Request $request, $id_mesin)
+// {
+//     $startDate = $request->input('start_date');
+//     $endDate = $request->input('end_date');
+
+//     // Cek apakah ID Mesin ada di database
+//     $cekMesin = DB::table('data_sensor')->where('id_mesin', $id_mesin)->exists();
+
+//     if (!$cekMesin) {
+//         return response()->json(["message" => "ID Mesin tidak ditemukan"], 404);
+//     }
+
+//     $query = DB::table('data_sensor')
+//         ->selectRaw("DATE(waktu) as tanggal,
+//  DATE_FORMAT(MIN(waktu), '%W') as hari,
+//  LEFT(AVG(suhu), 4) as rata_rata_suhu,
+//  LEFT(AVG(kelembaban), 4) as rata_rata_kelembaban")
+//         ->where('id_mesin', $id_mesin)
+//         ->whereNotNull('waktu') // Filter hanya data dengan waktu yang valid
+
+//         ->groupBy(DB::raw('DATE(waktu)'))
+//         ->orderBy('tanggal', 'ASC');
+
+//     if ($startDate && $endDate) {
+//         $query->whereBetween('waktu', [$startDate . " 00:00:00", $endDate . " 23:59:59"]);
+//     }
+
+//     $data = $query->get();
+
+//     // Jika data kosong, berikan pesan
+//     if ($data->isEmpty()) {
+//         return response()->json(["message" => "Data tidak ditemukan untuk ID Mesin ini"], 404);
+//     }
+
+//     return response()->json($data);
+// }
+
+// public function fetchDataHistory($id_mesin, Request $request)
+// {
+//     $startDate = $request->input('start_date');
+//     $endDate = $request->input('end_date');
+
+//     $query = DB::table('data_sensor')
+//         ->where('id_mesin', $id_mesin);
+
+//     if ($startDate && $endDate) {
+//         $query->whereBetween('waktu', [$startDate, $endDate]);
+//     }
+
+//     $data = $query->get(['waktu', 'id_mesin', 'suhu', 'kelembaban']);
+
+//     if ($data->isEmpty()) {
+//         return response()->json(["message" => "Tidak ada data"], 404);
+//     }
+
+//     return response()->json($data);
+// }
 
 
 
@@ -216,5 +273,9 @@ public function fetchDataHistoryROB1(Request $request)
         return view('PilihHistory');
     }
 
-
+//     public function show($id)
+// {
+//     $alat = Alat::findOrFail($id); // Ambil data alat berdasarkan ID
+//     return view('alat.show', compact('alat'));
+// }
 }

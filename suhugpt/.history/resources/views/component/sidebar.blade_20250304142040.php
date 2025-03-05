@@ -127,7 +127,7 @@
 
     <aside class="sidebar">
         <div class="sidebar-menu">
-            <a onclick="goToDashboard()">Dashboard</a>
+            <a href="#" onclick="goToDashboard()">Dashboard</a>
 
             <button class="dropdown-btn">Settings
                 <i class="fa fa-caret-down"></i>
@@ -141,7 +141,7 @@
                 <a href="{{route('admin.create')}}">Add Tools</a>
 
             </div>
-            <a onclick="onLogout()">Logout</a>
+            <a href="#" onclick="onLogout()">Logout</a>
 
         </div>
     </aside>

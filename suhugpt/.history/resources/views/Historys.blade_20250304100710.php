@@ -5,7 +5,7 @@
 
 
 <div style="margin-bottom: 20px; text-align: center; margin-top: 3%;">
-    <input type="hidden" id="id_mesin" value="{{ $id_mesin}}">
+    <input type="hidden" id="id_mesin" value="{{ $id_mesin}}">  ID Mesin dari halaman sebelumnya
     {{-- <input type="hidden" id="ip_address" value="{{ $ip_address }}">  IP address dari halaman sebelumnya --}}
 <div style="margin-top:7%">
     <input type="date" id="start_date">
@@ -41,7 +41,7 @@ function fetchDataHistory(startDate = '', endDate = '') {
     }
 
     if (!id_mesin) {
-        alert("Machine ID not found!");
+        alert("ID Mesin tidak ditemukan!");
         return;
     }
 
@@ -52,7 +52,7 @@ function fetchDataHistory(startDate = '', endDate = '') {
         dataType: 'json',
         success: function(data) {
             if (data.length === 0) {
-                alert("There is no data in the selected time range.");
+                alert("Tidak ada data dalam rentang waktu yang dipilih.");
                 return;
             }
 
