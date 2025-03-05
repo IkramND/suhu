@@ -1,7 +1,6 @@
 @extends('component.navbar')
 @section('mains')
-
-</form>
+    </form>
     <br>
 
     @foreach($alats as $alat)
@@ -31,16 +30,6 @@
                 <canvas id="humidityChart_{{ $alat->id_mesin }}"></canvas>
             </div>
         </div>
-
-
-        <style>
-            /* Menghilangkan spinner di input number */
-    input[type=number]::-webkit-inner-spin-button,
-    input[type=number]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-        </style>
 
         <script>
             let temperatureChart_{{ $alat->id_mesin }};

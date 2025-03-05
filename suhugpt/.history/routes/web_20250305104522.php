@@ -16,9 +16,11 @@ use App\Http\Controllers\SettingController;
 
 
 
-Route::get('/admin/report', [PDFController::class, 'index']) -> name('admin.report');
+Route::get('/', function () {
+    return view('home');
+});
 
-Route::post('/generate-pdf', [PDFController::class, 'generatePDF'])->name('generate.pdf');
+Route::post('/generate-pdf', [PDFControllerller::class, 'generatePDF'])->name('generate.pdf');
 
 // Card alat
 Route::get('/admin/create', [CardController::class, 'create'])->name('admin.create');

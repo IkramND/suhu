@@ -16,7 +16,9 @@ use App\Http\Controllers\SettingController;
 
 
 
-Route::get('/admin/report', [PDFController::class, 'index']) -> name('admin.report');
+Route::get('/admin/report', function () {
+    return view('admin.Report') ->name('report.result');
+});
 
 Route::post('/generate-pdf', [PDFController::class, 'generatePDF'])->name('generate.pdf');
 

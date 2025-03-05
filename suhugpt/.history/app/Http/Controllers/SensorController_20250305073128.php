@@ -92,12 +92,12 @@ public function fetchDataHistoryROB1(Request $request)
     public function fetchData(Request $request)
 {
     $id_mesin = $request->input('id_mesin');
-    $limit = $request->input('limit','10');
+    $limit = $request->input('limit','10')
 
     $data = DB::table('data_sensor')
         ->where('id_mesin', $id_mesin)
         ->orderBy('waktu', 'desc') // Ambil data terbaru dulu
-        ->limit($limit) // Ambil 10 data terbaru
+        ->limit(10) // Ambil 10 data terbaru
         ->get();
 
     return response()->json(collect($data)->reverse()->values()); // Reverse setelah dikonversi ke Collection

@@ -46,7 +46,7 @@
             @endif
 
             <div class="form-group">
-                <input type="text" class="form-control" name="id_mesin" placeholder="Machine ID" required>
+                <input type="text" class="form-control" name="id_mesin" placeholder="id_mesin" required>
             </div>
 
             <div class="form-group">
