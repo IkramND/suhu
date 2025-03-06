@@ -14,7 +14,7 @@ class SensorObserver
      */
     public function created(Sensor $sensor)
     {
-        Log::info("SensorObserver dipanggil untuk id_mesin: {$sensor->id_mesin}, suhu: {$sensor->suhu}, kelembaban: {$sensor->kelembaban}");
+        \Log::info("SensorObserver dipanggil untuk id_mesin: {$sensor->id_mesin}");
 
         // Kirim event ketika data baru dibuat
         event(new SensorDataUpdate($sensor));

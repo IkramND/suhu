@@ -31,12 +31,12 @@ Route::get('/cek-sensor', function () {
     $latestData = Sensor::latest('id')->first();
 
     if ($latestData) {
-        Log::info("Sensor terbaru ditemukan", ['id_mesin' => $latestData->id_mesin, 'suhu' => $latestData->suhu, 'kelembaban' => $latestData->kelembaban]);
+        \Log::info("Sensor terbaru ditemukan", ['id_mesin' => $latestData->id_mesin, 'suhu' => $latestData->suhu, 'kelembaban' => $latestData->kelembaban]);
 
         // Kirim event agar alert bisa dikirim otomatis
         event(new SensorDataUpdate($latestData));
     } else {
-        Log::info("Tidak ada data sensor terbaru.");
+        \Log::info("Tidak ada data sensor terbaru.");
     }
 
     return "Cek sensor selesai!";

@@ -3,7 +3,7 @@
 namespace App\Providers;
 use App\Models\Sensor;
 use App\Observers\SensorObserver;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Log
 
 use Illuminate\Support\ServiceProvider;
 
@@ -22,9 +22,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Log::info("SensorObserver telah didaftarkan!"); // Tambahkan log untuk debugging
-
         Sensor::observe(SensorObserver::class);
+        Log::info("SensorObserver telah didaftarkan!"); // Tambahkan log untuk debugging
 
     }
 }

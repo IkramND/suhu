@@ -21,18 +21,19 @@ class CheckSensorThresholds // Perbaiki nama class
 
     public function handle(SensorDataUpdate $event): void
     {
-        Log::info("Listener CheckSensorThresholds diproses untuk id_mesin: {$event->sensorData->id_mesin}");
+        \Log::info("Listener CheckSensorThresholds diproses untuk id_mesin: {$event->sensorData->id_mesin}");
 
+        // \Log::info('Listener CheckSensorThresholds diproses', ['data' => $event->sensorData]);
 
         $data = $event->sensorData;
         $config = Configuration::where('id_mesin', $data->id_mesin)->first();
 
         if (!$config) {
-            Log::warning("Konfigurasi tidak ditemukan untuk id_mesin: {$data->id_mesin}");
+            // \Log::warning("Konfigurasi tidak ditemukan untuk id_mesin: {$data->id_mesin}");
             return;
         }
 
-        Log::info("Konfigurasi ditemukan", ['config' => $config]);
+        // \Log::info("Konfigurasi ditemukan", ['config' => $config]);
 
         $alertMessage = "";
 
