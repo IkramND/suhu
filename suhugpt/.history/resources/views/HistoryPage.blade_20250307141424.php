@@ -53,7 +53,7 @@
                     return;
                 }
 
-                const labels = data.map(item => `${item.hari}, ${item.tanggal}`, );
+                // const labels = data.map(item => `${item.hari}, ${item.tanggal}`, );
                 const tempData = data.map(item => parseFloat(item.rata_rata_suhu));
                 const humData = data.map(item => parseFloat(item.rata_rata_kelembaban));
 

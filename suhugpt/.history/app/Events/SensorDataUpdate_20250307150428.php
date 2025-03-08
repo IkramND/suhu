@@ -16,8 +16,6 @@ class SensorDataUpdate
 
     public function __construct(Sensor $sensorData)
     {
-        $this->sensorData = $sensorData;
-        // $this->sensorData = clone $sensorData;
-
+        $this->sensorData = clone $sensorData;
     }
 }

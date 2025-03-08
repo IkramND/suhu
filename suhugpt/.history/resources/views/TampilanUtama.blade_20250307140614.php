@@ -86,7 +86,7 @@ function fetchData{{ $alat->id_mesin }}() {
             }
 
             // Ambil labels (waktu) dan data suhu/kelembaban
-            const labels = data.map(item => new Date(item.waktu).toLocaleTimeString([],{hour: '2-digit', minute: '2-digit',hour12:false }));
+            const labels = data.map(item => new Date(item.waktu).toLocaleTimeString([],{hour: '2-digit', minute: '2-digit'});
             const tempData = data.map(item => item.suhu);
             const humData = data.map(item => item.kelembaban);
 

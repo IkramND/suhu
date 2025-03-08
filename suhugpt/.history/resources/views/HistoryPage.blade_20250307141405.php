@@ -53,7 +53,7 @@
                     return;
                 }
 
-                const labels = data.map(item => `${item.hari}, ${item.tanggal}`, );
+                const labels = data.map(item => `${item.hari}, ${item.tanggal}`,new Date(item.waktu).toLocaleTimeString([],{hour: '2-digit', minute: '2-digit',hour12:false}));
                 const tempData = data.map(item => parseFloat(item.rata_rata_suhu));
                 const humData = data.map(item => parseFloat(item.rata_rata_kelembaban));
 
