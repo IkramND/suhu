@@ -34,19 +34,19 @@ class CardController extends Controller
     public function index(){
 
         $alats = DB::select("
-            SELECT a.*,
-                   CASE
-                       WHEN b.id_mesin IS NOT NULL THEN 'Active'
-                       ELSE 'Inactive'
-                   END AS status
-            FROM alat a
-            LEFT JOIN (
-                SELECT id_mesin, MAX(id) AS latest_id
-                FROM data_sensor
-                WHERE waktu BETWEEN NOW() - INTERVAL 5 MINUTE AND NOW() + INTERVAL 5 MINUTE
-                GROUP BY id_mesin
-            ) b ON a.id_mesin = b.id_mesin;
-        ");
+    SELECT a.*,
+           CASE
+               WHEN b.id_mesin IS NOT NULL THEN 'Active'
+               ELSE 'Inactive'
+           END AS status
+    FROM alat a
+    LEFT JOIN (
+        SELECT id_mesin, MAX(id) AS latest_id
+        FROM data_sensor
+        WHERE waktu BETWEEN NOW() - INTERVAL 5 MINUTE AND NOW()
+        GROUP BY id_mesin
+    ) b ON a.id_mesin = b.id_mesin;
+");
 
 
     // $alats = Alat::all();
@@ -57,7 +57,7 @@ class CardController extends Controller
     {
         // while (true)
         // {
-            $alats = DB::select("
+            $alats = DB::select(`
                 SELECT a.*,
                        CASE
                            WHEN b.id_mesin IS NOT NULL THEN 'Active'
@@ -67,11 +67,10 @@ class CardController extends Controller
                 LEFT JOIN (
                     SELECT id_mesin, MAX(id) AS latest_id
                     FROM data_sensor
-                    WHERE waktu BETWEEN NOW() - INTERVAL 5 MINUTE AND NOW() + INTERVAL 5 MINUTE
+                    WHERE waktu BETWEEN NOW() - INTERVAL 5 MINUTE AND NOW()
                     GROUP BY id_mesin
                 ) b ON a.id_mesin = b.id_mesin;
-            ");
-
+            `);
 
             return view('TampilanUtama',compact('alats'));
         // }

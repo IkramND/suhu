@@ -137,7 +137,7 @@ function fetchData{{ $alat->id_mesin }}() {
 
 // Jalankan pertama kali dan perbarui setiap 2 detik
 fetchData{{ $alat->id_mesin }}();
-setInterval(fetchData{{ $alat->id_mesin }}, 2000);
+setInterval(window.location.refresh(), 2000);
 
         </script>
 
