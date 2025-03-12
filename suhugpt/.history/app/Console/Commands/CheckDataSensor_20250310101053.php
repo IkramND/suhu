@@ -1,0 +1,91 @@
+<?php
+
+namespace App\Console\Commands;
+
+use App\Models\Notification;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
+
+class CheckDataSensor extends Command
+{
+    protected $signature = 'sensor:cek';
+    protected $description = 'Cek data sensor dan lakukan aksi jika ada masalah';
+
+    public function handle()
+    {
+        Log::info("Job Start!");
+        $latest_id = 0;
+        $index = 0;
+
+        while (true) {
+
+            Log::info("---------------------------------------");
+            Log::info("          JOB SELECT DATA              ");
+            Log::info("---------------------------------------");
+
+            $sql = 'SELECT a.id as sensor_id, a.*, b.*
+                    FROM data_sensor a
+                    JOIN configuration b ON a.id_mesin = b.id_mesin
+                    ORDER BY a.id DESC
+                    LIMIT 1';
+
+            $data = DB::select($sql);
+            $data = $data[0];
+
+            Log::info("Latest Id : " . $latest_id);
+            Log::info("Data Id : " . $data->sensor_id);
+
+            if ($index == 0) {
+                $latest_id = $data->sensor_id;
+            }
+
+            if ($latest_id == $data->sensor_id && $index > 0) {
+                Log::info("<<<>>> Wait <<<>>>");
+                Log::info("Data Still Same!!...");
+                sleep(3);
+                continue; // Lanjutkan loop tanpa mematikan daemon
+            }
+
+            if ($latest_id != $data->sensor_id || $index == 0) {
+
+                $latest_id = $data->sensor_id;
+                $index++;
+
+                // Validasi sensor
+                $message = "";
+                $notification = Notification::pluck('email')->toArray();
+                $conditions = [
+                    $data->suhu > $data->batas_atas_suhu,
+                    $data->suhu < $data->batas_bawah_suhu,
+                    $data->kelembaban > $data->batas_atas_kelembaban,
+                    $data->kelembaban < $data->batas_bawah_kelembaban
+                ];
+
+                if (in_array(true, $conditions, true)) {
+                    $message = "⚠️ *Peringatan! Data Sensor Tidak Sesuai!*\n";
+                    $message .= "ID Mesin: *{$data->id_mesin}*\n";
+                    $message .= "Suhu: *{$data->suhu}°C* (Batas: {$data->batas_bawah_suhu}°C - {$data->batas_atas_suhu}°C)\n";
+                    $message .= "Kelembaban: *{$data->kelembaban}%* (Batas: {$data->batas_bawah_kelembaban}% - {$data->batas_atas_kelembaban}%)\n";
+                }
+
+                Log::info("---------------------------------------");
+                Log::info("          SEND TO TELEGRAM             ");
+                Log::info("---------------------------------------");
+
+                // Kirim alert ke Telegram jika ada masalah
+                if (!empty($message)) {
+                    Http::timeout(5)->post("https://api.telegram.org/bot" . env('TELEGRAM_BOT_TOKEN') . "/sendMessage", [
+                        'chat_id' => env('TELEGRAM_CHAT_ID'),
+                        'email' => $notification,
+                        'text' => $message,
+                        'parse_mode' => 'Markdown'
+                    ]);
+                }
+            }
+
+            sleep(3); // Tunggu sebelum iterasi berikutnya
+        }
+    }
+}
