@@ -14,8 +14,6 @@ class Authenticate
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-
-
     public function handle($request, Closure $next, ...$guards)
 {
     if (!Auth::check()) {

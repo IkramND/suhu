@@ -89,7 +89,7 @@
 
 
             function validateInput(input) {
-            const maxLimit = 24; // Batas maksimum
+            const maxLimit = 100; // Batas maksimum
             if (input.value > maxLimit) {
                 alert("Input more than maximum input");
                 input.value = ""; // Mengosongkan input jika melebihi batas
@@ -162,7 +162,7 @@ function fetchData{{ $alat->id_mesin }}() {
                     data: {
                         labels: labels,
                         datasets: [{
-                            label: 'Humidity (%)',
+                            label: 'Kelembaban (%)',
                             data: humData,
                             borderColor: 'blue',
                             fill: false

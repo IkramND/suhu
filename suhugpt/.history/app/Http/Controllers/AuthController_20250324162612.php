@@ -9,6 +9,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
+
+
 use Illuminate\Support\Facades\Validator;
 use App\Mail\OtpMail;
 use App\Models\Otp;
@@ -161,6 +163,39 @@ public function showForgotPasswordForm()
         return back()->with('error', 'Terjadi kesalahan, coba lagi.');
     }
     }
+
+
+public function sendEmail (Request $request)
+{
+
+
+
+//     // try {
+//         // Generate OTP 6 digit
+        $otp = '112233';
+        // $otp = rand(100000, 999999);
+        $email = $request->email;
+
+        // Simpan log OTP
+        Log::info("Generated OTP: $otp for email: $email");
+
+        // Kirim email menggunakan Laravel Mail
+        Mail::raw("Your OTP code is: $otp", function ($message) use ($email) {
+            $message->to($email)->subject("Your OTP Code");
+        });
+
+//         Log::info("OTP email successfully sent to: $email");
+
+        return response()->json([
+            'success' => true,
+            'email' => $email,
+            'otp' => $otp // Kembalikan OTP dalam response hanya untuk keperluan debug (hapus di produksi)
+        ]);
+
+
+        return redirect('/login')->with('succes', 'Already Succes Change Password, Please go to login');
+}
+
 
 
 

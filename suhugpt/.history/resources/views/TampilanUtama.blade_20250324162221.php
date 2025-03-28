@@ -89,7 +89,7 @@
 
 
             function validateInput(input) {
-            const maxLimit = 24; // Batas maksimum
+            const maxLimit = ; // Batas maksimum
             if (input.value > maxLimit) {
                 alert("Input more than maximum input");
                 input.value = ""; // Mengosongkan input jika melebihi batas

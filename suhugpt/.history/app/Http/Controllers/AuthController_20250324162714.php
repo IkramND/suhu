@@ -9,6 +9,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
+
+
 use Illuminate\Support\Facades\Validator;
 use App\Mail\OtpMail;
 use App\Models\Otp;
@@ -161,6 +163,13 @@ public function showForgotPasswordForm()
         return back()->with('error', 'Terjadi kesalahan, coba lagi.');
     }
     }
+
+
+public function sendEmail (Request $request)
+{
+
+
+
 
 
 

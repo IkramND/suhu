@@ -165,7 +165,7 @@ $.ajax({
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Humidity (%)',
+                        label: 'Humididy (%)',
                         data: humData,
                         borderColor: 'blue',
                         fill: false

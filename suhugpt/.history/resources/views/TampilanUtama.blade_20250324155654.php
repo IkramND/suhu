@@ -97,8 +97,8 @@
         }
 
 function fetchData{{ $alat->id_mesin }}() {
-    let limit = document.getElementById("limit_{{ $alat->id_mesin }}").value || 10; // Ambil nilai limit dari input
-    let second = document.getElementById("second_{{ $alat->id_mesin }}").value || 10;
+    let limit = document.getElementById("limit_{{ $alat->id_mesin }}"); // Ambil nilai limit dari input
+    let second = document.getElementById("second_{{ $alat->id_mesin }}");
 
 
     $.ajax({
