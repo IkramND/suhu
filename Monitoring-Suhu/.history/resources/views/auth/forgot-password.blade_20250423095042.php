@@ -58,7 +58,7 @@
 </head>
 <body>
     <div class="login-dark">
-        <form method="POST" action="{{route('validate.user')}}">
+        <form method="POST" action="{{route('forgot.password2')}}">
             @csrf
             <div class="illustration"><i class="icon ion-ios-locked-outline"></i></div>
 
@@ -78,7 +78,7 @@
                 </div>
             @endif
 
-
+            {{-- @if($step == 1)
                 <div class="form-group">
                     <input type="text" name="name" id="name" class="form-control" placeholder="Username" required>
                 </div>
@@ -88,6 +88,22 @@
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary btn-block" style="background: blue">Submit</button>
                 </div>
+            @endif
+
+            @if($step == 2)
+                <div class="form-group">
+                    <input type="password" name="new_password" id="new_password" class="form-control" placeholder="Password Baru" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" name="new_password_confirmation" id="confirm_password" class="form-control" placeholder="Konfirmasi Password" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" name="otp" id="otp" class="form-control" placeholder="Kode OTP" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success btn-block">Ganti Password</button>
+                </div>
+            @endif --}}
         </form>
     </div>
 </body>

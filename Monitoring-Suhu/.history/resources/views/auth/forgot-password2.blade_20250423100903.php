@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
-    {{-- <script src="{{ asset('js/script.js') }}" defer></script> --}}
     <style>
 
         .login-dark {
@@ -58,7 +57,7 @@
 </head>
 <body>
     <div class="login-dark">
-        <form method="POST" action="{{route('validate.user')}}">
+        <form method="POST" action="">
             @csrf
             <div class="illustration"><i class="icon ion-ios-locked-outline"></i></div>
 
@@ -77,16 +76,11 @@
                     @endforeach
                 </div>
             @endif
-
-
                 <div class="form-group">
-                    <input type="text" name="name" id="name" class="form-control" placeholder="Username" required>
+                    <input type="text" name="otp" id="otp" class="form-control" placeholder="Kode OTP" required>
                 </div>
                 <div class="form-group">
-                    <input type="email" name="email" id="email" class="form-control" placeholder="Email" required>
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary btn-block" style="background: blue">Submit</button>
+                    <button type="submit" class="btn btn-success btn-block">Ganti Password</button>
                 </div>
         </form>
     </div>

@@ -144,7 +144,7 @@ public function showForgotPasswordForm()
     public function validateUser2(Request $request){
 
         $request->validate([
-            'otp' => 'required|digits:6',
+            'otp' => 'required|digits:6s',
         ]);
 
         $otp = Session::get('otp');

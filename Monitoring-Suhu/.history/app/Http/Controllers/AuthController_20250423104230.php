@@ -121,7 +121,7 @@ public function showForgotPasswordForm()
 
         if ($user)
         {
-            $otp = rand(100000,999999);
+            $otp = rand(1000000,9999999);
             Session::put('otp', $otp);
             Session::put('otp_expires_at', now()->addMinutes(5));
             Session::put('user_id', $user->id);
@@ -169,38 +169,34 @@ public function showForgotPasswordForm()
         return redirect()->route('forgot.password3');
     }
 
-    public function validateUser3(){
-            return view('auth.forgot-password3');
+//     public function resetPassword(Request $request)
+//     {
+//         $request->validate([
+//             'name' => 'required',
+//             'email' => 'required|email',
+//             'new_password' => 'required|min:6|confirmed',
+//         ]);
 
-    }
-
-    public function resetPassword(Request $request)
-    {
-        $request->validate([
-            'new_password' => 'required|min:6|confirmed',
-        ]);
-
-        $user = User::find(Session::get('user_id'));
-        $user->password = bcrypt($request->password);
-        $user->save();
+//         $user = user::where('name',$request->name)
+//                     ->where('email', $request->email)
+//                     ->first();
 
 
-        if($user){
-            $user->password = Hash::make($request->new_password);
-            $user->save();
-
-            Session::forget('otp');
-            Session::forget('user_id');
-            Session::forget('otp_expired_at');
+//         if($user){
+//             $user->password = Hash::make($request->new_password);
+//             $user->save();
 
 
-            return redirect()->route('login')->with('success', 'Password reset success');
+//             return response()->json([
+//                 'success' => true,
+//                 'message' => 'Change Password Success!'
+//             ]);
 
-        }if(!$user){
+//         }if(!$user){
 
-        return back()->with('error', 'Terjadi kesalahan, coba lagi.');
-    }
-    }
+//         return back()->with('error', 'Terjadi kesalahan, coba lagi.');
+//     }
+//     }
 
 // Logout
 public function logout(Request $request)

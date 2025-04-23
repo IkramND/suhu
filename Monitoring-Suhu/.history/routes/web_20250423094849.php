@@ -35,11 +35,9 @@ Route::get('/login', function () {
 })->name('login');
 
 Route::get('/forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('forgot.password');
-Route::get('/forgot-password-2', [AuthController::class, 'showForgotPasswordForm2'])->name('forgot.password2');
-Route::get('/forgot-password-3', [AuthController::class, 'showForgotPasswordForm3'])->name('forgot.password3');
+Route::get('/forgot-password-2', [AuthController::class, 'showForgotPasswordForm'])->name('forgot.password2');
+Route::get('/forgot-password-3', [AuthController::class, 'showForgotPasswordForm'])->name('forgot.password3');
 Route::post('/validate-user', [AuthController::class, 'validateUser'])->name('validate.user');
-Route::post('/validate-user2', [AuthController::class, 'validateUser2'])->name('validate.user2');
-Route::post('/validate-user3', [AuthController::class, 'validateUser3'])->name('validate.user3');
 Route::post('/reset-password-func', [AuthController::class, 'resetPassword'])->name('reset.password.func');
 Route::get('/reset-password', [AuthController::class, 'showForgotPasswordForm2'])->name('reset.password');
 

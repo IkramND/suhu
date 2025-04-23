@@ -121,7 +121,7 @@ public function showForgotPasswordForm()
 
         if ($user)
         {
-            $otp = rand(100000,999999);
+            $otp = rand(1000000,9999999);
             Session::put('otp', $otp);
             Session::put('otp_expires_at', now()->addMinutes(5));
             Session::put('user_id', $user->id);
@@ -170,31 +170,33 @@ public function showForgotPasswordForm()
     }
 
     public function validateUser3(){
+        if($otp != Session::get('otp')){
             return view('auth.forgot-password3');
-
+        }
     }
 
     public function resetPassword(Request $request)
     {
         $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
             'new_password' => 'required|min:6|confirmed',
         ]);
 
-        $user = User::find(Session::get('user_id'));
-        $user->password = bcrypt($request->password);
-        $user->save();
+        $user = user::where('name',$request->name)
+                    ->where('email', $request->email)
+                    ->first();
 
 
         if($user){
             $user->password = Hash::make($request->new_password);
             $user->save();
 
-            Session::forget('otp');
-            Session::forget('user_id');
-            Session::forget('otp_expired_at');
 
-
-            return redirect()->route('login')->with('success', 'Password reset success');
+            return response()->json([
+                'success' => true,
+                'message' => 'Change Password Success!'
+            ]);
 
         }if(!$user){
 

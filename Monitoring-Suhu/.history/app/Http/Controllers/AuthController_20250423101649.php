@@ -86,7 +86,6 @@ public function updatePassword(Request $request)
 
 // ForgotPass
 
-
 public function showForgotPasswordForm()
     {
         return view('auth.forgot-password');
@@ -100,8 +99,6 @@ public function showForgotPasswordForm()
     {
         return view('auth.forgot-password3');
     }
-
-
 
     public function validateUser(Request $request)
     {
@@ -121,80 +118,58 @@ public function showForgotPasswordForm()
 
         if ($user)
         {
-            $otp = rand(100000,999999);
-            Session::put('otp', $otp);
-            Session::put('otp_expires_at', now()->addMinutes(5));
-            Session::put('user_id', $user->id);
+            $otp = rand(1000000,9999999);
             $userEmail = $request->email;
             Mail::raw("Your Otp Code : $otp", function ($message) use ($userEmail) {
                 $message->to($userEmail)->subject('Testing Email');
             });
 
-            return redirect()->route('forgot.password2')->with('success', 'OTP has been sent to your email');
+            response()->json([
+                'success' => true,
+                'message' => 'OTP sent successfully',
+                'email' => $request->email,
+                'name' => $request->name,
+                'otp' => $otp
+            ]);
 
-            // return view('auth.forgot-password2',compact('otp'));
+            return view('auth.forgot-password2,compact($otp)');
 
             // return view('auth.forgot-password2');
 
         } else {
-            return back()->with('error', 'Username and Email not match!');
+            return back()->with('error', 'Username dan Email tidak cocok!');
         }
     }
 
-    public function validateUser2(Request $request){
+    public function validateUser2($otp){
 
-        $request->validate([
-            'otp' => 'required|digits:6',
-        ]);
-
-        $otp = Session::get('otp');
-        $otpExpires = Session::get('otp_expires_at');
-
-        if(!$otp || !$otpExpires){
-            return redirect()->route('forgot.password2')->withErrors([
-                'otp' => 'OTP session not found. Please request again.',
-            ]);
+        if($otp !== $otp ){
+            return redirect()->with('errors', 'OTP is not match');
         }
-
-        if(now()->greaterThan(Session::get('otp_expires_at'))){
-            Session::forget(['otp', 'otp_expires_at', 'user_id']);
-            return redirect()->route('forgot.password2')->withErrors(['otp' => 'OTP EXPIRED']);
-        }
-
-
-        if($request->otp != Session::get('otp') ){
-            return back()->withErrors(['otp' => 'OTP is incorrect']);
-        }
-
-        return redirect()->route('forgot.password3');
-    }
-
-    public function validateUser3(){
-            return view('auth.forgot-password3');
-
     }
 
     public function resetPassword(Request $request)
     {
         $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
             'new_password' => 'required|min:6|confirmed',
         ]);
 
-        $user = User::find(Session::get('user_id'));
-        $user->password = bcrypt($request->password);
-        $user->save();
+        $user = user::where('name',$request->name)
+                    ->where('email', $request->email)
+                    ->first();
 
 
         if($user){
             $user->password = Hash::make($request->new_password);
             $user->save();
 
-            Session::forget('otp');
-            Session::forget('user_id');
-            Session::forget('otp_expired_at');
 
-
-            return redirect()->route('login')->with('success', 'Password reset success');
+            return response()->json([
+                'success' => true,
+                'message' => 'Change Password Success!'
+            ]);
 
         }if(!$user){
 

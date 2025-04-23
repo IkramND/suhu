@@ -58,7 +58,7 @@
 </head>
 <body>
     <div class="login-dark">
-        <form method="POST" action="{{route('validate.user')}}">
+        <form method="POST" action="{{route('forgot.password2')}}">
             @csrf
             <div class="illustration"><i class="icon ion-ios-locked-outline"></i></div>
 

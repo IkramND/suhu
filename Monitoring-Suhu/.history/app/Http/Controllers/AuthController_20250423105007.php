@@ -121,7 +121,7 @@ public function showForgotPasswordForm()
 
         if ($user)
         {
-            $otp = rand(100000,999999);
+            $otp = rand(1000000,9999999);
             Session::put('otp', $otp);
             Session::put('otp_expires_at', now()->addMinutes(5));
             Session::put('user_id', $user->id);
