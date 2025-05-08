@@ -9,7 +9,7 @@
         <div class="card">
             <div class="pisah" style="grid-template-columns: 3fr 4fr 1fr; display: grid; position: relative;">
                 <div>
-                    <h4>Location :  {{ $alat->lokasi }}</h4>
+                    <h4>Machine ID :  {{ $alat->id_mesin }} ({{$alat->lokasi}})</h4>
                     <h4>Status :<span id="status_{{ $alat->id_mesin}}" style="color: {{$alat->status == 'Active' ? 'green' : 'red'}}">{{$alat->status}}</span> </h4>
                     <h4>Last update : <span id="lastUpdate_{{ $alat->id_mesin }}">Loading...</span></h4>
                 </div>

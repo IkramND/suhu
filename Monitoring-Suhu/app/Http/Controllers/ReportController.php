@@ -9,10 +9,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Alat;
+use App\Models\Notification;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
-
-
+use Mockery\Matcher\Not;
 
 class ReportController extends Controller
 {
@@ -25,7 +25,8 @@ class ReportController extends Controller
 
 
     public function indexExport(){
-    return view('Report.ReportFInalExport', ['step' => 1]);
+        $notifications = Notification::all();
+    return view('Report.ReportFInalExport', compact('notifications') , ['step' => 1]);
     }
 
     public function processStep1(Request $request){
@@ -49,7 +50,9 @@ class ReportController extends Controller
         $request->validate([
             'id_mesin' => 'required|exists:alat,id_mesin',
             'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date'
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'file' => 'required',
+            'archive' => 'required'
         ]);
 
         $email = Session::get('user_email');
@@ -78,7 +81,6 @@ class ReportController extends Controller
             return redirect()->route('report.export')->withErrors(['email' => 'please enter your email first']);
         }
 
-
         $data = [
             'email' => $request->email,
             'id_mesin' => $request->id_mesin,
@@ -90,34 +92,119 @@ class ReportController extends Controller
             'sensor_data' => $sensorData
         ];
 
+        // PDF Export
+        if($request->file == 'PDF'){
+            $pdf = PDF::Loadview('admin.Reportresult', $data);
+            Mail::send('emails.report', ['data' => $data], function($message) use ($email, $pdf) {
+                $message->to($email)->subject('Report Machine PDF');
+                $message->attachData($pdf->output(), 'Machine_Report.pdf');
+            });
 
-        $pdf = PDF::Loadview('admin.Reportresult', $data);
-         Mail::send('emails.report',['data' => $data], function($message) use ($email,$pdf){
-            $message->to($email)->subject('Report Machine');
-            $message->attachData($pdf->output(),'Machine_Report.pdf');
-         });
+            foreach ($sensorData as $sensor) {
+                ReportResult::create([
+                    'id_mesin' => $request->id_mesin,
+                    'average_temperature' => $sensor->average_temperature,
+                    'average_humidity' => $sensor->average_humidity,
+                    'lowest_temperature' => $sensor->lowest_temperature,
+                    'highest_temperature' => $sensor->highest_temperature,
+                    'lowest_humidity' => $sensor->lowest_humidity,
+                    'highest_humidity' => $sensor->highest_humidity,
+                    'waktu' => $sensor->tanggal,
+                    'created_at' => Carbon::now()->setTimezone('Asia/Jakarta'),
+                    'updated_at' => Carbon::now()->setTimezone('Asia/Jakarta')
+                ]);
+            }
 
+            if($request->archive == 'YES'){
+            // Delete processed data
+            Sensor::where('id_mesin', $request->id_mesin)
+                ->whereBetween('waktu', [$request->start_date . ' 00:00:00', $request->end_date . ' 23:59:59'])
+                ->delete();
+            }
 
-         foreach ($sensorData as $sensor) {
-            ReportResult::create([
-                'id_mesin' => $request->id_mesin,
-                'average_temperature' => $sensor->average_temperature,
-                'average_humidity' => $sensor->average_humidity,
-                'lowest_temperature' => $sensor->lowest_temperature,
-                'highest_temperature' => $sensor->highest_temperature,
-                'lowest_humidity' => $sensor->lowest_humidity,
-                'highest_humidity' => $sensor->highest_humidity,
-                'waktu' => $sensor->tanggal, // Tanggal dari query
-                'created_at' =>Carbon::now()->setTimezone('Asia/Jakarta'),
-                'updated_at' => Carbon::now()->setTimezone('Asia/Jakarta')
-            ]);
+            Session::forget('user_email');
+            return $pdf->stream('pdf_file.pdf');
         }
 
-        Sensor::where('id_mesin',$request->id_mesin)->whereBetween('waktu',[$request->start_date . ' 00:00:00',$request->end_date . ' 23:59:59'])->delete();
+        // CSV Export
+        if($request->file == 'CSV'){
+            $filename = 'Report_' . $request->start_date .'__'.$request->end_date  . '.csv';
 
-        Session::forget('user_email');
-        return $pdf->stream('pdf_file.pdf');
+            $headers = [
+                'Content-Type' => 'text/csv',
+                'Content-Disposition' => "attachment; filename=\"$filename\"",
+            ];
+
+            $columns = [
+                'Date',
+                'Lowest Temperature',
+                'Highest Temperature',
+                'Lowest Humidity',
+                'Highest Humidity',
+                'Average Temperature',
+                'Average Humidity'
+            ];
+
+            // Create CSV in memory
+            $tempCsv = fopen('php://temp', 'r+');
+            fputcsv($tempCsv, $columns, ';');
+
+            foreach ($sensorData as $row) {
+                fputcsv($tempCsv, [
+                    $row->tanggal,
+                    number_format($row->lowest_temperature, 2),
+                    number_format($row->highest_temperature, 2),
+                    number_format($row->lowest_humidity, 2),
+                    number_format($row->highest_humidity, 2),
+                    number_format($row->average_temperature, 2),
+                    number_format($row->average_humidity, 2)
+                ], ';');
+            }
+
+            rewind($tempCsv);
+            $csvContent = stream_get_contents($tempCsv);
+            fclose($tempCsv);
+
+            // Send CSV via email
+            Mail::send('emails.report', ['data' => $data], function($message) use ($email, $csvContent, $filename) {
+                $message->to($email)->subject('Report Machine CSV');
+                $message->attachData($csvContent, $filename, [
+                    'mime' => 'text/csv',
+                ]);
+            });
+
+            // Stream file directly to browser
+            $callback = function() use ($sensorData, $columns) {
+                $file = fopen('php://output', 'w');
+                fputcsv($file,$columns, ';');
+
+                foreach ($sensorData as $row) {
+                    fputcsv($file, [
+                        $row->tanggal,
+                        number_format($row->lowest_temperature, 2),
+                        number_format($row->highest_temperature, 2),
+                        number_format($row->lowest_humidity, 2),
+                        number_format($row->highest_humidity, 2),
+                        number_format($row->average_temperature, 2),
+                        number_format($row->average_humidity, 2)
+                    ], ';');
+                }
+
+                fclose($file);
+            };
+
+            if($request->archive == 'YES'){
+            // Clean up sensor data after processing
+            Sensor::where('id_mesin', $request->id_mesin)
+                ->whereBetween('waktu', [$request->start_date. ' 00:00:00', $request->end_date . ' 23:59:59'])
+                ->delete();
+            }
+            Session::forget('user_email');
+
+            return response()->stream($callback, 200, $headers);
+        }
     }
+
 
 
     public function ReportResult(Request $request)
@@ -148,7 +235,11 @@ class ReportController extends Controller
                 ->orderBy('tanggal', 'asc')
                 ->get();
 
-
+                if($month < 10){
+                    $month = 0 . $month;
+                }else{
+                    $month;
+                }
 
         $data = [
             'id_mesin' => $request->id_mesin,
@@ -162,6 +253,7 @@ class ReportController extends Controller
             'sensor_data' => $ReportResult
         ];
 
+
         if($request->file == 'PDF'){
 
         $pdf = PDF::Loadview('Report.ReportFinalHistory', $data);
@@ -169,7 +261,44 @@ class ReportController extends Controller
         return $pdf->stream('pdf_file.pdf');
     }
     if($request->file == 'CSV'){
+        $filename = 'ReportArchive_' . $month . '_' . $year . '.csv';
 
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"$filename\""
+        ];
+
+        $columns = [
+            'Date',
+            'Lowest Temperature',
+            'Highest Temperature',
+            'Lowest Humidity',
+            'Highest Humidity',
+            'Average Temperature',
+            'Average Humidity',
+        ];
+
+
+        $callback = function() use ($ReportResult, $columns){
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns, ';');
+
+            foreach ($ReportResult as $row){
+                fputcsv($file, [
+                    $row->tanggal,
+                    number_format($row->lowest_temperature, 2),
+                    number_format($row->highest_temperature, 2),
+                    number_format($row->lowest_humidity, 2),
+                    number_format($row->highest_humidity, 2),
+                    number_format($row->average_temperature, 2),
+                    number_format($row->average_humidity, 2)
+
+
+                ],';');
+            }
+            fclose($file);
+        };
+        return response()->stream($callback, 200, $headers);
     }
 
     }
@@ -245,22 +374,22 @@ class ReportController extends Controller
             $callback = function() use ($reportdailyresult, $columns,$request){
                 $file = fopen('php://output','w');
 
-                fwrite($file, implode(',', $columns). "\n");
+                fputcsv($file, $columns, ';');
 
                 foreach ($reportdailyresult as $row){
-                    $line = [
+                    fputcsv($file , [
                         $row->Jam . ":00",
-                        $row->lowest_temperature,
-                        $row->highest_temperature,
-                        $row->lowest_humidity,
-                        $row->highest_humidity,
+                        number_format($row->lowest_temperature, 2),
+                        number_format($row->highest_temperature, 2),
+                        number_format($row->lowest_humidity, 2),
+                        number_format($row->highest_humidity, 2),
                         number_format($row->average_temperature, 2),
                         number_format($row->average_humidity, 2)
 
-                    ];
-                    fwrite($file,implode(',', $line) . "\n");
+                    ],';');
 
                 }
+
 
                 fclose($file);
             };

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Configuration;
+use App\Models\Alat;
 use Illuminate\Http\Request;
 
 class SettingController extends Controller
@@ -13,7 +14,8 @@ class SettingController extends Controller
     }
 
     public function settings(){
-        return view('admin.Settings');
+        $alats = Alat::all();
+        return view('admin.Settings', compact('alats'));
     }
 
     public function configuration(Request $request){

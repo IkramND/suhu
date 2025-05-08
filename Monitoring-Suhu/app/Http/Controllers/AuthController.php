@@ -6,36 +6,93 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\Role;
+use App\Models\Alat;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Validator;
-use App\Mail\OtpMail;
-use App\Models\Otp;
-use Carbon\Carbon;
-use Illuminate\Contracts\Mail\Mailer;
-
 use function Laravel\Prompts\select;
 
 class AuthController extends Controller
 {
 
 // Register
-public function register(Request $request)
+
+public function register(){
+$roles = Role::all();
+// $alats = Alat::all();
+return view('auth.register', compact('roles'));
+}
+
+public function registers(Request $request)
 {
     $request->validate([
         'name' => 'required|string|max:255|unique:users,name',
         'email' => 'required|string|email|max:255|unique:users,email',
-        'password' => 'required|string|min:8|confirmed'
+        'password' => 'required|string|min:8|confirmed',
+        'role_id' => 'required'
     ]);
 
-    $user = User::create([
+    $role = Role::find($request->role_id);
+
+    if (!$role){
+        return back()->withErrors(['role_id' => 'Role not found']);
+    }
+
+    if ($role->role === 'Operator' || $role->role === 'operator') {
+        $alats = Alat::all()->sortBy('id_mesin');
+
+        session([
+            'user' => [
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'role_id' => $request->role_id
+            ]
+        ]);
+
+        return view('auth.acess', compact('alats'));
+    }
+
+    if ($role->role === 'Admin' || $role->role === 'admin'){
+    User::create([
         'name' => $request->name,
         'email' => $request->email,
-        'password' => Hash::make($request->password)
+        'password' => Hash::make($request->password),
+        'role_id' => $request->role_id,
+        'acess' => '["ALL"]'
     ]);
 
-    return redirect('/admin')->with('success', 'Registrasi berhasil! Silakan login.');
+    return redirect('/login')->with('success', 'Registrasi berhasil! Silakan login.');
+}
+}
+
+public function acess(){
+    return view('auth.acess');
+}
+
+public function acesssubmit(Request $request){
+$request->validate([
+    'acess' => 'required'
+]);
+
+$user = session('user');
+if (!$user){
+    return redirect()->route('register')->withErrors(['session' => 'Session Expired']);
+}
+
+
+
+user::create([
+    'name' => $user['name'],
+    'email' => $user['email'],
+    'password' => $user['password'],
+    'role_id' => $user['role_id'],
+    'acess' => json_encode($request->acess)
+]);
+
+session()->forget('user');
+
+return redirect('/login')->with('success', 'Register Success');
 }
 
 // Login
@@ -44,13 +101,22 @@ public function login(Request $request)
     $credentials = $request->only('name', 'password');
 
     if (Auth::attempt($credentials)) {
-        session()->regenerate(); // Pastikan session diperbarui setelah login
+        session()->regenerate();
 
-        // Jika berhasil login, redirect ke dashboard
-        return redirect()->route('card.index');
+        $user = Auth::user();
+
+        if($user->role->role === 'Admin' || $user->role->role === 'admin'){
+            return redirect()->route('card.index');
+        }
+
+        if($user->role->role === 'Operator' || $user->role->role === 'operator'){
+            return redirect()->route('dashboard');
+        }
     }
 
-    // Jika gagal login, kembalikan ke halaman login dengan pesan error
+
+
+
     return back()->withErrors(['name' => ' * Wrong Username or Password']);
 }
 
@@ -79,7 +145,7 @@ public function updatePassword(Request $request)
     Auth::logout();
 
     // Redirect ke halaman utama dengan pesan sukses
-    return redirect('/')->with('success', 'Password berhasil diperbarui. Silakan login kembali.');
+    return redirect('/login')->with('success', 'Password berhasil diperbarui. Silakan login kembali.');
 }
 
 
@@ -132,9 +198,6 @@ public function showForgotPasswordForm()
 
             return redirect()->route('forgot.password2')->with('success', 'OTP has been sent to your email');
 
-            // return view('auth.forgot-password2',compact('otp'));
-
-            // return view('auth.forgot-password2');
 
         } else {
             return back()->withErrors(['name' => 'Username and Email not match!']);

@@ -9,25 +9,17 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+
 
     <title></title>
-
-    <style>
-         /* Menghilangkan spinner di input number */
-    input[type=number]::-webkit-inner-spin-button,
-    input[type=number]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-    </style>
 </head>
 <body>
-
     <div class="login-dark">
-        <form method="POST" action="{{ route('add.configuration') }}">
+        <form method="POST" action="{{ route('acess.submit') }}">
             @csrf
-            <div class="illustration"><i class="icon ion-settings"></i></div>
-            <h5 class="text-center mb-3">Configurations</h5>
+            <div class="illustration"><i class="ion-unlocked"></i></div>
 
             @if(session('success'))
                 <div class="alert alert-success text-center">
@@ -36,43 +28,25 @@
             @endif
 
             @if ($errors->any())
-                <div style="background: #0f0f0f;color:red;margin-bottom: 5%">
+                <div>
                     <ul class="list-unstyled mb-0">
                         @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
+                            <li style="background: #0f0f0f; color:red "><i>{{"* $error "}}</i></li>
                         @endforeach
                     </ul>
                 </div>
             @endif
-
-            <div class="form-group custom-dropdown">
-                <div class="dropdown-selected"><span class="selected-text">Choose Machine ID</span><span class="dropdown-arrow">&#9660;</span></div>
-
-                <ul class="dropdown-options">
-                    @foreach ($alats as $alat )
-                    <li data-value="{{$alat->id_mesin}}">{{$alat->id_mesin}}</li>
-                    @endforeach
-                </ul>
-                <input type="hidden" name="id_mesin" id="id_mesin">
-                {{-- <input type="text" class="form-control" name="id_mesin" placeholder="Machine ID" required> --}}
-            </div>
-
-            <div class="form-group">
-                <input type="number" class="form-control" name="batas_atas_suhu" placeholder="Upper Limit Temperature" required>
-            </div>
-
-            <div class="form-group">
-                <input type="number" class="form-control" name="batas_bawah_suhu" placeholder="Lower Limit Temperature" required>
-            </div>
-
-            <div class="form-group">
-                <input type="number" class="form-control" name="batas_atas_kelembaban" placeholder="Upper Limit Humidity " required>
-            </div>
-
-            <div class="form-group">
-                <input type="number" class="form-control" name="batas_bawah_kelembaban" placeholder="Lower Limit Humidity" required>
-            </div>
-
+        <div>
+            <p>Choose Acess Machine for <span style="font-weight: bold">{{session('user.name')}}</span></p>
+        </div>
+        <div>
+            @foreach ($alats as $alat)
+                <input type="checkbox" name="acess[]" value="{{$alat->id_mesin}}">
+                {{$alat->id_mesin}}
+                <br>
+            @endforeach
+        </div>
+        <br>
             <div class="form-group">
                 <button type="submit" class="btn btn-primary btn-block">Submit</button>
             </div>
@@ -90,14 +64,14 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: #000000;
+            background: black  ;
         }
 
         .login-dark form {
             width: 100%;
             max-width: 350px;
             background-color: #0f0f0f;
-            padding: 20px 40px 20px 40px;
+            padding: 40px;
             border-radius: 5px;
             text-align: center;
             color: #fff;

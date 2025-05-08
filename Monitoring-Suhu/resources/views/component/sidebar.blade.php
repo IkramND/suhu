@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title>Responsive Sidebar</title>
+    <title></title>
     <style>
         body {
             margin: 0;
@@ -149,11 +149,13 @@
             <button class="dropdown-btn">Settings <i class="fa fa-caret-down"></i></button>
             <div class="dropdown-container">
                 <a href="{{route('admin.create')}}">Add Tools</a>
-                <a href="{{route('alat.list')}}">List Tools</a>
+                <a href="{{route('alat.list')}}">Tools List</a>
                 <a href="{{route('settings')}}">Add Machine Limit Sensor Configuration</a>
-                <a href="{{route('index.configuration')}}">List Machine Limit Sensor Configuration</a>
+                <a href="{{route('index.configuration')}}">Machine Limit Sensor Configuration List</a>
                 <a href="{{route('admin.create.notification')}}">Add Email Configuration</a>
-                <a href="{{route('admin.emailnotification.list')}}">List Email Configuration</a>
+                <a href="{{route('admin.emailnotification.list')}}">Email Configuration List</a>
+                <a href="{{route('register')}}">Register</a>
+                <a href="{{route('operator.list')}}">Operator List</a>
                 <a href="/change-password">Change Password</a>
             </div>
 
@@ -226,7 +228,7 @@
                 });
 
                 if (response.ok) {
-                    window.location.href = "/";
+                    window.location.href = "/login";
                 } else {
                     alert("Logout failed");
                 }

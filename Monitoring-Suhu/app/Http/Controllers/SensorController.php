@@ -68,23 +68,7 @@ class SensorController extends Controller
         return response()->json($filtered);
     }
 
-    //real
 
-//     public function fetchData(Request $request)
-// {
-//     $id_mesin = $request->input('id_mesin');
-//     $limit = $request->input('limit');
-//     $second = $request->input('second');
-
-//     $data = DB::table('data_sensor')
-//         ->where('id_mesin', $id_mesin)
-//         ->whereRaw('MOD(TIME_TO_SEC(TIME(waktu)) - TIME_TO_SEC(TIME((SELECT MIN(waktu) FROM data_sensor))), ?) = 0', [$second]) // Filter waktu berdasarkan interval detik
-//         ->orderBy('waktu', 'desc') // Ambil data terbaru dulu
-//         ->limit($limit) // Ambil data terbatas sesuai permintaan
-//         ->get();
-
-//     return response()->json(collect($data)->reverse()->values()); // Reverse setelah konversi ke Collection
-// }
 
 
 

@@ -43,7 +43,7 @@
         color: white;
         margin: 5px;
     }
-    .btn-warning {
+    .btn-orange {
         background-color: orange;
     }
     .btn-danger {
@@ -52,24 +52,48 @@
     .btn:hover {
         opacity: 0.8;
     }
+    .btn-warning{
+        background-color:orange
+    }
 </style>
 
 <div class="container">
-    @foreach($alats as $alat)
+    @foreach($operators as $operator)
         <div class="card">
-            <h5 class="card-title">{{ $alat->id_mesin }}</h5>
-            <p class="card-text">Machine ID : <span style="color:solid black; font-weight:bold ">{{ $alat->id_mesin }}</span></p>
-            <p class="card-text">IP Address : <span style="color:solid black; font-weight:bold ">{{ $alat->ip_address }}</span></p>
-            <p class="card-text">Location : <span style="color:solid black; font-weight:bold ">{{ $alat->lokasi }}</span></p>
+            {{-- <h5 class="card-title">{{ $operator->id}}</h5> --}}
+            <h2>{{ $operator->name }}</h2>
+            {{-- <h2>Acess</h2> --}}
+<div style="display: flex; flex-wrap: wrap; gap: 5px; justify-content: center;">
+    @foreach(json_decode($operator->acess, true) as $id_mesin)
+    <span style="
+        /* background-color: blue; */
+        color: white;
+        background:green;
+        padding: 3px 8px;
+        /* border-radius: 12px; */
+        font-size: 12px;
+        display: inline-block;
+        max-width: 80px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-weight:bold;"
+        title="{{ $id_mesin }}">
+        {{ $id_mesin }}
+    </span>
+@endforeach
+</div>
+<br>
 
-            <a href="{{ route('Editalat', $alat->id) }}" class="btn btn-warning">Edit</a>
-            <form action="{{ route('alats.destroy', $alat->id) }}" method="POST" style="display:inline;">
+            <a href="{{ route('operator.edit', $operator->id) }}" class="btn btn-warning">Edit</a>
+            <form action="{{ route('operator.destroy', $operator->id) }}" method="POST" style="display:inline;">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="btn btn-danger" onclick="return confirm('Delete?')">Delete</button>
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Yakin ingin menghapus?')">Delete</button>
             </form>
         </div>
     @endforeach
 </div>
+
 
 @endsection

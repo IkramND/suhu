@@ -12,7 +12,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
     {{-- <link rel="stylesheet" href="assets/css/Login-Form-Dark.css"> --}}
-    <title>Document</title>
+    <title></title>
 </head>
 <body>
     <div class="login-dark">

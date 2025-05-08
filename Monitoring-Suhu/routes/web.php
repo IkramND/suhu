@@ -11,6 +11,7 @@ use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\OperatorController;
 use App\Http\Controllers\ReportController;
 // use App\Http\Controllers\Auth\OTPController;
 
@@ -21,13 +22,12 @@ Route::get('/get-alats', [CardController::class, 'getAlats']);
 
 
 Route::get('/sensor/fetch-data', [SensorController::class, 'fetchData']);
-Route::get('/', [CardController::class, 'dashboard'])->name('dashboard');
 
-Route::get('/register', function () {
-    return view('auth.register');
-})->name('register');
+Route::get('/register', [AuthController::class, 'register'])->name('register');
+Route::post('/register', [AuthController::class, 'registers']);
 
-Route::post('/register', [AuthController::class, 'register']);
+Route::get('/register-acess', [AuthController::class, 'acess'])->name('acess');
+Route::post('/register-acess-submit', [AuthController::class , 'acesssubmit'])->name('acess.submit');
 
 Route::get('/sensor/fetch-data/{id_mesin}', [SensorController::class, 'fetchDataByIdMesin']);
 
@@ -57,6 +57,9 @@ Route::get('/changePassPage', function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/admin', [CardController::class, 'index'])->name('card.index');
 
+    Route::get('/', [CardController::class, 'dashboard'])->name('dashboard');
+
+
 
     Route::get('/sensor/fetch-data/{id_mesin}', [SensorController::class, 'fetchDataHistory'])->where('id_mesin', '[A-Za-z0-9]+')->name('fetchDataHistory');
 
@@ -76,7 +79,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/alats/{id}/edit', [CardController::class, 'edit'])->name('alats.edit');
     Route::get('/admin/machine-list', [CardController::class, 'indexlist'])->name('alat.list');
     Route::put('/alats/{id}', [CardController::class, 'update'])->name('alats.update');
-
     Route::get('/history', [HistoryController::class, 'index'])->name('history');
     Route::get('/sensor/fetch-history', [HistoryController::class, 'fetchHistory']);
     Route::get('/admin/editalat/{id}', [Cardcontroller::class, 'Editalat'])->name('Editalat');
@@ -103,6 +105,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/report-daily' , [ReportController::class, 'reportdaily'])->name('reportdaily');
     Route::post('/report-daily-post' , [ReportController::class, 'reportdailypost'])->name('reportdailypost');
 
+    //Operator
+    Route::get('/operator-list',[OperatorController::class, 'list'])->name('operator.list');
+    Route::get('/operator/{id}/edit', [OperatorController::class, 'edit'])->name('operator.edit');
+    Route::put('/operator/{id}', [OperatorController::class, 'update'])->name('operator.update');
+    Route::delete('/operator/{id}', [OperatorController::class, 'destroy'])->name('operator.destroy');
 
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

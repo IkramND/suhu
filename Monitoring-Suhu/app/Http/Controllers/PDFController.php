@@ -90,19 +90,19 @@ class PDFController extends Controller
 
                 $callback = function() use ($sensorData, $columns) {
                     $file = fopen('php://output', 'w');
-                    fwrite($file, implode(',', $columns) . "\n");
+                    fputcsv($file,$columns, ';');
 
 
                     foreach ($sensorData as $row) {
                         fputcsv($file, [
                             $row->tanggal,
-                            $row->lowest_temperature,
-                            $row->highest_temperature,
-                            $row->lowest_humidity,
-                            $row->highest_humidity,
-                            $row->average_temperature,
-                            $row->average_humidity
-                        ]);
+                            number_format($row->lowest_temperature, 2),
+                            number_format($row->highest_temperature, 2),
+                            number_format($row->lowest_humidity, 2),
+                            number_format($row->highest_humidity, 2),
+                            number_format($row->average_temperature, 2),
+                            number_format($row->average_humidity, 2)
+                        ], ';');
                     }
 
                     fclose($file);

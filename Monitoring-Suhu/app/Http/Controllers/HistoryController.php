@@ -17,16 +17,6 @@ class HistoryController extends Controller
         return view('Historys', compact('historyData', 'id_mesin','ip_address'));
     }
 
-    public function SensorPage(Request $request){
-        $lokasi = $request->input('lokasi','memuat...');
-        $ip = $request->input('ip', 'memuat');
-        $id_mesin = $request->input('id_mesin', 'memuat');
-
-
-        return view('HistoryPage',compact('lokasi','ip','id_mesin'));
-    }
-
-
 
 public function fetchHistory(Request $request)
 {

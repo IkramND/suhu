@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
 
-    <title>Edit Configuration</title>
+    <title></title>
 </head>
 <body>
     <div class="login-dark">
@@ -22,19 +22,19 @@
             <h5 class="text-center mb-3">Edit Configuration</h5>
 
             <div class="form-group">
-                <input type="text" class="form-control" name="id_mesin" value="{{ $configuration->id_mesin }}" placeholder="ID Mesin" required>
+                <input type="text" class="form-control" name="id_mesin" value="{{$configuration->id_mesin}}" placeholder="ID Mesin" required>
+            </div>
+            <div class="form-group" >
+                <input type="text" class="form-control" name="batas_atas_suhu"  placeholder="Upper Limit Temperature ({{$configuration->batas_atas_suhu}})" required>
             </div>
             <div class="form-group">
-                <input type="text" class="form-control" name="batas_atas_suhu" value="{{ $configuration->batas_atas_suhu }}" placeholder="Batas Atas Suhu" required>
+                <input type="text" class="form-control" name="batas_bawah_suhu"   placeholder="Lower Limit Temperature ({{$configuration->batas_bawah_suhu}})" required>
             </div>
             <div class="form-group">
-                <input type="text" class="form-control" name="batas_bawah_suhu" value="{{ $configuration->batas_bawah_suhu }}" placeholder="Batas Bawah Suhu" required>
+                <input type="text" class="form-control" name="batas_atas_kelembaban"   placeholder="Upper Limit Humidity ({{$configuration->batas_atas_kelembaban}})" required>
             </div>
             <div class="form-group">
-                <input type="text" class="form-control" name="batas_atas_kelembaban" value="{{ $configuration->batas_atas_kelembaban }}" placeholder="Batas Atas Kelembaban" required>
-            </div>
-            <div class="form-group">
-                <input type="text" class="form-control" name="batas_bawah_kelembaban" value="{{ $configuration->batas_bawah_kelembaban }}" placeholder="Batas Bawah Kelembaban" required>
+                <input type="text" class="form-control" name="batas_bawah_kelembaban"   placeholder="Lower Limit Humidity ({{$configuration->batas_bawah_kelembaban}})" required>
             </div>
 
             <div class="form-group">

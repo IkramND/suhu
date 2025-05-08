@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css"/>
 
-  <title>Archive Report</title>
+  <title></title>
 
   <style>
     /* Hilangkan spinner input number */
@@ -224,7 +224,7 @@
             e.stopPropagation();
             const isOpen = options.style.display === 'block';
 
-            document.querySelectorAll('.dropdown-options').forEach(opt => opt.style.display = 'none')
+            document.querySelectorAll('.dropdown-options').forEach(opt => opt.style.display = 'none');
             document.querySelectorAll('.dropdown-arrow').forEach(arw => arw.innerHTML = '&#9660;');
 
             options.style.display = isOpen ? 'none' : 'block';
@@ -242,13 +242,6 @@
         });
     });
 
-        // Klik di luar dropdown untuk menutup dan reset panah
-        // document.addEventListener('click', function (e) {
-        //     if (!dropdown.contains(e.target)) {
-        //         options.style.display = 'none';
-        //         arrow.innerHTML = '&#9660;';
-        //     }
-        // });
 
         document.addEventListener('click', function(){
             document.querySelectorAll('.dropdown-options').forEach(opt => opt.style.display = 'none');

@@ -16,18 +16,18 @@
 
 
     <div class="login-dark">
-        <form action="{{ route('alats.update', $alat->id) }}" method="POST">
+        <form action="{{ route('operator.update', $operators->id) }}" method="POST">
             @csrf
             @method('PUT')
-
-            <div class="illustration"><i class="ion-wrench"></i></div>
-            <h5 class="text-center mb-3">Editing Tools</h5>
 
             @if(session('success'))
                 <div class="alert alert-success text-center">
                     {{ session('success') }}
                 </div>
             @endif
+
+            <div class="illustration"><i class="ion-wrench"></i></div>
+            <h5 class="text-center mb-3">Access Edit For <span style="font-weight: bold">{{$operators->name}}</span></h4>
 
             @if ($errors->any())
                 <div class="alert alert-danger text-center">
@@ -39,18 +39,19 @@
                 </div>
             @endif
 
-            <div class="form-group">
-                <input type="text" class="form-control" id="id_mesin" name="id_mesin" value="{{ $alat->id_mesin }}" placeholder="ID Mesin" required>
+            {{-- <div class="form-group">
+                <input type="text" class="form-control" id="id_mesin" name="id_mesin" value="{{ $operators->acess}}" placeholder="ID Mesin" required>
+            </div> --}}
+            <div style="width:65%;margin: 0 auto;text-align:left;display:flex;justify-content:space-between;flex-wrap:wrap">
+            @foreach ($alats as $alat)
+            <div>
+            <input type="checkbox" name="acess[]" value="{{$alat->id_mesin}}">
+            {{$alat->id_mesin}}
             </div>
-
-            <div class="form-group">
-                <input type="text" class="form-control" id="ip_address" name="ip_address" placeholder="IP Address ({{ $alat->ip_address }})" required>
+            <br>
+            @endforeach
             </div>
-
-            <div class="form-group">
-                <input type="text" class="form-control" id="lokasi" name="lokasi" placeholder="Lokasi ({{ $alat->lokasi }})" required>
-            </div>
-
+            <br>
             <div class="form-group">
                 <button type="submit" class="btn btn-primary btn-block">Update</button>
             </div>

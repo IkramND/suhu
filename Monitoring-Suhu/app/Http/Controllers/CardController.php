@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Alat;
 use App\Models\Sensor;
 use Illuminate\Support\Facades\DB;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 
 class CardController extends Controller
@@ -114,26 +116,50 @@ public function getLastSensorData(Request $request)
 
     public function dashboard()
     {
-        // while (true)
-        // {
+
+        $userId = Auth::id(); // ambil ID user yang login
+        $user = User::findOrFail($userId);
+
+        // Decode JSON dari kolom acess jadi array PHP
+        $accessIds = json_decode($user->acess, true);
+
+        $users = Auth::user();
+
+        if($users->role->role === 'Admin' || $users->role->role === 'admin'){
             $alats = DB::select("
-                SELECT a.*,
-                       CASE
-                           WHEN b.id_mesin IS NOT NULL THEN 'Active'
-                           ELSE 'Inactive'
-                       END AS status
-                FROM alat a
-                LEFT JOIN (
-                    SELECT id_mesin, MAX(id) AS latest_id
-                    FROM data_sensor
-                    WHERE waktu BETWEEN NOW() - INTERVAL 5 MINUTE AND NOW() + INTERVAL 5 MINUTE
-                    GROUP BY id_mesin
-                ) b ON a.id_mesin = b.id_mesin;
-            ");
+            SELECT a.*,
+                   CASE
+                       WHEN b.id_mesin IS NOT NULL THEN 'Active'
+                       ELSE 'Inactive'
+                   END AS status
+            FROM alat a
+            LEFT JOIN (
+                SELECT id_mesin, MAX(id) AS latest_id
+                FROM data_sensor
+                WHERE waktu BETWEEN NOW() - INTERVAL 5 MINUTE AND NOW() + INTERVAL 5 MINUTE
+                GROUP BY id_mesin
+            ) b ON a.id_mesin = b.id_mesin;
+        ");
+                return view('admin.indexing', compact('alats'));
+            }
 
+        // Pastikan hasilnya array, bukan null
+        if (!is_array($accessIds)) {
+            $accessIds = [];
+        }
 
-            return view('TampilanUtama',compact('alats'));
-        // }
+        $alats = DB::table('alat as a')
+            ->leftJoin(DB::raw('(
+                SELECT id_mesin, MAX(id) as latest_id
+                FROM data_sensor
+                WHERE waktu BETWEEN NOW() - INTERVAL 5 MINUTE AND NOW()
+                GROUP BY id_mesin
+            ) as b'), 'a.id_mesin', '=', 'b.id_mesin')
+            ->select('a.*', DB::raw("CASE WHEN b.id_mesin IS NOT NULL THEN 'Active' ELSE 'Inactive' END as status"))
+            ->whereIn('a.id_mesin', $accessIds)
+            ->get();
+
+        return view('utama', compact('alats'));
 
     }
 

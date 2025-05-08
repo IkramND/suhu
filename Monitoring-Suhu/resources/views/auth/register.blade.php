@@ -13,7 +13,7 @@
 
 
 
-    <title>Register</title>
+    <title></title>
 </head>
 <body>
     <div class="login-dark">
@@ -55,10 +55,19 @@
                 <input type="password" class="form-control" name="password_confirmation" placeholder="Password Confirmation" required>
             </div>
 
+            <div class="form-group custom-dropdown">
+                <div class="dropdown-selected"><span class="selected-text">Choose Role</span><span class="dropdown-arrow">&#9660;</span></div>
 
+                <ul class="dropdown-options">
+                    @foreach ($roles as $role )
+                        <li data-value="{{$role->id}}">{{$role->role}}</li>
+                    @endforeach
+                </ul>
+                <input type="hidden" name="role_id" id="role_id">
+            </div>
 
             <div class="form-group">
-                <button type="submit" class="btn btn-primary btn-block">Register</button>
+                <button type="submit" class="btn btn-primary btn-block">Submit</button>
             </div>
         </form>
     </div>
@@ -130,6 +139,96 @@
         body {
             overflow: hidden;
         }
+
+        /* Custom dropdown */
+    .custom-dropdown {
+        position: relative;
+        user-select: none;
+    }
+
+    .dropdown-selected {
+        background-color: transparent;
+        border-bottom: 1px solid #434a52;
+        padding: 10px;
+        color: #fff;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .dropdown-selected::after {
+        font-size: 0.8rem;
+        color: #fff;
+        margin-left: 10px;
+    }
+
+    .dropdown-options {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background-color: #1a1a1a;
+        border: 1px solid #434a52;
+        max-height: 200%;
+        overflow-y: auto;
+        z-index: 999;
+        display: none;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .dropdown-options li {
+        padding: 10px;
+        cursor: pointer;
+        color: white;
+        text-align: left;
+    }
+
+    .dropdown-options li:hover {
+        background-color: #333;
+    }
     </style>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function(){
+        const dropdown = document.querySelectorAll('.custom-dropdown');
+
+        dropdown.forEach(function(dropdown){
+            const selected = dropdown.querySelector('.dropdown-selected');
+            const options = dropdown.querySelector('.dropdown-options');
+            const hiddenInput = dropdown.querySelector('input[type="hidden"]');
+            const arrow = dropdown.querySelector('.dropdown-arrow');
+            const selectedText = dropdown.querySelector('.selected-text');
+
+            selected.addEventListener('click', function (e){
+                e.stopPropagation();
+                const isOpen = options.style.display === 'block';
+
+                document.querySelectorAll('.dropdown-options').forEach(opt => opt.style.display = 'none');
+                document.querySelectorAll('.dropdown-arrow').forEach(arw => arw.innerHTML = '&#9660;');
+
+                options.style.display = isOpen ? 'none' : 'block';
+                arrow.innerHTML = isOpen ? '&#9660;' : '&#9650;' ;
+            });
+
+            options.querySelectorAll('li').forEach(function (option){
+                option.addEventListener('click',function (e){
+                    e.stopPropagation();
+                    selectedText.textContent = this.textContent;
+                    hiddenInput.value = this.getAttribute('data-value');
+                    options.style.display = 'none';
+                    arrow.innerHTML = '&#9660;';
+                });
+            });
+        });
+
+        document.addEventListener('click', function(){
+            document.querySelectorAll('.dropdown-options').forEach(opt => opt.style.display = 'none');
+            document.querySelectorAll('.dropdown-arrow').forEach(arw => arw.innerHTML = '&#9660;')
+        })
+    });
+    </script>
 </body>
 </html>

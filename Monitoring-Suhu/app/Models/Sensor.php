@@ -13,19 +13,6 @@ class Sensor extends Model
     protected $table = 'data_sensor'; // Sesuaikan dengan nama tabel di database
     protected $fillable = ['id_mesin', 'suhu', 'kelembaban', 'waktu']; // Tambahkan id_mesin!
 
-    // protected static function booted()
-    // {
-    //     static::created(function ($sensor){
-    //         $existing = Alat::where('id_mesin',$sensor->id_mesin)->first();
-    //         if(!$existing){
-    //             Alat::created([
-    //                 'id_mesin' => $sensor->id_mesin,
-    //                 'ip_address' => $sensor->ip_address,
-    //                 'lokasi' => $sensor->lokasi
-    //             ]);
-    //         }
-    //     });
-    // }
 
     public function configuration()
     {

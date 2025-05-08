@@ -18,7 +18,8 @@ class NotificationController extends Controller
     }
 
     public function create(){
-        return view('admin.AddNotification');
+        $notifications = Notification::all();
+        return view('admin.AddNotification',  compact('notifications'));
     }
 
     public function AddEmail(Request $request){

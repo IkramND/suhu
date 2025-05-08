@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Export Report</title>
+    <title></title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -74,7 +74,7 @@
             right: 0;
             background-color: #1a1a1a;
             border: 1px solid #434a52;
-            max-height: 200px;
+            max-height: 200%;
             overflow-y: auto;
             z-index: 999;
             display: none;
@@ -106,9 +106,23 @@
                     @endforeach
                 </div>
             @endif
-            <div class="form-group">
-                <input class="form-control" type="email" name="email" placeholder="Send To Email" required>
+
+            <div class="form-group custom-dropdown">
+                <div class="dropdown-selected">
+                    <span class="selected-text">Choose Email</span>
+                    <span class="dropdown-arrow">&#9660;</span>
+                </div>
+                <ul class="dropdown-options">
+                    @foreach ($notifications as $notification)
+                        <li data-value="{{ $notification->email }}">{{ $notification->email }}</li>
+                    @endforeach
+                </ul>
+                <input type="hidden" name="email" id="email">
             </div>
+
+            {{-- <div class="form-group">
+                <input class="form-control" type="email" name="email" placeholder="Send To Email" required>
+            </div> --}}
             <div class="form-group">
                 <button class="btn btn-primary btn-block" style="background: blue">Send Email</button>
             </div>
@@ -148,6 +162,28 @@
                 <input class="form-control flatpickr-input" type="text" id="endDateInput" name="end_date" placeholder="Select End Date" readonly>
             </div>
 
+            <div class="form-group custom-dropdown">
+                <div class="dropdown-selected">
+                <span class="selected-text">Choose File Output</span>
+                <span class="dropdown-arrow">&#9660;</span>
+            </div>
+
+                <ul class="dropdown-options">
+                    <li data-value="PDF">PDF</li>
+                    <li data-value="CSV">CSV</li>
+                </ul>
+                <input type="hidden" name="file" id="file">
+            </div>
+
+            <div style="display:flex;justify-content:space-between;padding-left:10px" class="form-group dropdown-selected">
+                <div>
+                Archive
+                </div>
+                <div>
+                <input type="radio" name="archive" value="YES" id="">YES
+                <input type="radio" name="archive" value="NO" id="">NO
+                </div>
+            </div>
             <div class="form-group">
                 <button class="btn btn-primary btn-block" style="background: blue">Submit</button>
             </div>
