@@ -39,11 +39,14 @@
         <div>
             <p>Choose Acess Machine for <span style="font-weight: bold">{{session('user.name')}}</span></p>
         </div>
-        <div>
-            @foreach ($alats as $alat)
+        <div style="width:65%;margin: 0 auto;text-align:left;display:flex;justify-content:space-between;flex-wrap:wrap;">
+
+             @foreach ($alats as $alat)
+             <div>
                 <input type="checkbox" name="acess[]" value="{{$alat->id_mesin}}">
                 {{$alat->id_mesin}}
-                <br>
+            </div>
+            <br>
             @endforeach
         </div>
         <br>

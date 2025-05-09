@@ -50,7 +50,6 @@
 
                 <hr style="border: solid black 1px;margin-top:0;padding-top:0">
 
-                <!-- Input untuk mengatur jumlah data -->
                 <div class="PisahChart" style="grid-template-columns: 1fr 1fr; display:grid;">
                     <div>
                 <canvas id="temperatureChart_{{ $alat->id_mesin }}"></canvas>
@@ -66,7 +65,6 @@
 @foreach ( $alats as $alat )
 
         <style>
-            /* Menghilangkan spinner di input number */
     input[type=number]::-webkit-inner-spin-button,
     input[type=number]::-webkit-outer-spin-button {
         -webkit-appearance: none;
@@ -75,11 +73,9 @@
 
     body{
         overflow-x: hidden;
-        /* background: red; */
     }
 
     canvas{
-        /* max-height: 400px; */
         width: 100%;
     }
         </style>
@@ -93,7 +89,7 @@
             const maxLimit = 24; // Batas maksimum
             if (input.value > maxLimit) {
                 alert("Input more than maximum input");
-                input.value = ""; // Mengosongkan input jika melebihi batas
+                input.value = "";
             }
         }
 
@@ -121,7 +117,6 @@ function fetchData{{ $alat->id_mesin }}() {
                 return;
             }
 
-            // Ambil labels (waktu) dan data suhu/kelembaban
             const labels = data.map(item => new Date(item.waktu).toLocaleTimeString([],{hour: '2-digit', minute: '2-digit',hour12:false }));
             const tempData = data.map(item => item.suhu);
             const humData = data.map(item => item.kelembaban);
@@ -132,13 +127,11 @@ function fetchData{{ $alat->id_mesin }}() {
 
 
 
-            // Jika grafik sudah ada, cukup update datanya
             if (temperatureChart_{{ $alat->id_mesin }}) {
-                temperatureChart_{{ $alat->id_mesin }}.data.labels = labels; // Perbarui labels (sumbu X)
-                temperatureChart_{{ $alat->id_mesin }}.data.datasets[0].data = tempData; // Perbarui data suhu
+                temperatureChart_{{ $alat->id_mesin }}.data.labels = labels;
+                temperatureChart_{{ $alat->id_mesin }}.data.datasets[0].data = tempData;
                 temperatureChart_{{ $alat->id_mesin }}.update();
             } else {
-                // Jika grafik belum ada, buat baru
                 temperatureChart_{{ $alat->id_mesin }} = new Chart(document.getElementById("temperatureChart_{{ $alat->id_mesin }}").getContext('2d'), {
                     type: 'line',
                     data: {
@@ -186,10 +179,6 @@ function updateAlats() {
                 let lastUpdateElement = document.querySelector(`#last_update_${alat.id_mesin}`);
                 let suhuElement = document.querySelector(`#suhu_${alat.id_mesin}`);
                 let kelembabanElement = document.querySelector(`#kelembaban_${alat.id_mesin}`);
-
-                // if (statusElement) {
-                //     statusElement.innerHTML = `<span style="color: ${alat.status === 'Active' ? 'green' : 'red'}">${alat.status}</span>`;
-                // }
 
                 if (statusElement) {
                     statusElement.textContent = alat.status;

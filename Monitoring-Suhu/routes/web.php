@@ -13,6 +13,7 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OperatorController;
 use App\Http\Controllers\ReportController;
+use App\Http\Middleware\CheckAdminRole;
 // use App\Http\Controllers\Auth\OTPController;
 
 
@@ -25,6 +26,7 @@ Route::get('/sensor/fetch-data', [SensorController::class, 'fetchData']);
 
 Route::get('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/register', [AuthController::class, 'registers']);
+Route::post('/register-otp', [AuthController::class , 'otpvalidation'])->name('register.validation');
 
 Route::get('/register-acess', [AuthController::class, 'acess'])->name('acess');
 Route::post('/register-acess-submit', [AuthController::class , 'acesssubmit'])->name('acess.submit');
@@ -52,10 +54,14 @@ Route::get('/changePassPage', function () {
     return view('auth.changePassword');
 });
 
+// Route::middleware(['auth', 'CheckAdminRole'])->group(function(){
+// Route::get('/admin', [CardController::class, 'index'])->name('card.index');
+// });
+Route::middleware([CheckAdminRole::class])->get('/admin', [CardController::class, 'index'])->name('card.index');
+
 
 // Middleware untuk memastikan user login sebelum mengakses routes berikutnya
 Route::middleware(['auth'])->group(function () {
-    Route::get('/admin', [CardController::class, 'index'])->name('card.index');
 
     Route::get('/', [CardController::class, 'dashboard'])->name('dashboard');
 

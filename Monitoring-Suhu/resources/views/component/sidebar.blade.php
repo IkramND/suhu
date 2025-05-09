@@ -164,12 +164,11 @@
             <div class="dropdown-container">
                 <a href="{{route('admin.report')}}">Real Time Summary Report </a>
                 <a href="{{route('reportdaily')}}">Real Time Daily Report </a>
-
                 <a href="{{route('report.export')}}">Send to Email</a>
                 <a href="{{route('index.report')}}">Archive Report</a>
             </div>
 
-            <a onclick="onLogout()">Logout</a>
+            {{-- <a onclick="onLogout()">Logout</a> --}}
         </div>
     </aside>
 

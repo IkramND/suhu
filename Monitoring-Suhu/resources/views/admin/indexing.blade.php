@@ -189,7 +189,7 @@ function updateAlats() {
         success: function(data) {
             data.forEach(alat => {
                 let statusElement = document.querySelector(`#status_${alat.id_mesin}`);
-                let lastUpdateElement = document.querySelector(`#last_update_${alat.id_mesin}`);
+                let lastUpdateElement = document.querySelector(`#lastUpdate_${alat.id_mesin}`);
                 let suhuElement = document.querySelector(`#suhu_${alat.id_mesin}`);
                 let kelembabanElement = document.querySelector(`#kelembaban_${alat.id_mesin}`);
 
@@ -229,8 +229,7 @@ function updateAlats() {
 
 
     updateAlats();
-    setInterval(updateAlats, 60000);
-// Jalankan pertama kali dan perbarui setiap 2 detik
+    setInterval(updateAlats, 30000);
 fetchData{{ $alat->id_mesin }}();
 setInterval(fetchData{{ $alat->id_mesin }}, 5000);
 

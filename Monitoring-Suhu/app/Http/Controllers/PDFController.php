@@ -82,9 +82,9 @@ class PDFController extends Controller
                     'Date',
                     'Lowest Temperature',
                     'Highest Temperature',
+                    'Average Temperature',
                     'Lowest Humidity',
                     'Highest Humidity',
-                    'Average Temperature',
                     'Average Humidity'
                 ];
 
@@ -98,9 +98,9 @@ class PDFController extends Controller
                             $row->tanggal,
                             number_format($row->lowest_temperature, 2),
                             number_format($row->highest_temperature, 2),
+                            number_format($row->average_temperature, 2),
                             number_format($row->lowest_humidity, 2),
                             number_format($row->highest_humidity, 2),
-                            number_format($row->average_temperature, 2),
                             number_format($row->average_humidity, 2)
                         ], ';');
                     }

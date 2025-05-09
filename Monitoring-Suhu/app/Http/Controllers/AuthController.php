@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Alat;
+use App\Models\Notification;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use function Laravel\Prompts\select;
@@ -19,7 +20,6 @@ class AuthController extends Controller
 
 public function register(){
 $roles = Role::all();
-// $alats = Alat::all();
 return view('auth.register', compact('roles'));
 }
 
@@ -54,15 +54,27 @@ public function registers(Request $request)
     }
 
     if ($role->role === 'Admin' || $role->role === 'admin'){
-    User::create([
-        'name' => $request->name,
-        'email' => $request->email,
-        'password' => Hash::make($request->password),
-        'role_id' => $request->role_id,
-        'acess' => '["ALL"]'
-    ]);
 
-    return redirect('/login')->with('success', 'Registrasi berhasil! Silakan login.');
+        $otp = rand(100000,999999);
+        $adminEmail = Notification::pluck('email')->toArray();
+
+        session([
+            'user' => [
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'role_id' => $request->role_id,
+                'otp' => $otp
+            ]
+            ]);
+
+
+            Mail::raw("Your Otp Code : $otp", function ($message) use ($adminEmail) {
+                $message->to($adminEmail)->subject('OTP Code For Register');
+            });
+        return view('auth.registervalidation');
+
+
 }
 }
 
@@ -80,19 +92,78 @@ if (!$user){
     return redirect()->route('register')->withErrors(['session' => 'Session Expired']);
 }
 
+ $otp = rand(100000,999999);
+ $user['otp'] = $otp;
+ $user['acess'] = $request->acess;
+ session(['user' => $user]);
 
 
-user::create([
-    'name' => $user['name'],
-    'email' => $user['email'],
-    'password' => $user['password'],
-    'role_id' => $user['role_id'],
-    'acess' => json_encode($request->acess)
-]);
+ $adminEmail = Notification::pluck('email')->toArray();
 
-session()->forget('user');
+ Mail::raw("Your Otp Code : $otp", function ($message) use ($adminEmail) {
+    $message->to($adminEmail)->subject('OTP Code For Register');
+});
+return view('auth.registervalidation');
+}
 
-return redirect('/login')->with('success', 'Register Success');
+public function otpvalidation(Request $request){
+    $request->validate([
+        'otp' => 'required|digits:6'
+    ]);
+    $users = session('user');
+    $role = Role::find($users['role_id']);
+
+    if($request->otp == $users['otp']){
+        if($role->role === 'Admin' || $role->role === 'admin' ){
+        User::create([
+        'name' => $users['name'],
+        'email' => $users['email'],
+        'password' => $users['password'],
+        'role_id' => $users['role_id'],
+        'acess' => '["ALL"]'
+    ]);
+    session()->forget('user');
+    if(Auth::check()){
+        $loginrole = Role::find(Auth::user()->role_id);
+        if($loginrole->role == 'Admin' || $loginrole == 'admin'){
+            return redirect('/admin');
+        }
+
+        if($loginrole->role == 'Operator' || $loginrole == 'operator'){
+            return redirect('/');
+        }
+    return redirect('/login')->with('success', 'Register Success');
+    }
+}
+
+    if($role->role === 'Operator' || $role->role === 'operator'){
+        user::create([
+            'name' => $users['name'],
+            'email' => $users['email'],
+            'password' => $users['password'],
+            'role_id' => $users['role_id'],
+            'acess' => json_encode($users['acess'])
+        ]);
+        session()->forget('user');
+        if(Auth::check()){
+            $loginrole = Role::find(Auth::user()->role_id);
+            if($loginrole->role == 'Admin' || $loginrole == 'admin'){
+                return redirect('/admin');
+            }
+
+            if($loginrole->role == 'Operator' || $loginrole == 'operator'){
+                return redirect('/');
+            }
+        return redirect('/login')->with('success',' Register Success' );
+    }
+    return redirect('/login')->with('success',' Register Success' );
+
+}
+}
+
+if ($request->otp != $users['otp']){
+return back()->withErrors(['otp' => 'OTP not match or expired']);
+}
 }
 
 // Login
@@ -183,7 +254,6 @@ public function showForgotPasswordForm()
                     ->first();
 
 
-                    // dd($request->method());
 
         if ($user)
         {
@@ -193,7 +263,7 @@ public function showForgotPasswordForm()
             Session::put('user_id', $user->id);
             $userEmail = $request->email;
             Mail::raw("Your Otp Code : $otp", function ($message) use ($userEmail) {
-                $message->to($userEmail)->subject('Testing Email');
+                $message->to($userEmail)->subject('OTP code');
             });
 
             return redirect()->route('forgot.password2')->with('success', 'OTP has been sent to your email');

@@ -60,10 +60,8 @@
 <div class="container">
     @foreach($operators as $operator)
         <div class="card">
-            {{-- <h5 class="card-title">{{ $operator->id}}</h5> --}}
             <h2>{{ $operator->name }}</h2>
-            {{-- <h2>Acess</h2> --}}
-<div style="display: flex; flex-wrap: wrap; gap: 5px; justify-content: center;">
+    <div style="display: flex; flex-wrap: wrap; gap: 5px; justify-content: center;">
     @foreach(json_decode($operator->acess, true) as $id_mesin)
     <span style="
         /* background-color: blue; */

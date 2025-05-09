@@ -4,6 +4,8 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -18,9 +20,11 @@ class Authenticate
 
     public function handle($request, Closure $next, ...$guards)
 {
+    // $role = Role::find()
     if (!Auth::check()) {
         return redirect('/login')->withErrors(['error' => 'You must log in first.']);
     }
+
 
     return $next($request);
 }

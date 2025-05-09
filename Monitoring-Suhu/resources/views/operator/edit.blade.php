@@ -39,9 +39,6 @@
                 </div>
             @endif
 
-            {{-- <div class="form-group">
-                <input type="text" class="form-control" id="id_mesin" name="id_mesin" value="{{ $operators->acess}}" placeholder="ID Mesin" required>
-            </div> --}}
             <div style="width:65%;margin: 0 auto;text-align:left;display:flex;justify-content:space-between;flex-wrap:wrap">
             @foreach ($alats as $alat)
             <div>
