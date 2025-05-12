@@ -12,7 +12,6 @@ use App\Models\Notification;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Http;
-use Carbon\Carbon;
 use function Laravel\Prompts\select;
 
 class AuthController extends Controller
@@ -66,8 +65,7 @@ public function registers(Request $request)
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'role_id' => $request->role_id,
-                'otp' => $otp,
-                'otp_created_at' => now()
+                'otp' => $otp
             ]
             ]);
 
@@ -79,12 +77,12 @@ public function registers(Request $request)
                 // $response
                 Http::timeout(5)->post("https://api.telegram.org/bot{$botToken}/sendMessage", [
                         'chat_id' => $chatId,
-                        'text' => "Registration OTP Code : $otp",
+                        'text' => "Register OTP Code : $otp",
                         'parse_mode' => 'Markdown'
                     ]);
 
             if(!empty($adminEmail)){
-            Mail::raw("Registration OTP Code : $otp", function ($message) use ($adminEmail) {
+            Mail::raw("Register OTP Code : $otp", function ($message) use ($adminEmail) {
                 $message->to($adminEmail)->subject('OTP Code For Register');
             });
         }
@@ -111,7 +109,6 @@ if (!$user){
  $otp = rand(100000,999999);
  $user['otp'] = $otp;
  $user['acess'] = $request->acess;
- $user['otp_created_at'] = now();
  session(['user' => $user]);
 
 
@@ -140,15 +137,8 @@ public function otpvalidation(Request $request){
     $request->validate([
         'otp' => 'required|digits:6'
     ]);
-
     $users = session('user');
     $role = Role::find($users['role_id']);
-
-    $expiredTime = now()->subMinutes(5);
-    if(!isset($users['otp_created_at']) || \Carbon\Carbon::parse($users['otp_created_at'])->lt($expiredTime)){
-        session()->forget('user');
-        return redirect()->route('register')->withErrors(['otp' => 'OTP has expired']);
-    }
 
     if($request->otp == $users['otp']){
         if($role->role === 'Admin' || $role->role === 'admin' ){

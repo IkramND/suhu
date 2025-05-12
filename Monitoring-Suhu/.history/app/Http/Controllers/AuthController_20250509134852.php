@@ -144,10 +144,8 @@ public function otpvalidation(Request $request){
     $users = session('user');
     $role = Role::find($users['role_id']);
 
-    $expiredTime = now()->subMinutes(5);
-    if(!isset($users['otp_created_at']) || \Carbon\Carbon::parse($users['otp_created_at'])->lt($expiredTime)){
-        session()->forget('user');
-        return redirect()->route('register')->withErrors(['otp' => 'OTP has expired']);
+    if (!$users) {
+        return redirect()->route('register')->withErrors(['session' => 'Session expired']);
     }
 
     if($request->otp == $users['otp']){

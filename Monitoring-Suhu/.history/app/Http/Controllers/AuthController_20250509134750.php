@@ -111,7 +111,7 @@ if (!$user){
  $otp = rand(100000,999999);
  $user['otp'] = $otp;
  $user['acess'] = $request->acess;
- $user['otp_created_at'] = now();
+ $user['otp_created_at'] = now()
  session(['user' => $user]);
 
 
@@ -140,15 +140,8 @@ public function otpvalidation(Request $request){
     $request->validate([
         'otp' => 'required|digits:6'
     ]);
-
     $users = session('user');
     $role = Role::find($users['role_id']);
-
-    $expiredTime = now()->subMinutes(5);
-    if(!isset($users['otp_created_at']) || \Carbon\Carbon::parse($users['otp_created_at'])->lt($expiredTime)){
-        session()->forget('user');
-        return redirect()->route('register')->withErrors(['otp' => 'OTP has expired']);
-    }
 
     if($request->otp == $users['otp']){
         if($role->role === 'Admin' || $role->role === 'admin' ){

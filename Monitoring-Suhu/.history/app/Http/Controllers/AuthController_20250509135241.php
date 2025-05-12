@@ -147,7 +147,7 @@ public function otpvalidation(Request $request){
     $expiredTime = now()->subMinutes(5);
     if(!isset($users['otp_created_at']) || \Carbon\Carbon::parse($users['otp_created_at'])->lt($expiredTime)){
         session()->forget('user');
-        return redirect()->route('register')->withErrors(['otp' => 'OTP has expired']);
+        return redirect()->route('register')->withErrors(['otp' => 'OTP has expired'])
     }
 
     if($request->otp == $users['otp']){
