@@ -15,16 +15,11 @@ class Configuration extends Model
     protected $primaryKey = 'id';
 
 
-    protected $fillable = [ 'id_mesin','batas_atas_suhu','batas_bawah_suhu','batas_atas_kelembaban','batas_bawah_kelembaban' ];
+    protected $fillable = ['id_mesin', 'batas_atas_suhu', 'batas_bawah_suhu', 'batas_atas_kelembaban', 'batas_bawah_kelembaban'];
 
 
     public function sensorData()
     {
         return $this->hasMany(Sensor::class, 'id_mesin', 'id_mesin');
-
     }
-
-
-
-
 }

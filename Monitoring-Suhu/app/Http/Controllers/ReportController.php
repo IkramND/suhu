@@ -18,35 +18,40 @@ class ReportController extends Controller
 {
 
 
-    public function index(){
+    public function index()
+    {
         $alats = Alat::all();
-        return view('Report.ReportForm',compact('alats'));
+        return view('Report.ReportForm', compact('alats'));
     }
 
 
-    public function indexExport(){
+    public function indexExport()
+    {
         $notifications = Notification::all();
-    return view('Report.ReportFInalExport', compact('notifications') , ['step' => 1]);
+        return view('Report.ReportFInalExport', compact('notifications'), ['step' => 1]);
     }
 
-    public function processStep1(Request $request){
+    public function processStep1(Request $request)
+    {
         $request->validate([
             'email' => 'required|email|exists:notification,email',
         ]);
 
-        Session::put('user_email',$request->email);
+        Session::put('user_email', $request->email);
 
         return redirect()->route('report.exportStep2');
     }
 
 
 
-    public function indexExport2(){
+    public function indexExport2()
+    {
         $alats = Alat::all();
-        return view('Report.ReportFInalExport', ['step' => 2],compact('alats'));
+        return view('Report.ReportFInalExport', ['step' => 2], compact('alats'));
     }
 
-    public function processStep2(Request $request){
+    public function processStep2(Request $request)
+    {
         $request->validate([
             'id_mesin' => 'required|exists:alat,id_mesin',
             'start_date' => 'required|date',
@@ -57,9 +62,9 @@ class ReportController extends Controller
 
         $email = Session::get('user_email');
 
-        $alat = Alat::where('id_mesin' ,$request->id_mesin)->first();
-        if(!$alat){
-            return back()->with('error','Not found');
+        $alat = Alat::where('id_mesin', $request->id_mesin)->first();
+        if (!$alat) {
+            return back()->with('error', 'Not found');
         }
 
         $sensorData = Sensor::select(
@@ -71,13 +76,13 @@ class ReportController extends Controller
             DB::raw('ROUND(AVG(suhu),2) as average_temperature'),
             DB::raw('ROUND(AVG(kelembaban),2) as average_humidity'),
         )
-        ->where('id_mesin', $request->id_mesin)
-        ->whereBetween('waktu', [$request->start_date . ' 00:00:00', $request->end_date . ' 23:59:59'])
-        ->groupBy(DB::raw('DATE(waktu)'))
-        ->orderBy('tanggal', 'asc')
-        ->get();
+            ->where('id_mesin', $request->id_mesin)
+            ->whereBetween('waktu', [$request->start_date . ' 00:00:00', $request->end_date . ' 23:59:59'])
+            ->groupBy(DB::raw('DATE(waktu)'))
+            ->orderBy('tanggal', 'asc')
+            ->get();
 
-        if(!$email){
+        if (!$email) {
             return redirect()->route('report.export')->withErrors(['email' => 'please enter your email first']);
         }
 
@@ -86,16 +91,16 @@ class ReportController extends Controller
             'id_mesin' => $request->id_mesin,
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
-            'ip_address' =>$alat->ip_address,
+            'ip_address' => $alat->ip_address,
             'lokasi' => $alat->lokasi,
             'date' => now()->setTimezone('Asia/Jakarta')->format('d-m-Y H:i:s'),
             'sensor_data' => $sensorData
         ];
 
         // PDF Export
-        if($request->file == 'PDF'){
+        if ($request->file == 'PDF') {
             $pdf = PDF::Loadview('admin.Reportresult', $data);
-            Mail::send('emails.report', ['data' => $data], function($message) use ($email, $pdf) {
+            Mail::send('emails.report', ['data' => $data], function ($message) use ($email, $pdf) {
                 $message->to($email)->subject('Report Machine PDF');
                 $message->attachData($pdf->output(), 'Machine_Report.pdf');
             });
@@ -115,11 +120,11 @@ class ReportController extends Controller
                 ]);
             }
 
-            if($request->archive == 'YES'){
-            // Delete processed data
-            Sensor::where('id_mesin', $request->id_mesin)
-                ->whereBetween('waktu', [$request->start_date . ' 00:00:00', $request->end_date . ' 23:59:59'])
-                ->delete();
+            if ($request->archive == 'YES') {
+                // Delete processed data
+                Sensor::where('id_mesin', $request->id_mesin)
+                    ->whereBetween('waktu', [$request->start_date . ' 00:00:00', $request->end_date . ' 23:59:59'])
+                    ->delete();
             }
 
             Session::forget('user_email');
@@ -127,8 +132,8 @@ class ReportController extends Controller
         }
 
         // CSV Export
-        if($request->file == 'CSV'){
-            $filename = 'Report_' . $request->start_date .'__'.$request->end_date  . '.csv';
+        if ($request->file == 'CSV') {
+            $filename = 'Report_' . $request->start_date . '__' . $request->end_date  . '.csv';
 
             $headers = [
                 'Content-Type' => 'text/csv',
@@ -166,7 +171,7 @@ class ReportController extends Controller
             fclose($tempCsv);
 
             // Send CSV via email
-            Mail::send('emails.report', ['data' => $data], function($message) use ($email, $csvContent, $filename) {
+            Mail::send('emails.report', ['data' => $data], function ($message) use ($email, $csvContent, $filename) {
                 $message->to($email)->subject('Report Machine CSV');
                 $message->attachData($csvContent, $filename, [
                     'mime' => 'text/csv',
@@ -174,9 +179,9 @@ class ReportController extends Controller
             });
 
             // Stream file directly to browser
-            $callback = function() use ($sensorData, $columns) {
+            $callback = function () use ($sensorData, $columns) {
                 $file = fopen('php://output', 'w');
-                fputcsv($file,$columns, ';');
+                fputcsv($file, $columns, ';');
 
                 foreach ($sensorData as $row) {
                     fputcsv($file, [
@@ -193,11 +198,11 @@ class ReportController extends Controller
                 fclose($file);
             };
 
-            if($request->archive == 'YES'){
-            // Clean up sensor data after processing
-            Sensor::where('id_mesin', $request->id_mesin)
-                ->whereBetween('waktu', [$request->start_date. ' 00:00:00', $request->end_date . ' 23:59:59'])
-                ->delete();
+            if ($request->archive == 'YES') {
+                // Clean up sensor data after processing
+                Sensor::where('id_mesin', $request->id_mesin)
+                    ->whereBetween('waktu', [$request->start_date . ' 00:00:00', $request->end_date . ' 23:59:59'])
+                    ->delete();
             }
             Session::forget('user_email');
 
@@ -220,7 +225,7 @@ class ReportController extends Controller
             'file' => 'required'
         ]);
 
-        $alat = Alat::where('id_mesin',$request->id_mesin)->first();
+        $alat = Alat::where('id_mesin', $request->id_mesin)->first();
 
 
 
@@ -228,18 +233,18 @@ class ReportController extends Controller
         $year = (int)$request->year;
 
         $ReportResult = ReportResult::selectRaw('DATE(waktu) as tanggal, average_temperature,average_humidity,lowest_temperature,highest_temperature,lowest_humidity,highest_humidity')
-                ->where('id_mesin', $request->id_mesin)
-                ->whereMonth('waktu', $month)
-                ->whereYear('waktu', $year)
-                // ->groupBy(DB::raw('DATE(waktu)'))
-                ->orderBy('tanggal', 'asc')
-                ->get();
+            ->where('id_mesin', $request->id_mesin)
+            ->whereMonth('waktu', $month)
+            ->whereYear('waktu', $year)
+            // ->groupBy(DB::raw('DATE(waktu)'))
+            ->orderBy('tanggal', 'asc')
+            ->get();
 
-                if($month < 10){
-                    $month = 0 . $month;
-                }else{
-                    $month;
-                }
+        if ($month < 10) {
+            $month = 0 . $month;
+        } else {
+            $month;
+        }
 
         $data = [
             'id_mesin' => $request->id_mesin,
@@ -248,74 +253,75 @@ class ReportController extends Controller
             'month' => $month,
             'year' => $year,
             // 'date' => now()->format('d-m-Y H:i:s'),
-            'date' => now()->setTimezone('Asia/Jakarta')->format('d-m-Y H:i:s'),// Ganti dengan zona waktu pengguna
+            'date' => now()->setTimezone('Asia/Jakarta')->format('d-m-Y H:i:s'), // Ganti dengan zona waktu pengguna
 
             'sensor_data' => $ReportResult
         ];
 
 
-        if($request->file == 'PDF'){
+        if ($request->file == 'PDF') {
 
-        $pdf = PDF::Loadview('Report.ReportFinalHistory', $data);
+            $pdf = PDF::Loadview('Report.ReportFinalHistory', $data);
 
-        return $pdf->stream('pdf_file.pdf');
+            return $pdf->stream('pdf_file.pdf');
+        }
+        if ($request->file == 'CSV') {
+            $filename = 'ReportArchive_' . $month . '_' . $year . '.csv';
+
+            $headers = [
+                'Content-Type' => 'text/csv',
+                'Content-Disposition' => "attachment; filename=\"$filename\""
+            ];
+
+            $columns = [
+                'Date',
+                'Lowest Temperature',
+                'Highest Temperature',
+                'Average Temperature',
+                'Lowest Humidity',
+                'Highest Humidity',
+                'Average Humidity',
+            ];
+
+
+            $callback = function () use ($ReportResult, $columns) {
+                $file = fopen('php://output', 'w');
+                fputcsv($file, $columns, ';');
+
+                foreach ($ReportResult as $row) {
+                    fputcsv($file, [
+                        $row->tanggal,
+                        number_format($row->lowest_temperature, 2),
+                        number_format($row->highest_temperature, 2),
+                        number_format($row->average_temperature, 2),
+                        number_format($row->lowest_humidity, 2),
+                        number_format($row->highest_humidity, 2),
+                        number_format($row->average_humidity, 2)
+
+
+                    ], ';');
+                }
+                fclose($file);
+            };
+            return response()->stream($callback, 200, $headers);
+        }
     }
-    if($request->file == 'CSV'){
-        $filename = 'ReportArchive_' . $month . '_' . $year . '.csv';
 
-        $headers = [
-            'Content-Type' => 'text/csv',
-            'Content-Disposition' => "attachment; filename=\"$filename\""
-        ];
-
-        $columns = [
-            'Date',
-            'Lowest Temperature',
-            'Highest Temperature',
-            'Average Temperature',
-            'Lowest Humidity',
-            'Highest Humidity',
-            'Average Humidity',
-        ];
-
-
-        $callback = function() use ($ReportResult, $columns){
-            $file = fopen('php://output', 'w');
-            fputcsv($file, $columns, ';');
-
-            foreach ($ReportResult as $row){
-                fputcsv($file, [
-                    $row->tanggal,
-                    number_format($row->lowest_temperature, 2),
-                    number_format($row->highest_temperature, 2),
-                    number_format($row->average_temperature, 2),
-                    number_format($row->lowest_humidity, 2),
-                    number_format($row->highest_humidity, 2),
-                    number_format($row->average_humidity, 2)
-
-
-                ],';');
-            }
-            fclose($file);
-        };
-        return response()->stream($callback, 200, $headers);
-    }
-
-    }
-
-    public function reportdaily(){
+    public function reportdaily()
+    {
         $alats = Alat::all();
-        return view('Report.ReportDaily',compact('alats'));
+        return view('Report.ReportDaily', compact('alats'));
     }
 
-    public function reportdailypost(Request $request){
+    public function reportdailypost(Request $request)
+    {
         $request->validate([
             'id_mesin' => 'required|exists:alat,id_mesin',
             'dates' => 'required',
             'file' => 'required'
         ]);
 
-        $alat = Alat::where('id_mesin' , $request->id_mesin)->first();
+        $alat = Alat::where('id_mesin', $request->id_mesin)->first();
         $dates = $request->dates;
 
         $reportdailyresult = Sensor::select(
@@ -328,12 +334,12 @@ class ReportController extends Controller
             DB::raw('AVG(suhu) AS average_temperature'),
             DB::raw('AVG(kelembaban) AS average_humidity')
         )
-        ->where('id_mesin', $request->id_mesin)
-        ->whereDate('waktu', $request->dates)
-        ->groupBy(DB::raw('DATE(waktu)'), DB::raw('HOUR(waktu)'))
-        ->orderBy('Tanggal')
-        ->orderBy('Jam')
-        ->get();
+            ->where('id_mesin', $request->id_mesin)
+            ->whereDate('waktu', $request->dates)
+            ->groupBy(DB::raw('DATE(waktu)'), DB::raw('HOUR(waktu)'))
+            ->orderBy('Tanggal')
+            ->orderBy('Jam')
+            ->get();
 
         $data = [
             'id_mesin' => $request->id_mesin,
@@ -341,19 +347,19 @@ class ReportController extends Controller
             'lokasi' => $alat->lokasi,
             'dates' => $dates,
             'file' => $request->file,
-            'date' => now()->setTimezone('Asia/Jakarta')->format('d-m-Y H:i:s'),// Ganti dengan zona waktu pengguna
+            'date' => now()->setTimezone('Asia/Jakarta')->format('d-m-Y H:i:s'), // Ganti dengan zona waktu pengguna
 
             'sensor_data' => $reportdailyresult
         ];
 
 
-        if($request->file == 'PDF'){
-        $pdf = PDF::Loadview('admin.ReportDailyResult', $data);
-        return $pdf->stream('pdf_file.pdf');
+        if ($request->file == 'PDF') {
+            $pdf = PDF::Loadview('admin.ReportDailyResult', $data);
+            return $pdf->stream('pdf_file.pdf');
         }
 
 
-        if($request->file == 'CSV'){
+        if ($request->file == 'CSV') {
             $filename = 'Report_' . $dates . '.csv';
 
             $headers = [
@@ -371,13 +377,13 @@ class ReportController extends Controller
                 'Average Humidity'
             ];
 
-            $callback = function() use ($reportdailyresult, $columns,$request){
-                $file = fopen('php://output','w');
+            $callback = function () use ($reportdailyresult, $columns, $request) {
+                $file = fopen('php://output', 'w');
 
                 fputcsv($file, $columns, ';');
 
-                foreach ($reportdailyresult as $row){
-                    fputcsv($file , [
+                foreach ($reportdailyresult as $row) {
+                    fputcsv($file, [
                         $row->Jam . ":00",
                         number_format($row->lowest_temperature, 2),
                         number_format($row->highest_temperature, 2),
@@ -386,17 +392,13 @@ class ReportController extends Controller
                         number_format($row->highest_humidity, 2),
                         number_format($row->average_humidity, 2)
 
-                    ],';');
-
+                    ], ';');
                 }
 
 
                 fclose($file);
             };
             return response()->stream($callback, 200, $headers);
-
         }
     }
-
-
 }

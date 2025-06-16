@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,6 +13,7 @@
 
     <title></title>
 </head>
+
 <body>
     <div class="login-dark">
         <form action="{{ route('admin.store') }}" method="POST">
@@ -19,14 +21,14 @@
             <div class="illustration"><i class="icon ion-ios-gear-outline"></i></div>
             <h5 class="text-center mb-3">Add Tools</h5>
 
-            @if(session('success'))
+            @if (session('success'))
                 <div class="alert alert-success text-center">
                     {{ session('success') }}
                 </div>
             @endif
 
             @if ($errors->any())
-                <div class="alert" style="background: #0f0f0f;color:red" >
+                <div class="alert" style="background: #0f0f0f;color:red">
                     <ul class="list-unstyled mb-0">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
@@ -36,15 +38,18 @@
             @endif
 
             <div class="form-group">
-                <input type="text" class="form-control" id="id_mesin" name="id_mesin" placeholder="Machine ID" required>
+                <input type="text" class="form-control" id="id_mesin" name="id_mesin" placeholder="Machine ID"
+                    required>
             </div>
 
             <div class="form-group">
-                <input type="text" class="form-control" id="ip_address" name="ip_address" placeholder="IP Address" required>
+                <input type="text" class="form-control" id="ip_address" name="ip_address" placeholder="IP Address"
+                    required>
             </div>
 
             <div class="form-group">
-                <input type="text" class="form-control" id="lokasi" name="lokasi" placeholder="Location" required>
+                <input type="text" class="form-control" id="lokasi" name="lokasi" placeholder="Location"
+                    required>
             </div>
 
             <div class="form-group">
@@ -122,4 +127,5 @@
         }
     </style>
 </body>
+
 </html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,6 +13,7 @@
 
     <title></title>
 </head>
+
 <body>
     <div class="login-dark">
         <form action="{{ route('configuration.update', $configuration->id) }}" method="POST">
@@ -22,19 +24,24 @@
             <h5 class="text-center mb-3">Edit Configuration</h5>
 
             <div class="form-group">
-                <input type="text" class="form-control" name="id_mesin" value="{{$configuration->id_mesin}}" placeholder="ID Mesin" required>
-            </div>
-            <div class="form-group" >
-                <input type="text" class="form-control" name="batas_atas_suhu"  placeholder="Upper Limit Temperature ({{$configuration->batas_atas_suhu}})" required>
+                <input type="text" class="form-control" name="id_mesin" value="{{ $configuration->id_mesin }}"
+                    placeholder="ID Mesin" required>
             </div>
             <div class="form-group">
-                <input type="text" class="form-control" name="batas_bawah_suhu"   placeholder="Lower Limit Temperature ({{$configuration->batas_bawah_suhu}})" required>
+                <input type="text" class="form-control" name="batas_atas_suhu"
+                    placeholder="Upper Limit Temperature ({{ $configuration->batas_atas_suhu }})" required>
             </div>
             <div class="form-group">
-                <input type="text" class="form-control" name="batas_atas_kelembaban"   placeholder="Upper Limit Humidity ({{$configuration->batas_atas_kelembaban}})" required>
+                <input type="text" class="form-control" name="batas_bawah_suhu"
+                    placeholder="Lower Limit Temperature ({{ $configuration->batas_bawah_suhu }})" required>
             </div>
             <div class="form-group">
-                <input type="text" class="form-control" name="batas_bawah_kelembaban"   placeholder="Lower Limit Humidity ({{$configuration->batas_bawah_kelembaban}})" required>
+                <input type="text" class="form-control" name="batas_atas_kelembaban"
+                    placeholder="Upper Limit Humidity ({{ $configuration->batas_atas_kelembaban }})" required>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" name="batas_bawah_kelembaban"
+                    placeholder="Lower Limit Humidity ({{ $configuration->batas_bawah_kelembaban }})" required>
             </div>
 
             <div class="form-group">
@@ -107,4 +114,5 @@
         }
     </style>
 </body>
+
 </html>

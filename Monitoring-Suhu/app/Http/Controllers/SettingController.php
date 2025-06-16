@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Configuration;
 use App\Models\Alat;
 use Illuminate\Http\Request;
@@ -8,19 +9,22 @@ use Illuminate\Http\Request;
 class SettingController extends Controller
 {
 
-    public function index(){
+    public function index()
+    {
         $configurations = Configuration::all();
-        return view('admin.Configurationlist',compact('configurations'));
+        return view('admin.Configurationlist', compact('configurations'));
     }
 
-    public function settings(){
+    public function settings()
+    {
         $alats = Alat::all();
         return view('admin.Settings', compact('alats'));
     }
 
-    public function configuration(Request $request){
+    public function configuration(Request $request)
+    {
         $request->validate([
-            'id_mesin' =>'required|string',
+            'id_mesin' => 'required|string',
             'batas_atas_suhu' => 'required|numeric',
             'batas_bawah_suhu' => 'required|numeric',
             'batas_atas_kelembaban' => 'required|numeric',
@@ -38,24 +42,26 @@ class SettingController extends Controller
             'batas_bawah_kelembaban' => $request->batas_bawah_kelembaban
 
         ]);
-        return redirect()->route('configuration.list')->with('success','Alat berhasil ditambahkan');
-
+        return redirect()->route('configuration.list')->with('success', 'Alat berhasil ditambahkan');
     }
 
-    public function listconfiguration(){
+    public function listconfiguration()
+    {
         $configurations = Configuration::all();
-        return view('admin.Configurationlist',compact('configurations'));
+        return view('admin.Configurationlist', compact('configurations'));
     }
 
-    function edit($id){
+    function edit($id)
+    {
         $configuration = Configuration::findOrFail($id);
 
-        return view('admin.editconfiguration',compact('configuration'));
+        return view('admin.editconfiguration', compact('configuration'));
     }
 
-    public function update(Request $request, $id){
+    public function update(Request $request, $id)
+    {
         $request->validate([
-           'id_mesin' =>'required|string',
+            'id_mesin' => 'required|string',
             'batas_atas_suhu' => 'required|numeric',
             'batas_bawah_suhu' => 'required|numeric',
             'batas_atas_kelembaban' => 'required|numeric',
@@ -63,15 +69,16 @@ class SettingController extends Controller
         ]);
 
         $configuration = Configuration::findOrFail($id);
-        $configuration -> update($request->all());
+        $configuration->update($request->all());
 
-        return redirect()->route('configuration.list')->with('success','Data alat berhasil diupdate');
+        return redirect()->route('configuration.list')->with('success', 'Data alat berhasil diupdate');
     }
 
 
-    public function destroy($id){
+    public function destroy($id)
+    {
         $configuration = Configuration::findOrFail($id);
         $configuration->delete();
-        return redirect()->route('configuration.list')->with('success','Data alat berhasil dihapus');
+        return redirect()->route('configuration.list')->with('success', 'Data alat berhasil dihapus');
     }
 }

@@ -14,15 +14,17 @@ class NotificationController extends Controller
     public function index()
     {
         $notifications = Notification::all();
-        return view('admin.ListNotification',compact('notifications'));
+        return view('admin.ListNotification', compact('notifications'));
     }
 
-    public function create(){
+    public function create()
+    {
         $notifications = Notification::all();
         return view('admin.AddNotification',  compact('notifications'));
     }
 
-    public function AddEmail(Request $request){
+    public function AddEmail(Request $request)
+    {
 
         $request->validate([
             'email' => 'required|email'
@@ -37,16 +39,14 @@ class NotificationController extends Controller
             'email' => $request->email
         ]);
 
-        return redirect()->route('admin.emailnotification.list')->with('success','Email is added');
+        return redirect()->route('admin.emailnotification.list')->with('success', 'Email is added');
     }
 
-    public function destroy($id){
+    public function destroy($id)
+    {
         $notification = Notification::findOrfail($id);
         $notification->delete();
 
-        return redirect()->route('admin.emailnotification.list')->with('success','Email has beed destroy ');
+        return redirect()->route('admin.emailnotification.list')->with('success', 'Email has beed destroy ');
     }
-
-
 }
-

@@ -1,13 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Carbon;
-use App\Models\alat;
-
-use function Laravel\Prompts\select;
-use function Laravel\Prompts\table;
 
 class SensorController extends Controller
 {
@@ -18,9 +14,9 @@ class SensorController extends Controller
         $start_date = $request->input('start_date');
         $end_date = $request->input('end_date');
 
-        $data =DB::table('data_sensor')->where('id_mesin', $id_mesin)
-                          ->whereBetween('waktu', [$start_date, $end_date])
-                          ->get();
+        $data = DB::table('data_sensor')->where('id_mesin', $id_mesin)
+            ->whereBetween('waktu', [$start_date, $end_date])
+            ->get();
         return response()->json($data);
     }
 
@@ -35,6 +31,7 @@ class SensorController extends Controller
         $rawData = DB::table('data_sensor')
             ->where('id_mesin', $id_mesin)
             ->orderBy('waktu', 'desc')
+            ->limit(2000)
             ->get();
 
         if ($rawData->isEmpty()) {
@@ -74,29 +71,29 @@ class SensorController extends Controller
 
 
     public function fetchDataHistory(Request $request, $id_mesin)
-{
-    $startDate = $request->input('start_date');
-    $endDate = $request->input('end_date');
-    $cekMesin = DB::table('data_sensor')->where('id_mesin', $id_mesin)->exists();
-    if (!$cekMesin) {
-        return response()->json(['message' => 'ID Mesin tidak ditemukan'], 400);
-    }
+    {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $cekMesin = DB::table('data_sensor')->where('id_mesin', $id_mesin)->exists();
+        if (!$cekMesin) {
+            return response()->json(['message' => 'ID Mesin tidak ditemukan'], 400);
+        }
 
-    $query = DB::table('data_sensor')
-    ->selectRaw("DATE(waktu) as tanggal,
+        $query = DB::table('data_sensor')
+            ->selectRaw("DATE(waktu) as tanggal,
                 DATE_FORMAT(MIN(waktu), '%W') as hari,
                 LEFT(AVG(suhu), 4) as rata_rata_suhu,
                 LEFT(AVG(kelembaban), 4) as rata_rata_kelembaban")
-    ->where('id_mesin', $id_mesin) // Gunakan id_mesin dari input user
-    ->groupBy(DB::raw('DATE(waktu)'))
-    ->orderBy('tanggal', 'ASC');
+            ->where('id_mesin', $id_mesin) // Gunakan id_mesin dari input user
+            ->groupBy(DB::raw('DATE(waktu)'))
+            ->orderBy('tanggal', 'ASC');
 
-    if ($startDate && $endDate) {
-        $query->whereBetween('waktu', [$startDate . " 00:00:00", $endDate . " 23:59:59"]);
+        if ($startDate && $endDate) {
+            $query->whereBetween('waktu', [$startDate . " 00:00:00", $endDate . " 23:59:59"]);
+        }
+
+        $data = $query->get();
+
+        return response()->json($data);
     }
-
-    $data = $query->get();
-
-    return response()->json($data);
-}
 }

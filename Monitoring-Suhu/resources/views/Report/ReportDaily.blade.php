@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,16 +11,21 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <title></title>
     <style>
-        html, body {
+        html,
+        body {
             overflow: hidden;
             height: 100%;
             margin: 0;
             padding: 0;
         }
+
         .login-dark form select.form-control option {
-    color: black;  /* Warna teks di dalam dropdown */
-    background-color: white; /* Warna latar belakang opsi */
-}
+            color: black;
+            /* Warna teks di dalam dropdown */
+            background-color: white;
+            /* Warna latar belakang opsi */
+        }
+
         .login-dark {
             height: 100vh;
             background-size: cover;
@@ -37,7 +43,7 @@
             padding: 40px;
             border-radius: 4px;
             color: #fff;
-            box-shadow: 3px 3px 4px rgba(0,0,0,0.2);
+            box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.2);
         }
 
         .login-dark .illustration {
@@ -73,49 +79,49 @@
         }
 
         .custom-dropdown {
-    position: relative;
-    user-select: none;
-}
+            position: relative;
+            user-select: none;
+        }
 
-.dropdown-selected {
-    background-color: transparent;
-    border-bottom: 1px solid #434a52;
-    padding: 10px;
-    color: #fff;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+        .dropdown-selected {
+            background-color: transparent;
+            border-bottom: 1px solid #434a52;
+            padding: 10px;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-.dropdown-options {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background-color: #1a1a1a;
-    border: 1px solid #434a52;
-    max-height: 200px;
-    overflow-y: auto;
-    z-index: 999;
-    display: none;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
+        .dropdown-options {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: #1a1a1a;
+            border: 1px solid #434a52;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 999;
+            display: none;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
 
-.dropdown-options li {
-    padding: 10px;
-    cursor: pointer;
-    color: white;
-}
+        .dropdown-options li {
+            padding: 10px;
+            cursor: pointer;
+            color: white;
+        }
 
-.dropdown-options li:hover {
-    background-color: #333;
-}
-
+        .dropdown-options li:hover {
+            background-color: #333;
+        }
     </style>
 </head>
+
 <body>
 
 
@@ -127,31 +133,32 @@
 
             @csrf
             <div class="illustration"><i class="ion-clipboard"></i></div>
-           @if ($errors->any())
-    <div style="color: red; padding: 10px; border-radius: 5px;">
-            @foreach ($errors->all() as $error)
-                <p><i>{{" * $error "}}</i></p>
-            @endforeach
+            @if ($errors->any())
+                <div style="color: red; padding: 10px; border-radius: 5px;">
+                    @foreach ($errors->all() as $error)
+                        <p><i>{{ " * $error " }}</i></p>
+                    @endforeach
 
-    </div>
-@endif
-    <div class="form-group custom-dropdown">
-        <div class="dropdown-selected">
-          <span class="selected-text">Choose Machine ID</span>
-          <span class="dropdown-arrow">&#9660;</span>
-        </div>
+                </div>
+            @endif
+            <div class="form-group custom-dropdown">
+                <div class="dropdown-selected">
+                    <span class="selected-text">Choose Machine ID</span>
+                    <span class="dropdown-arrow">&#9660;</span>
+                </div>
 
-        <ul class="dropdown-options">
-          @foreach ($alats as $alat)
-            <li data-value="{{ $alat->id_mesin }}">{{ $alat->id_mesin }}</li>
-          @endforeach
-        </ul>
+                <ul class="dropdown-options">
+                    @foreach ($alats as $alat)
+                        <li data-value="{{ $alat->id_mesin }}">{{ $alat->id_mesin }}</li>
+                    @endforeach
+                </ul>
 
-        <input type="hidden" name="id_mesin" id="id_mesin">
-      </div>
+                <input type="hidden" name="id_mesin" id="id_mesin">
+            </div>
 
             <div class="form-group">
-                <input class="form-control flatpickr-input" type="text" id="customDateInput" placeholder="Select Date" name="dates">
+                <input class="form-control flatpickr-input" type="text" id="customDateInput"
+                    placeholder="Select Date" name="dates">
             </div>
 
             <div class="form-group custom-dropdown">
@@ -180,43 +187,43 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <script>
-
         flatpickr("#customDateInput", {
-        dateFormat: "Y-m-d",
-            });
-        document.addEventListener('DOMContentLoaded', function () {
+            dateFormat: "Y-m-d",
+        });
+        document.addEventListener('DOMContentLoaded', function() {
             const dropdown = document.querySelectorAll('.custom-dropdown');
 
-            dropdown.forEach(function(dropdown){
-            const selected = dropdown.querySelector('.dropdown-selected');
-            const options = dropdown.querySelector('.dropdown-options');
-            const hiddenInput = dropdown.querySelector('input[type="hidden"]');
-            const arrow = dropdown.querySelector('.dropdown-arrow');
-            const selectedText = dropdown.querySelector('.selected-text');
+            dropdown.forEach(function(dropdown) {
+                const selected = dropdown.querySelector('.dropdown-selected');
+                const options = dropdown.querySelector('.dropdown-options');
+                const hiddenInput = dropdown.querySelector('input[type="hidden"]');
+                const arrow = dropdown.querySelector('.dropdown-arrow');
+                const selectedText = dropdown.querySelector('.selected-text');
 
-            selected.addEventListener('click', function () {
-                const isOpen = options.style.display === 'block';
-                options.style.display = isOpen ? 'none' : 'block';
-                arrow.innerHTML = isOpen ? '&#9660;' : '&#9650;';
-            });
+                selected.addEventListener('click', function() {
+                    const isOpen = options.style.display === 'block';
+                    options.style.display = isOpen ? 'none' : 'block';
+                    arrow.innerHTML = isOpen ? '&#9660;' : '&#9650;';
+                });
 
-            options.querySelectorAll('li').forEach(function (option) {
-                option.addEventListener('click', function () {
-                    selectedText.textContent = this.textContent;
-                    hiddenInput.value = this.getAttribute('data-value');
-                    options.style.display = 'none';
-                    arrow.innerHTML = '&#9660;';
+                options.querySelectorAll('li').forEach(function(option) {
+                    option.addEventListener('click', function() {
+                        selectedText.textContent = this.textContent;
+                        hiddenInput.value = this.getAttribute('data-value');
+                        options.style.display = 'none';
+                        arrow.innerHTML = '&#9660;';
+                    });
                 });
             });
-        });
 
-            document.addEventListener('click', function (e) {
+            document.addEventListener('click', function(e) {
                 if (!dropdown.contains(e.target)) {
                     options.style.display = 'none';
                     arrow.innerHTML = '&#9660;';
                 }
             });
         });
-      </script>
+    </script>
 </body>
+
 </html>

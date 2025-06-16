@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,6 +17,7 @@
             align-items: center;
             justify-content: center;
         }
+
         .login-dark form {
             max-width: 400px;
             width: 90%;
@@ -23,14 +25,16 @@
             padding: 40px;
             border-radius: 4px;
             color: #fff;
-            box-shadow: 3px 3px 4px rgba(0,0,0,0.2);
+            box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.2);
         }
+
         .login-dark .illustration {
             text-align: center;
             padding: 15px 0 20px;
             font-size: 100px;
             color: blue;
         }
+
         .login-dark form .form-control {
             background: none;
             border: none;
@@ -40,6 +44,7 @@
             outline: none;
             color: inherit;
         }
+
         .login-dark form .btn-primary {
             background: #214a80;
             border: none;
@@ -50,13 +55,16 @@
             text-shadow: none;
             outline: none;
         }
+
         .login-dark form .btn-primary:hover {
             background: #1a3b6e;
         }
+
         .custom-dropdown {
             position: relative;
             user-select: none;
         }
+
         .dropdown-selected {
             background-color: transparent;
             border-bottom: 1px solid #434a52;
@@ -67,6 +75,7 @@
             justify-content: space-between;
             align-items: center;
         }
+
         .dropdown-options {
             position: absolute;
             top: 100%;
@@ -82,11 +91,13 @@
             margin: 0;
             padding: 0;
         }
+
         .dropdown-options li {
             padding: 10px;
             cursor: pointer;
             color: white;
         }
+
         .dropdown-options li:hover {
             background-color: #333;
         }
@@ -95,99 +106,102 @@
 
 <body>
     <div class="login-dark">
-        @if($step == 1)
-        <form id="EmailForm" method="POST" action="{{ route('report.processStep1') }}">
-            @csrf
-            <div class="illustration"><i class="icon ion-ios-email"></i></div>
-            @if ($errors->any())
-                <div style="color: red; padding: 10px; border-radius: 5px;">
-                    @foreach ($errors->all() as $error)
-                        <p><i>* {{ $error }}</i></p>
-                    @endforeach
-                </div>
-            @endif
+        @if ($step == 1)
+            <form id="EmailForm" method="POST" action="{{ route('report.processStep1') }}">
+                @csrf
+                <div class="illustration"><i class="icon ion-ios-email"></i></div>
+                @if ($errors->any())
+                    <div style="color: red; padding: 10px; border-radius: 5px;">
+                        @foreach ($errors->all() as $error)
+                            <p><i>* {{ $error }}</i></p>
+                        @endforeach
+                    </div>
+                @endif
 
-            <div class="form-group custom-dropdown">
-                <div class="dropdown-selected">
-                    <span class="selected-text">Choose Email</span>
-                    <span class="dropdown-arrow">&#9660;</span>
+                <div class="form-group custom-dropdown">
+                    <div class="dropdown-selected">
+                        <span class="selected-text">Choose Email</span>
+                        <span class="dropdown-arrow">&#9660;</span>
+                    </div>
+                    <ul class="dropdown-options">
+                        @foreach ($notifications as $notification)
+                            <li data-value="{{ $notification->email }}">{{ $notification->email }}</li>
+                        @endforeach
+                    </ul>
+                    <input type="hidden" name="email" id="email">
                 </div>
-                <ul class="dropdown-options">
-                    @foreach ($notifications as $notification)
-                        <li data-value="{{ $notification->email }}">{{ $notification->email }}</li>
-                    @endforeach
-                </ul>
-                <input type="hidden" name="email" id="email">
-            </div>
 
-            {{-- <div class="form-group">
+                {{-- <div class="form-group">
                 <input class="form-control" type="email" name="email" placeholder="Send To Email" required>
             </div> --}}
-            <div class="form-group">
-                <button class="btn btn-primary btn-block" style="background: blue">Send Email</button>
-            </div>
-        </form>
+                <div class="form-group">
+                    <button class="btn btn-primary btn-block" style="background: blue">Send Email</button>
+                </div>
+            </form>
         @endif
 
-        @if($step == 2)
-        <form id="ReportForm" method="POST" action="{{ route('report.processStep2') }}">
-            @csrf
-            <div class="illustration"><i class="ion-clipboard"></i></div>
-            @if ($errors->any())
-                <div style="color: red; padding: 10px; border-radius: 5px;">
-                    @foreach ($errors->all() as $error)
-                        <p><i>* {{ $error }}</i></p>
-                    @endforeach
+        @if ($step == 2)
+            <form id="ReportForm" method="POST" action="{{ route('report.processStep2') }}">
+                @csrf
+                <div class="illustration"><i class="ion-clipboard"></i></div>
+                @if ($errors->any())
+                    <div style="color: red; padding: 10px; border-radius: 5px;">
+                        @foreach ($errors->all() as $error)
+                            <p><i>* {{ $error }}</i></p>
+                        @endforeach
+                    </div>
+                @endif
+
+                <div class="form-group custom-dropdown">
+                    <div class="dropdown-selected">
+                        <span class="selected-text">Choose Machine ID</span>
+                        <span class="dropdown-arrow">&#9660;</span>
+                    </div>
+                    <ul class="dropdown-options">
+                        @foreach ($alats as $alat)
+                            <li data-value="{{ $alat->id_mesin }}">{{ $alat->id_mesin }}</li>
+                        @endforeach
+                    </ul>
+                    <input type="hidden" name="id_mesin" id="id_mesin">
                 </div>
-            @endif
 
-            <div class="form-group custom-dropdown">
-                <div class="dropdown-selected">
-                    <span class="selected-text">Choose Machine ID</span>
-                    <span class="dropdown-arrow">&#9660;</span>
+                <div class="form-group">
+                    <input class="form-control flatpickr-input" type="text" id="startDateInput" name="start_date"
+                        placeholder="Select Start Date" readonly>
                 </div>
-                <ul class="dropdown-options">
-                    @foreach ($alats as $alat)
-                        <li data-value="{{ $alat->id_mesin }}">{{ $alat->id_mesin }}</li>
-                    @endforeach
-                </ul>
-                <input type="hidden" name="id_mesin" id="id_mesin">
-            </div>
 
-            <div class="form-group">
-                <input class="form-control flatpickr-input" type="text" id="startDateInput" name="start_date" placeholder="Select Start Date" readonly>
-            </div>
-
-            <div class="form-group">
-                <input class="form-control flatpickr-input" type="text" id="endDateInput" name="end_date" placeholder="Select End Date" readonly>
-            </div>
-
-            <div class="form-group custom-dropdown">
-                <div class="dropdown-selected">
-                <span class="selected-text">Choose File Output</span>
-                <span class="dropdown-arrow">&#9660;</span>
-            </div>
-
-                <ul class="dropdown-options">
-                    <li data-value="PDF">PDF</li>
-                    <li data-value="CSV">CSV</li>
-                </ul>
-                <input type="hidden" name="file" id="file">
-            </div>
-
-            <div style="display:flex;justify-content:space-between;padding-left:10px" class="form-group dropdown-selected">
-                <div>
-                Archive
+                <div class="form-group">
+                    <input class="form-control flatpickr-input" type="text" id="endDateInput" name="end_date"
+                        placeholder="Select End Date" readonly>
                 </div>
-                <div>
-                <input type="radio" name="archive" value="YES" id="">YES
-                <input type="radio" name="archive" value="NO" id="">NO
+
+                <div class="form-group custom-dropdown">
+                    <div class="dropdown-selected">
+                        <span class="selected-text">Choose File Output</span>
+                        <span class="dropdown-arrow">&#9660;</span>
+                    </div>
+
+                    <ul class="dropdown-options">
+                        <li data-value="PDF">PDF</li>
+                        <li data-value="CSV">CSV</li>
+                    </ul>
+                    <input type="hidden" name="file" id="file">
                 </div>
-            </div>
-            <div class="form-group">
-                <button class="btn btn-primary btn-block" style="background: blue">Submit</button>
-            </div>
-        </form>
+
+                <div style="display:flex;justify-content:space-between;padding-left:10px"
+                    class="form-group dropdown-selected">
+                    <div>
+                        Archive
+                    </div>
+                    <div>
+                        <input type="radio" name="archive" value="YES" id="">YES
+                        <input type="radio" name="archive" value="NO" id="">NO
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary btn-block" style="background: blue">Submit</button>
+                </div>
+            </form>
         @endif
     </div>
 
@@ -202,22 +216,24 @@
         });
 
         // Dropdown Custom
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const dropdowns = document.querySelectorAll('.custom-dropdown');
 
-            dropdowns.forEach(function (dropdown) {
+            dropdowns.forEach(function(dropdown) {
                 const selected = dropdown.querySelector('.dropdown-selected');
                 const options = dropdown.querySelector('.dropdown-options');
                 const hiddenInput = dropdown.querySelector('input[type="hidden"]');
                 const arrow = dropdown.querySelector('.dropdown-arrow');
                 const selectedText = dropdown.querySelector('.selected-text');
 
-                selected.addEventListener('click', function (e) {
+                selected.addEventListener('click', function(e) {
                     e.stopPropagation();
                     const isOpen = options.style.display === 'block';
 
-                    document.querySelectorAll('.dropdown-options').forEach(opt => opt.style.display = 'none');
-                    document.querySelectorAll('.dropdown-arrow').forEach(arw => arw.innerHTML = '&#9660;');
+                    document.querySelectorAll('.dropdown-options').forEach(opt => opt.style
+                        .display = 'none');
+                    document.querySelectorAll('.dropdown-arrow').forEach(arw => arw.innerHTML =
+                        '&#9660;');
 
                     if (!isOpen) {
                         options.style.display = 'block';
@@ -225,8 +241,8 @@
                     }
                 });
 
-                options.querySelectorAll('li').forEach(function (item) {
-                    item.addEventListener('click', function (e) {
+                options.querySelectorAll('li').forEach(function(item) {
+                    item.addEventListener('click', function(e) {
                         const value = this.getAttribute('data-value');
                         const text = this.innerText;
                         hiddenInput.value = value;
@@ -236,7 +252,7 @@
                     });
                 });
 
-                document.addEventListener('click', function () {
+                document.addEventListener('click', function() {
                     options.style.display = 'none';
                     arrow.innerHTML = '&#9660;';
                 });
@@ -244,4 +260,5 @@
         });
     </script>
 </body>
+
 </html>

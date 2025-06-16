@@ -73,7 +73,7 @@
                 </div>
             @endif
                 <div class="form-group">
-                    <input type="text" name="otp" id="otp" class="form-control" placeholder="Kode OTP" required>
+                    <input type="text" name="otp" id="otp" class="form-control" placeholder="OTP Code" required>
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-success btn-block" style="background:blue">Submit</button>

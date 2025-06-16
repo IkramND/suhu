@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,6 +13,7 @@
 
     <title></title>
 </head>
+
 <body>
 
 
@@ -23,7 +25,7 @@
             <div class="illustration"><i class="ion-wrench"></i></div>
             <h5 class="text-center mb-3">Editing Tools</h5>
 
-            @if(session('success'))
+            @if (session('success'))
                 <div class="alert alert-success text-center">
                     {{ session('success') }}
                 </div>
@@ -40,15 +42,18 @@
             @endif
 
             <div class="form-group">
-                <input type="text" class="form-control" id="id_mesin" name="id_mesin" value="{{ $alat->id_mesin }}" placeholder="ID Mesin" required>
+                <input type="text" class="form-control" id="id_mesin" name="id_mesin" value="{{ $alat->id_mesin }}"
+                    placeholder="ID Mesin" required>
             </div>
 
             <div class="form-group">
-                <input type="text" class="form-control" id="ip_address" name="ip_address" placeholder="IP Address ({{ $alat->ip_address }})" required>
+                <input type="text" class="form-control" id="ip_address" name="ip_address"
+                    placeholder="IP Address ({{ $alat->ip_address }})" required>
             </div>
 
             <div class="form-group">
-                <input type="text" class="form-control" id="lokasi" name="lokasi" placeholder="Lokasi ({{ $alat->lokasi }})" required>
+                <input type="text" class="form-control" id="lokasi" name="lokasi"
+                    placeholder="Lokasi ({{ $alat->lokasi }})" required>
             </div>
 
             <div class="form-group">
@@ -128,4 +133,5 @@
     </style>
 
 </body>
+
 </html>

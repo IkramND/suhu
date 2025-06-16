@@ -12,36 +12,36 @@ class HistoryController extends Controller
     {
         $id_mesin = $request->query('id_mesin');
         $ip_address = $request->query('ip_address');
-        $historyData = DB::table('data_sensor')->where('id_mesin', $id_mesin)->orderBy('waktu', 'desc')->get();
+        $historyData = DB::table('data_sensor')->where('id_mesin', $id_mesin)->orderBy('waktu', 'desc')->limit(5000)->get();
 
-        return view('Historys', compact('historyData', 'id_mesin','ip_address'));
+        return view('Historys', compact('historyData', 'id_mesin', 'ip_address'));
     }
 
 
-public function fetchHistory(Request $request)
-{
-    $id_mesin = $request->query('id_mesin');
+    public function fetchHistory(Request $request)
+    {
+        $id_mesin = $request->query('id_mesin');
 
-    $startDate = $request->input('start_date');
-    $endDate = $request->input('end_date');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
 
-    $query = DB::table('data_sensor')
-    ->selectRaw("DATE(waktu) as tanggal,
+        $query = DB::table('data_sensor')
+            ->selectRaw("DATE(waktu) as tanggal,
                  DATE_FORMAT(MIN(waktu), '%M') as hari,
                  LEFT(AVG(suhu), 4) as rata_rata_suhu,
                  LEFT(AVG(kelembaban), 4) as rata_rata_kelembaban")
-    ->where('id_mesin', $id_mesin)
-    ->groupBy(DB::raw('DATE(waktu)'))
-    ->orderBy('tanggal', 'ASC');
+            ->where('id_mesin', $id_mesin)
+            ->groupBy(DB::raw('DATE(waktu)'))
+            ->orderBy('tanggal', 'ASC');
 
 
 
-    if ($startDate && $endDate) {
-        $query->whereBetween('waktu', [$startDate . " 00:00:00", $endDate . " 23:59:59"]);
+        if ($startDate && $endDate) {
+            $query->whereBetween('waktu', [$startDate . " 00:00:00", $endDate . " 23:59:59"]);
+        }
+
+        $data = $query->get();
+
+        return response()->json($data);
     }
-
-    $data = $query->get();
-
-    return response()->json($data);
-}
 }
