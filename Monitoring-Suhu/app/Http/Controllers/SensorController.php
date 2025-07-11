@@ -53,13 +53,11 @@ class SensorController extends Controller
                 }
             }
 
-            // Hentikan jika sudah cukup
             if (count($filtered) >= $limit) {
                 break;
             }
         }
 
-        // Karena kita ambil dari data terbaru, balikkan supaya dari lama ke baru
         $filtered = array_reverse($filtered);
 
         return response()->json($filtered);

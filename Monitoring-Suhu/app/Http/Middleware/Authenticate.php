@@ -20,7 +20,6 @@ class Authenticate
 
     public function handle($request, Closure $next, ...$guards)
 {
-    // $role = Role::find()
     if (!Auth::check()) {
         return redirect('/login')->withErrors(['error' => 'You must log in first.']);
     }

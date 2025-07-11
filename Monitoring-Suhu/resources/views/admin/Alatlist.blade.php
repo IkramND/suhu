@@ -9,7 +9,6 @@
             padding: 20px;
             margin-top: 75px;
             margin-left: 25%;
-            /* background: red; */
         }
 
         .card {
@@ -57,6 +56,15 @@
 
         .btn:hover {
             opacity: 0.8;
+        }
+
+        @media (max-width:800px) {
+            .container {
+
+                margin: 85px auto 0 auto;
+
+            }
+
         }
     </style>
 

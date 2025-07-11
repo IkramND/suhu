@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <!-- Bootstrap & Ionicons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
@@ -13,7 +12,6 @@
     <title></title>
 
     <style>
-         /* Menghilangkan spinner di input number */
     input[type=number]::-webkit-inner-spin-button,
     input[type=number]::-webkit-outer-spin-button {
         -webkit-appearance: none;
@@ -54,7 +52,6 @@
                     @endforeach
                 </ul>
                 <input type="hidden" name="id_mesin" id="id_mesin">
-                {{-- <input type="text" class="form-control" name="id_mesin" placeholder="Machine ID" required> --}}
             </div>
 
             <div class="form-group">
@@ -79,11 +76,9 @@
         </form>
     </div>
 
-    <!-- jQuery & Bootstrap JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Styling -->
     <style>
         .login-dark {
             height: 100vh;
@@ -147,7 +142,6 @@
             overflow: hidden;
         }
 
-        /* Custom dropdown */
     .custom-dropdown {
         position: relative;
         user-select: none;

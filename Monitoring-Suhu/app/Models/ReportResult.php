@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ReportResult extends Model
 {
     protected $table = 'report_history_result';
-    public $timestamps = true; // Pastikan timestamps aktif
+    public $timestamps = true;
 
 
     protected $fillable = [

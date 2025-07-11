@@ -23,7 +23,7 @@
             @method('PUT')
 
             <div class="illustration"><i class="ion-wrench"></i></div>
-            <h5 class="text-center mb-3">Editing Tools</h5>
+            <h5 class="text-center mb-3">Edit Tools</h5>
 
             @if (session('success'))
                 <div class="alert alert-success text-center">
@@ -63,11 +63,9 @@
         </form>
     </div>
 
-    <!-- jQuery & Bootstrap JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Styling -->
     <style>
         .login-dark {
             height: 100vh;

@@ -26,6 +26,7 @@
         font-size: 20px;
         font-weight: bold;
         margin-bottom: 10px;
+
     }
     .card-text {
         font-size: 16px;
@@ -52,6 +53,17 @@
     .btn:hover {
         opacity: 0.8;
     }
+
+    @media (max-width:800px) {
+            .container {
+
+                margin: 105px auto 0 auto;
+
+            }
+
+
+
+        }
 </style>
 
 <div class="container">
@@ -59,12 +71,11 @@
         <div class="card">
             <h5 class="card-title">{{ $notification->email }}</h5>
 
-            {{-- <a href="{{ route('notification.edit', $notification->id) }}" class="btn btn-warning">Edit</a> --}}
             <form action="{{ route('admin.notification.destroy', $notification->id) }}" method="POST" style="display:inline;">
 
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="btn btn-danger" onclick="return confirm('Yakin ingin menghapus?')">Delete</button>
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Delete?')">Delete</button>
             </form>
         </div>
     @endforeach

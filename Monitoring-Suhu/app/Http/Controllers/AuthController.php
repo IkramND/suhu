@@ -76,8 +76,7 @@ class AuthController extends Controller
             $chatId = config('services.telegram.chat_id');
 
 
-            // Kirim pesan ke Telegram
-            // $response
+
             Http::timeout(5)->post("https://api.telegram.org/bot{$botToken}/sendMessage", [
                 'chat_id' => $chatId,
                 'text' => "Registration OTP Code : $otp",
@@ -205,7 +204,6 @@ class AuthController extends Controller
         }
     }
 
-    // Login
     public function login(Request $request)
     {
         $credentials = $request->only('name', 'password');
@@ -246,21 +244,17 @@ class AuthController extends Controller
             'new_password' => ['required', 'min:8', 'confirmed'],
         ]);
 
-        // Update password langsung di database
         User::where('id', Auth::id())->update([
-            'password' => Hash::make($request->new_password),
+            'password' => Hash::make($request->new_password)
         ]);
 
-        // Logout user setelah password diubah
         Auth::logout();
 
-        // Redirect ke halaman utama dengan pesan sukses
-        return redirect('/login')->with('success', 'Password berhasil diperbarui. Silakan login kembali.');
+        return redirect('/login')->with('success', 'success');
     }
 
 
 
-    // ForgotPass
 
 
     public function showForgotPasswordForm()
@@ -368,11 +362,10 @@ class AuthController extends Controller
         }
         if (!$user) {
 
-            return back()->with('error', 'Terjadi kesalahan, coba lagi.');
+            return back()->with('error', 'error,try again');
         }
     }
 
-    // Logout
     public function logout(Request $request)
     {
         Auth::logout();
@@ -380,6 +373,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/login')->with('success', 'Logout berhasil.');
+        return redirect('/login')->with('success', 'Logout success.');
     }
 }

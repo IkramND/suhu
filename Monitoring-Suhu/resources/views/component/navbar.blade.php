@@ -6,6 +6,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <style>
@@ -82,17 +83,9 @@
         }
 
         .dropdown-menu a:hover {
-            /* background-color: #374fc3; */
             cursor: pointer;
         }
-    /* .arrow {
-        display: inline-block;
-      transition: transform 0.3s ease;
-    }
 
-    .arrow.open {
-      transform: rotate(180deg);
-    } */
 
         @media (max-width: 768px) {
             .menu-toggle {
@@ -111,12 +104,10 @@
             <div class="navbar-menu dropdown">
                 <button class="dropdown-toggle" onclick="toggleDropdown()">
 
-                {{-- <a href="/admin" target="_blank"> --}}
                     <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16" style="color: white">
                         <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
                         <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
                     </svg>
-                {{-- </a> --}}
             </span>
         </button><span class="arrow" id="dropdownArrow">
 

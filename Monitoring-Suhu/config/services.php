@@ -38,6 +38,15 @@ return [
     'telegram' => [
         'bot_token' => env('TELEGRAM_BOT_TOKEN'),
         'chat_id' => env('TELEGRAM_CHAT_ID'),
+    ],
+
+    'openrouter' => [
+            'key' => env('OPENROUTER_API_KEY'),
+    ],
+
+    'groq' => [
+        'key' => env('GROQ_API_KEY')
     ]
+
 
 ];

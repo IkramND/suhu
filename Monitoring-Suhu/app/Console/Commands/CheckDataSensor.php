@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Mail;
 class CheckDataSensor extends Command
 {
     protected $signature = 'sensor:cek';
-    protected $description = 'Cek data sensor dan lakukan aksi jika ada masalah';
+    protected $description = 'Check sensor data and take action if there is a problem.';
 
     public function handle()
     {
@@ -52,7 +52,7 @@ class CheckDataSensor extends Command
                 Log::info("<<<>>> Wait <<<>>>");
                 Log::info("Data Still Same!!...");
                 sleep(3);
-                continue; // Lanjutkan loop tanpa mematikan daemon
+                continue;
             }
 
             if ($latest_id != $data->sensor_id || $index == 0) {
@@ -60,7 +60,7 @@ class CheckDataSensor extends Command
                 $latest_id = $data->sensor_id;
                 $index++;
 
-                // Validasi sensor
+
                 $message = "";
                 $conditions = [
                     $data->suhu > $data->batas_atas_suhu,
@@ -83,15 +83,15 @@ class CheckDataSensor extends Command
                 Log::info("          SEND TO TELEGRAM             ");
                 Log::info("---------------------------------------");
 
-                // Kirim alert ke Telegram jika ada masalah
+
                 if (!empty($message)) {
                     $botToken = config('services.telegram.bot_token');
                     $chatId = config('services.telegram.chat_id');
 
 
-                    // Kirim pesan ke Telegram
+
                     $response = Http::timeout(5)->post("https://api.telegram.org/bot{$botToken}/sendMessage", [
-                        // 'chat_id' => env('TELEGRAM_CHAT_ID'),
+
                         'chat_id' => $chatId,
                         'text' => $message,
                         'parse_mode' => 'Markdown'

@@ -32,13 +32,13 @@ class OperatorController extends Controller
         $operators = User::findOrFail($id);
         $operators->update($request->all());
 
-        return redirect()->route('operator.list')->with('success', 'Data alat berhasil diupdate');
+        return redirect()->route('operator.list')->with('success', 'success');
     }
 
     public function destroy($id)
     {
         $configuration = User::findOrFail($id);
         $configuration->delete();
-        return redirect()->route('configuration.list')->with('success', 'Data alat berhasil dihapus');
+        return redirect()->route('configuration.list')->with('success', 'success');
     }
 }

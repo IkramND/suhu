@@ -9,7 +9,6 @@
             padding: 20px;
             margin-top: 75px;
             margin-left: 25%;
-            /* background: red; */
         }
 
         .card {
@@ -70,26 +69,12 @@
     </style>
 
     <div class="container">
-        @foreach ($configurations as $configuration)
+        @foreach ($dataretentions as $dataretention)
             <div class="card">
-                <h5 class="card-title">{{ $configuration->id_mesin }}</h5>
-                <p class="card-text">Upper Limit Temperature : <span
-                        style="color:solid black; font-weight:bold ">{{ $configuration->batas_atas_suhu }}</span></p>
-                <p class="card-text">Lower Limit Temperature : <span
-                        style="color:solid black; font-weight:bold ">{{ $configuration->batas_bawah_suhu }}</span></p>
-                <p class="card-text">Upper Limit Humadity : <span
-                        style="color:solid black; font-weight:bold ">{{ $configuration->batas_atas_kelembaban }}</span></p>
-                <p class="card-text"> Lower Limit Humadity : <span
-                        style="color:solid black; font-weight:bold ">{{ $configuration->batas_bawah_kelembaban }}</span></p>
-
-                <a href="{{ route('configuration.edit', $configuration->id) }}" class="btn btn-warning">Edit</a>
-                <form action="{{ route('configuration.destroy', $configuration->id) }}" method="POST"
-                    style="display:inline;">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger"
-                        onclick="return confirm('Delete')">Delete</button>
-                </form>
+                <h5 class="card-title">Data Retention</h5>
+                <p class="card-text"> <span
+                        style="color:solid black; font-weight:bold ">{{ $dataretention->year }} Years</span></p>
+                <a href="{{ route('dataretention.edit', $dataretention->id) }}" class="btn btn-warning">Edit</a>
             </div>
         @endforeach
     </div>

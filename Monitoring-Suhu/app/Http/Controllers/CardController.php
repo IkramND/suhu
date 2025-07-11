@@ -25,14 +25,13 @@ class CardController extends Controller
         ], [
             'id_mesin.unique' => '* Machine ID already exist'
         ]);
-        // dd($request->all());
         Alat::create([
             'id_mesin' => $request->id_mesin,
             'ip_address' => $request->ip_address,
             'lokasi' => $request->lokasi
         ]);
 
-        return redirect()->route('card.index')->with('success', 'Alat berhasil ditambahkan');
+        return redirect()->route('card.index')->with('success', 'success');
     }
 
 
@@ -57,17 +56,14 @@ class CardController extends Controller
 
 
 
-        // $alats = Alat::all();
         return view('admin.indexing', compact('alats'));
     }
 
     public function lastupdate()
     {
 
-        // $lastupdate = DB::select("select suhu,kelembaban,waktu  as latest_id from data_sensor order by waktu desc limit 1");
 
         $lastupdate = DB::table('data_sensor')
-            // ->where('id_mesin')
             ->select('suhu', 'kelembaban', 'waktu')
             ->latest()
             ->first();
@@ -81,7 +77,6 @@ class CardController extends Controller
     {
         $id_mesin = $request->id_mesin;
 
-        // Ambil data terbaru berdasarkan id_mesin
         $latestData = DB::table('sensor_data')
             ->where('id_mesin', $id_mesin)
             ->orderBy('waktu', 'desc')
@@ -117,7 +112,6 @@ class CardController extends Controller
         $userId = Auth::id(); // ambil ID user yang login
         $user = User::findOrFail($userId);
 
-        // Decode JSON dari kolom acess jadi array PHP
         $accessIds = json_decode($user->acess, true);
 
         $users = Auth::user();
@@ -140,7 +134,6 @@ class CardController extends Controller
             return view('admin.indexing', compact('alats'));
         }
 
-        // Pastikan hasilnya array, bukan null
         if (!is_array($accessIds)) {
             $accessIds = [];
         }
@@ -185,7 +178,7 @@ class CardController extends Controller
         $alat = Alat::findOrFail($id);
         $alat->update($request->all());
 
-        return redirect()->route('card.index')->with('success', 'Data alat berhasil diupdate');
+        return redirect()->route('card.index')->with('success', 'success');
     }
 
 
@@ -193,7 +186,7 @@ class CardController extends Controller
     {
         $alat = Alat::findOrFail($id);
         $alat->delete();
-        return redirect()->route('card.index')->with('success', 'Data alat berhasil dihapus');
+        return redirect()->route('card.index')->with('success', 'success');
     }
 
 

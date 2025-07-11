@@ -20,9 +20,7 @@ class CheckAdminRole
         $role = Role::find($request->role_id);
         $user = Auth::user();
 
-        // if(Auth::check() && Auth::user()->$role && $role->role == 'Admin' || Auth::cek() && Auth::user()->$role->role == 'admin')  {
-        // return $next($request);
-        // }
+
 
         if ($user && $user->role && strtolower($user->role->role) === 'admin') {
             return $next($request);

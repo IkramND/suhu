@@ -11,12 +11,14 @@ use Illuminate\Http\Request;
 class PDFController extends Controller
 {
 
-    public function index(){
+    public function index()
+    {
         $alats = Alat::all();
-        return view('admin.Report',compact('alats'));
+        return view('admin.Report', compact('alats'));
     }
 
-    public function generatePDF(Request $request){
+    public function generatePDF(Request $request)
+    {
         $request->validate([
             'id_mesin' => 'required|string',
             'start_date' => 'required|date',
@@ -26,8 +28,8 @@ class PDFController extends Controller
 
         $alat = Alat::where('id_mesin', $request->id_mesin)->first();
 
-        if(!$alat){
-            return back()->with('error','Not found');
+        if (!$alat) {
+            return back()->with('error', 'Not found');
         }
 
 
@@ -42,11 +44,11 @@ class PDFController extends Controller
             DB::raw('ROUND(AVG(suhu),2) as average_temperature'),
             DB::raw('ROUND(AVG(kelembaban),2) as average_humidity'),
         )
-        ->where('id_mesin', $request->id_mesin)
-        ->whereBetween('waktu', [$request->start_date . ' 00:00:00', $request->end_date . ' 23:59:59'])
-        ->groupBy(DB::raw('DATE(waktu)'))
-        ->orderBy('tanggal', 'asc')
-        ->get();
+            ->where('id_mesin', $request->id_mesin)
+            ->whereBetween('waktu', [$request->start_date . ' 00:00:00', $request->end_date . ' 23:59:59'])
+            ->groupBy(DB::raw('DATE(waktu)'))
+            ->orderBy('tanggal', 'asc')
+            ->get();
 
 
 
@@ -58,61 +60,57 @@ class PDFController extends Controller
             'end_date' => $request->end_date,
             'file' => $request->file,
             // 'date' => now()->format('d-m-Y H:i:s'),
-            'date' => now()->setTimezone('Asia/Jakarta')->format('d-m-Y H:i:s'),// Ganti dengan zona waktu pengguna
+            'date' => now()->setTimezone('Asia/Jakarta')->format('d-m-Y H:i:s'),
 
             'sensor_data' => $sensorData
         ];
 
-        if ($request->file == 'PDF'){
+        if ($request->file == 'PDF') {
 
-        $pdf = PDF::Loadview('admin.Reportresult', $data);
+            $pdf = PDF::Loadview('admin.Reportresult', $data);
 
-        return $pdf->stream('pdf_file.pdf');
+            return $pdf->stream('pdf_file.pdf');
         };
 
-        if($request->file == 'CSV'){
-                $filename = 'Report_' . $request->start_date .'__'.$request->end_date  . '.csv';
+        if ($request->file == 'CSV') {
+            $filename = 'Report_' . $request->start_date . '__' . $request->end_date  . '.csv';
 
-                $headers = [
-                    'Content-Type' => 'text/csv',
-                    'Content-Disposition' => "attachment; filename=\"$filename\"",
-                ];
+            $headers = [
+                'Content-Type' => 'text/csv',
+                'Content-Disposition' => "attachment; filename=\"$filename\"",
+            ];
 
-                $columns = [
-                    'Date',
-                    'Lowest Temperature',
-                    'Highest Temperature',
-                    'Average Temperature',
-                    'Lowest Humidity',
-                    'Highest Humidity',
-                    'Average Humidity'
-                ];
+            $columns = [
+                'Date',
+                'Lowest Temperature',
+                'Highest Temperature',
+                'Average Temperature',
+                'Lowest Humidity',
+                'Highest Humidity',
+                'Average Humidity'
+            ];
 
-                $callback = function() use ($sensorData, $columns) {
-                    $file = fopen('php://output', 'w');
-                    fputcsv($file,$columns, ';');
-
-
-                    foreach ($sensorData as $row) {
-                        fputcsv($file, [
-                            $row->tanggal,
-                            number_format($row->lowest_temperature, 2),
-                            number_format($row->highest_temperature, 2),
-                            number_format($row->average_temperature, 2),
-                            number_format($row->lowest_humidity, 2),
-                            number_format($row->highest_humidity, 2),
-                            number_format($row->average_humidity, 2)
-                        ], ';');
-                    }
-
-                    fclose($file);
-                };
-
-                return response()->stream($callback, 200, $headers);
+            $callback = function () use ($sensorData, $columns) {
+                $file = fopen('php://output', 'w');
+                fputcsv($file, $columns, ';');
 
 
+                foreach ($sensorData as $row) {
+                    fputcsv($file, [
+                        $row->tanggal,
+                        number_format($row->lowest_temperature, 2),
+                        number_format($row->highest_temperature, 2),
+                        number_format($row->average_temperature, 2),
+                        number_format($row->lowest_humidity, 2),
+                        number_format($row->highest_humidity, 2),
+                        number_format($row->average_humidity, 2)
+                    ], ';');
+                }
 
+                fclose($file);
+            };
+
+            return response()->stream($callback, 200, $headers);
         }
-
     }
 }

@@ -1,7 +1,6 @@
 @extends('component.dashboard')
 @section('main')
     <style>
-        /* Menghilangkan spinner di input number */
         input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button {
             -webkit-appearance: none;
@@ -11,6 +10,16 @@
         canvas {
             width: 100%;
             height: 100%;
+        }
+
+        .container {
+            width: 65%;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-left: 25%;
+            margin-top: 85px;
         }
 
         a.tooltip-svg {
@@ -38,7 +47,11 @@
             opacity: 1;
         }
 
+
         @media (max-width:1024px) {
+
+
+
             .pisah {
                 grid-template-columns: 7fr 1fr !important;
             }
@@ -60,17 +73,69 @@
                 grid-row: 1;
             }
 
+            input {
+                margin-top: 20px !important
+            }
+
+            button {
+                margin-top: 20px !important
+            }
+
         }
 
+        @media (max-width:800px) {
+            .container {
 
+                margin: 85px auto 0 auto;
+
+            }
+
+        }
+
+        @media (max-width:630px) {
+            .dd {
+                min-width: 100px;
+            }
+
+            .rd {
+                min-width: 100px;
+            }
+
+            input {
+                min-width: 80px;
+            }
+
+        }
+
+        @media (max-width:425px) {
+
+            .container {
+                margin-top: 115px;
+            }
+
+            .rd {
+                max-width: 63px;
+                min-width: 30px;
+            }
+
+            .dd {
+                max-width: 70px;
+                min-width: 65px;
+            }
+
+            button {
+                margin-top: 20px !important
+            }
+
+
+
+        }
     </style>
 
     <br>
 
     @foreach ($alats as $alat)
-        <div class="container"
-            style="width: 65%; padding: 20px; border: 1px solid #ccc; border-radius: 30px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); margin: 20px auto; margin-top:85px;margin-left:25%">
-
+        <div class="container">
             <div class="card">
                 <div class="pisah" style="grid-template-columns: 3fr 4fr 1fr; display: grid; position: relative;">
                     <div class="left">
@@ -83,25 +148,24 @@
                     <div class="center">
                         <h4 style="margin-bottom:0 ">IP : {{ $alat->ip_address }} </h4>
                         <div style="display:flex;align-items:center;">
-                            <h4 style="margin-bottom:0 ">Range data : </h4>
-                            <input type="number" id="limit_{{ $alat->id_mesin }}" name="limit_{{ $alat->id_mesin }}"
-                                min="1" max="18" required oninput="validateInput(this)"
-                                style="width: 11%; margin-left:5%;margin-top:5%">
+                            <h4 style="margin-bottom:0;" class="rd">Range data : </h4>
+                            <input type="number" class="input-maxdata" id="limit_{{ $alat->id_mesin }}"
+                                name="limit_{{ $alat->id_mesin }}" placeholder="" min="1" max="18" required
+                                oninput="validateInput(this)" style="width: 11%; margin-left:5%;margin-top:5%">
                             <button onclick="fetchData{{ $alat->id_mesin }}()"
                                 style="background-color: blue; color: white; padding: 4px 8px; border: none; border-radius: 5px; cursor: pointer;margin-top:5%;margin-left:2%">Update</button>
                             <span class="max" style="color:grey;margin-left:2%;margin-top:4%"> <i
-                                    style="font-weight:normal" id="maxdata">( max 18
-                                    )</i></span>
+                                    style="font-weight:normal" id="maxdata"></i></span>
                         </div>
                         <div style="display:flex;align-items:center;">
-                            <h4 style="margin-bottom:0 ">Duration data :</h4>
-                            <input type="number" id="second_{{ $alat->id_mesin }}" name="second_{{ $alat->id_mesin }}"
-                                required style="width: 11%;margin-left:12px;margin-top:5%">
-                            <button onclick="fetchData({{ $alat->id_mesin }})"
+                            <h4 style="margin-bottom:0" class="dd">Duration data :</h4>
+                            <input type="number" class="input-durationdata" id="second_{{ $alat->id_mesin }}"
+                                name="second_{{ $alat->id_mesin }}" placeholder="Def 60 Sec" required
+                                style="width: 11%;margin-left:12px;margin-top:5%">
+                            <button onclick="fetchData{{ $alat->id_mesin }}"
                                 style="background-color: blue; color: white; padding: 4px 8px; border: none; border-radius: 5px; cursor: pointer;margin-top:5%;margin-left:2%">Update</button>
                             <span class="max" style="color:grey;margin-left:2%;margin-top:4%"> <i
-                                    style="font-weight:normal">( Default 1
-                                    Minute )</i></span>
+                                    style="font-weight:normal" id="defsec"></i></span>
 
                         </div>
                     </div>
@@ -122,7 +186,6 @@
                             </svg>
                         </a>
 
-                        <!-- Data Suhu dan Kelembaban -->
                         <div style=" width: 100%; padding: 10px; text-align: left; margin-top: 30px; border-radius: 5px;">
                             <div
                                 style="margin-left:60%;border-radius:10px;text-align:center;border:1px solid black;height:60%;margin-top:23%">
@@ -141,7 +204,6 @@
 
 
 
-                <!-- Input untuk mengatur jumlah data -->
                 <hr style="border: solid black 1px">
                 <div style="display: grid;grid-template-columns: 1fr 1fr" class="pisah2">
                     <div>
@@ -162,18 +224,48 @@
 
             function getmaxlimit() {
                 const width = window.innerWidth;
-                if (width < 320) return 10;
-                if (width < 480) return 12;
+                if (width < 390) return 7;
+                if (width < 600) return 10;
                 if (width < 768) return 15;
                 return 18;
             }
 
-            function getmaxdata() {
+            function getsec() {
+                const width = window.innerWidth;
+                if (width < 630) return "Def 60 Sec";
+                if (width > 630) return " ( Default 60 Second ) ";
+            }
+
+
+            function getdata() {
+                const inputsrd = document.querySelectorAll('.input-maxdata');
+                const inputsdd = document.querySelectorAll('.input-durationdata');
+                const defsec = document.getElementById("defsec");
                 const maxdata = document.getElementById("maxdata");
-                if (maxdata) {
-                    maxdata.innerText = `( Max ${getmaxlimit()} )`;
+
+                const width = window.innerWidth;
+
+                const placeholderText = (width < 630) ? `Max ${getmaxlimit()}` : '';
+                const placeholderTexts = (width < 630) ? `${getsec()}` : '';
+
+                inputsrd.forEach(input => {
+                    input.placeholder = placeholderText;
+                });
+
+                inputsdd.forEach(input => {
+                    input.placeholder = placeholderTexts;
+                });
+
+                if (width > 630) {
+                    defsec.innerText = `${getsec()}`
+                    maxdata.innerText = `( MAX ${getmaxlimit()} ) `
+                } else {
+                    defsec.innerText = ""
+                    maxdata.innerText = ""
                 }
             }
+
+
 
 
 
@@ -187,17 +279,19 @@
             }
 
             window.addEventListener('DOMContentLoaded', () => {
-                getmaxdata();
+                getdata();
             });
 
             window.addEventListener('resize', () => {
-                getmaxdata();
+                getdata();
             });
 
             function fetchData{{ $alat->id_mesin }}() {
-                let limit = document.getElementById("limit_{{ $alat->id_mesin }}").value || 10;
+                let limitinput = document.getElementById("limit_{{ $alat->id_mesin }}").value;
                 let second = document.getElementById("second_{{ $alat->id_mesin }}").value || 60;
-
+                const width = window.innerWidth;
+                let defaultlimit = (width < 500) ? 5 : 10;
+                let limit = limitinput || defaultlimit;
 
                 $.ajax({
                     url: '/sensor/fetch-data',

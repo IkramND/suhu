@@ -12,9 +12,8 @@ class HistoryController extends Controller
     {
         $id_mesin = $request->query('id_mesin');
         $ip_address = $request->query('ip_address');
-        $historyData = DB::table('data_sensor')->where('id_mesin', $id_mesin)->orderBy('waktu', 'desc')->limit(5000)->get();
 
-        return view('Historys', compact('historyData', 'id_mesin', 'ip_address'));
+        return view('Historys', compact('id_mesin', 'ip_address'));
     }
 
 

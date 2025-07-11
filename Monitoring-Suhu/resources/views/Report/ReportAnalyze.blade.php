@@ -2,33 +2,32 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css" />
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <title></title>
-
     <style>
-        /* Hilangkan spinner input number */
-        input[type=number]::-webkit-inner-spin-button,
-        input[type=number]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-
         html,
         body {
-            overflow-x: hidden;
+            overflow: hidden;
             height: 100%;
             margin: 0;
             padding: 0;
         }
 
+        .login-dark form select.form-control option {
+            color: black;
+            background-color: white;
+        }
+
         .login-dark {
             height: 100vh;
             background-size: cover;
+            position: relative;
             background: #000000;
             display: flex;
             align-items: center;
@@ -69,13 +68,14 @@
             padding: 11px;
             box-shadow: none;
             margin-top: 26px;
+            text-shadow: none;
+            outline: none;
         }
 
         .login-dark form .btn-primary:hover {
             background: #1a3b6e;
         }
 
-        /* Custom dropdown */
         .custom-dropdown {
             position: relative;
             user-select: none;
@@ -92,12 +92,6 @@
             align-items: center;
         }
 
-        .dropdown-selected::after {
-            font-size: 0.8rem;
-            color: #fff;
-            margin-left: 10px;
-        }
-
         .dropdown-options {
             position: absolute;
             top: 100%;
@@ -105,7 +99,7 @@
             right: 0;
             background-color: #1a1a1a;
             border: 1px solid #434a52;
-            max-height: 200%;
+            max-height: 200px;
             overflow-y: auto;
             z-index: 999;
             display: none;
@@ -127,68 +121,44 @@
 </head>
 
 <body>
+    <div class="login-dark" style="height: 100vh;">
 
-    <div class="login-dark">
-        <form action="{{ route('report.result') }}" method="POST">
+        <form action="{{ route('report.analyze.post') }}" method="POST" >
+
             @csrf
-
             <div class="illustration"><i class="ion-clipboard"></i></div>
-
             @if ($errors->any())
                 <div style="color: red; padding: 10px; border-radius: 5px;">
                     @foreach ($errors->all() as $error)
                         <p><i>{{ " * $error " }}</i></p>
                     @endforeach
+
                 </div>
             @endif
-
             <div class="form-group custom-dropdown">
-                <div class="dropdown-selected"><span class="selected-text">Choose Machine ID</span><span
-                        class="dropdown-arrow" style="">&#9660;</span></div>
+                <div class="dropdown-selected">
+                    <span class="selected-text">Choose Machine ID</span>
+                    <span class="dropdown-arrow">&#9660;</span>
+                </div>
 
                 <ul class="dropdown-options">
                     @foreach ($alats as $alat)
                         <li data-value="{{ $alat->id_mesin }}">{{ $alat->id_mesin }}</li>
                     @endforeach
                 </ul>
+
                 <input type="hidden" name="id_mesin" id="id_mesin">
             </div>
 
-            <div class="form-group custom-dropdown">
-                <div class="dropdown-selected"><span class="selected-text">Choose Month</span><span
-                        class="dropdown-arrow">&#9660;</span></div>
-                <ul class="dropdown-options">
-                    <li data-value="1">January</li>
-                    <li data-value="2">February</li>
-                    <li data-value="3">March</li>
-                    <li data-value="4">April</li>
-                    <li data-value="5">May</li>
-                    <li data-value="6">June</li>
-                    <li data-value="7">July</li>
-                    <li data-value="8">August</li>
-                    <li data-value="9">September</li>
-                    <li data-value="10">October</li>
-                    <li data-value="11">November</li>
-                    <li data-value="12">December</li>
-                </ul>
-                <input type="hidden" name="month" id="month">
+            <div class="form-group">
+                <input class="form-control flatpickr-input" type="text" id="startDateInput"
+                    placeholder="Select Start Date" name="start_date">
             </div>
 
-            <div class="form-group custom-dropdown">
-                <div class="dropdown-selected">
-                    <span class="selected-text">Choose Year</span>
-                    <span class="dropdown-arrow">&#9660;</span>
-                </div>
-
-                <ul class="dropdown-options">
-                    @for ($year = now()->year + 5; $year >= 2000; $year--)
-                        <li data-value="{{ $year }}">{{ $year }}</li>
-                    @endfor
-                </ul>
-
-                <input type="hidden" name="year" id="year">
+            <div class="form-group">
+                <input class="form-control flatpickr-input" type="text" id="endDateInput"
+                    placeholder="Select End Date" name="end_date">
             </div>
-
 
             <div class="form-group custom-dropdown">
                 <div class="dropdown-selected">
@@ -197,19 +167,33 @@
                 </div>
 
                 <ul class="dropdown-options">
-                    <li data-value="PDF">PDF</li>
-                    <li data-value="CSV">CSV</li>
+                    <li data-value="WORD">WORD (DOCX) </li>
                 </ul>
-                <input type="hidden" name="file" id="file">
+                <input type="hidden" name="file" id="file" value="WORD">
             </div>
 
             <div class="form-group">
-                <button class="btn btn-primary btn-block" style="background: blue">Submit</button>
+                <button class="btn btn-primary btn-block" style="background-color:blue">Submit</button>
             </div>
         </form>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
     <script>
+        flatpickr("#startDateInput", {
+            dateFormat: "Y-m-d",
+            disableMobile: true
+        });
+
+        flatpickr("#endDateInput", {
+            dateFormat: "Y-m-d",
+            disableMobile: true
+        });
+
+
         document.addEventListener('DOMContentLoaded', function() {
             const dropdown = document.querySelectorAll('.custom-dropdown');
 
@@ -220,40 +204,34 @@
                 const arrow = dropdown.querySelector('.dropdown-arrow');
                 const selectedText = dropdown.querySelector('.selected-text');
 
-
-                selected.addEventListener('click', function(e) {
-                    e.stopPropagation();
+                selected.addEventListener('click', function() {
                     const isOpen = options.style.display === 'block';
-
-                    document.querySelectorAll('.dropdown-options').forEach(opt => opt.style
-                        .display = 'none');
-                    document.querySelectorAll('.dropdown-arrow').forEach(arw => arw.innerHTML =
-                        '&#9660;');
-
                     options.style.display = isOpen ? 'none' : 'block';
-                    arrow.innerHTML = isOpen ? '&#9660;' : '&#9650;'; // ▼ : ▲
+                    arrow.innerHTML = isOpen ? '&#9660;' : '&#9650;';
                 });
 
                 options.querySelectorAll('li').forEach(function(option) {
-                    option.addEventListener('click', function(e) {
-                        e.stopPropagation();
+                    option.addEventListener('click', function() {
                         selectedText.textContent = this.textContent;
                         hiddenInput.value = this.getAttribute('data-value');
                         options.style.display = 'none';
                         arrow.innerHTML = '&#9660;';
                     });
+
                 });
+
+                document.addEventListener('click', function(e) {
+                if (!dropdown.contains(e.target)) {
+                    options.style.display = 'none';
+                    arrow.innerHTML = '&#9660;';
+                }
+            });
+
             });
 
 
-            document.addEventListener('click', function() {
-                document.querySelectorAll('.dropdown-options').forEach(opt => opt.style.display = 'none');
-                document.querySelectorAll('.dropdown-arrow').forEach(arw => arw.innerHTML = '&#9660;');
-            })
         });
     </script>
-
-
 </body>
 
 </html>

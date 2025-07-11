@@ -189,6 +189,7 @@
     <script>
         flatpickr("#customDateInput", {
             dateFormat: "Y-m-d",
+            disableMobile: true
         });
         document.addEventListener('DOMContentLoaded', function() {
             const dropdown = document.querySelectorAll('.custom-dropdown');

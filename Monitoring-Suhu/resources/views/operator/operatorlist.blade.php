@@ -54,6 +54,15 @@
     .btn-warning{
         background-color:orange
     }
+
+    @media (max-width:800px) {
+            .container {
+
+                margin: 85px auto 0 auto;
+
+            }
+
+        }
 </style>
 
 <div class="container">
@@ -86,7 +95,7 @@
             <form action="{{ route('operator.destroy', $operator->id) }}" method="POST" style="display:inline;">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="btn btn-danger" onclick="return confirm('Yakin ingin menghapus?')">Delete</button>
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Delete?')">Delete</button>
             </form>
         </div>
     @endforeach

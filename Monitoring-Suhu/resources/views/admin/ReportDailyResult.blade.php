@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,6 +13,7 @@
             margin: 0;
             background-color: #f8f9fa;
         }
+
         .container {
             max-width: 800px;
             margin: 0 auto;
@@ -20,8 +22,18 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        h1 { color: #333; margin-bottom: 10px; }
-        p { font-size: 16px; color: #555; margin: 5px 0; }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 16px;
+            color: #555;
+            margin: 5px 0;
+        }
+
         .footer {
             margin-top: 20px;
             font-size: 12px;
@@ -29,29 +41,34 @@
             border-top: 1px solid #ddd;
             padding-top: 10px;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
-        table, th, td {
+
+        table,
+        th,
+        td {
             border: 1px solid #ddd;
             padding: 8px;
             text-align: center;
         }
+
         th {
             background: #007bff;
             color: white;
         }
+
         .highlight {
             font-weight: bold;
             background-color: #e3f2fd;
         }
     </style>
 </head>
+
 <body>
-
-
 
 
 
@@ -60,10 +77,10 @@
         <br>
         <br>
         <div style="text-align:left;padding-left:2%">
-        <p><strong>IP Address:</strong> {{ $ip_address }}</p>
-        <p><strong>Location:</strong> {{ $lokasi }}</p>
-        <p><strong>Date:</strong> {{\Carbon\Carbon::parse($dates)->format('d-m-Y')}}</p>
-    </div>
+            <p><strong>IP Address:</strong> {{ $ip_address }}</p>
+            <p><strong>Location:</strong> {{ $lokasi }}</p>
+            <p><strong>Date:</strong> {{ \Carbon\Carbon::parse($dates)->format('d-m-Y') }}</p>
+        </div>
 
 
 
@@ -85,16 +102,16 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($sensor_data as $data)
-                <tr>
-                    <td>{{ str_pad($data->Jam, 2, '0', STR_PAD_LEFT) . ':00' }}</td>
-                    <td>{{ number_format($data->average_temperature,2) }}</td>
-                    <td>{{ number_format($data->lowest_temperature,2) }}</td>
-                    <td>{{ number_format($data->highest_temperature,2) }}</td>
-                    <td>{{ number_format($data->average_humidity,2) }}</td>
-                    <td>{{ number_format($data->lowest_humidity,2) }}</td>
-                    <td>{{ number_format($data->highest_humidity,2) }}</td>
-                </tr>
+                @foreach ($sensor_data as $data)
+                    <tr>
+                        <td>{{ str_pad($data->Jam, 2, '0', STR_PAD_LEFT) . ':00' }}</td>
+                        <td>{{ number_format($data->average_temperature, 2) }}</td>
+                        <td>{{ number_format($data->lowest_temperature, 2) }}</td>
+                        <td>{{ number_format($data->highest_temperature, 2) }}</td>
+                        <td>{{ number_format($data->average_humidity, 2) }}</td>
+                        <td>{{ number_format($data->lowest_humidity, 2) }}</td>
+                        <td>{{ number_format($data->highest_humidity, 2) }}</td>
+                    </tr>
                 @endforeach
             </tbody>
         </table>
@@ -104,4 +121,5 @@
         </div>
     </div>
 </body>
+
 </html>

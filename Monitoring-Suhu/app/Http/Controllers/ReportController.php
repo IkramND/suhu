@@ -12,6 +12,11 @@ use App\Models\Alat;
 use App\Models\Notification;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Http;
+use PhpOffice\PhpWord\PhpWord;
+use Illuminate\Support\Facades\Log;
+
+
 use Mockery\Matcher\Not;
 
 class ReportController extends Controller
@@ -97,7 +102,6 @@ class ReportController extends Controller
             'sensor_data' => $sensorData
         ];
 
-        // PDF Export
         if ($request->file == 'PDF') {
             $pdf = PDF::Loadview('admin.Reportresult', $data);
             Mail::send('emails.report', ['data' => $data], function ($message) use ($email, $pdf) {
@@ -131,7 +135,6 @@ class ReportController extends Controller
             return $pdf->stream('pdf_file.pdf');
         }
 
-        // CSV Export
         if ($request->file == 'CSV') {
             $filename = 'Report_' . $request->start_date . '__' . $request->end_date  . '.csv';
 
@@ -150,7 +153,6 @@ class ReportController extends Controller
                 'Average Humidity'
             ];
 
-            // Create CSV in memory
             $tempCsv = fopen('php://temp', 'r+');
             fputcsv($tempCsv, $columns, ';');
 
@@ -170,7 +172,6 @@ class ReportController extends Controller
             $csvContent = stream_get_contents($tempCsv);
             fclose($tempCsv);
 
-            // Send CSV via email
             Mail::send('emails.report', ['data' => $data], function ($message) use ($email, $csvContent, $filename) {
                 $message->to($email)->subject('Report Machine CSV');
                 $message->attachData($csvContent, $filename, [
@@ -178,7 +179,6 @@ class ReportController extends Controller
                 ]);
             });
 
-            // Stream file directly to browser
             $callback = function () use ($sensorData, $columns) {
                 $file = fopen('php://output', 'w');
                 fputcsv($file, $columns, ';');
@@ -199,7 +199,6 @@ class ReportController extends Controller
             };
 
             if ($request->archive == 'YES') {
-                // Clean up sensor data after processing
                 Sensor::where('id_mesin', $request->id_mesin)
                     ->whereBetween('waktu', [$request->start_date . ' 00:00:00', $request->end_date . ' 23:59:59'])
                     ->delete();
@@ -236,7 +235,6 @@ class ReportController extends Controller
             ->where('id_mesin', $request->id_mesin)
             ->whereMonth('waktu', $month)
             ->whereYear('waktu', $year)
-            // ->groupBy(DB::raw('DATE(waktu)'))
             ->orderBy('tanggal', 'asc')
             ->get();
 
@@ -252,7 +250,6 @@ class ReportController extends Controller
             'lokasi' => $alat->lokasi,
             'month' => $month,
             'year' => $year,
-            // 'date' => now()->format('d-m-Y H:i:s'),
             'date' => now()->setTimezone('Asia/Jakarta')->format('d-m-Y H:i:s'), // Ganti dengan zona waktu pengguna
 
             'sensor_data' => $ReportResult
@@ -400,5 +397,149 @@ class ReportController extends Controller
             };
             return response()->stream($callback, 200, $headers);
         }
+    }
+
+    public function reportanalyze()
+    {
+        $alats = Alat::all();
+        return view('Report.ReportAnalyze', compact('alats'));
+    }
+
+    public function reportanalyzepost(Request $request)
+    {
+        $request->validate([
+            'id_mesin' => 'required|exists:alat,id_mesin',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'file' => 'required',
+        ]);
+
+        $sensorData = Sensor::select(
+            DB::raw('DATE(waktu) as tanggal'),
+            DB::raw('MIN(suhu) as lowest_temperature'),
+            DB::raw('MAX(suhu) as highest_temperature'),
+            DB::raw('MIN(kelembaban) as lowest_humidity'),
+            DB::raw('MAX(kelembaban) as highest_humidity'),
+            DB::raw('ROUND(AVG(suhu),2) as average_temperature'),
+            DB::raw('ROUND(AVG(kelembaban),2) as average_humidity'),
+        )
+            ->where('id_mesin', $request->id_mesin)
+            ->whereBetween('waktu', [$request->start_date . ' 00:00:00', $request->end_date . ' 23:59:59'])
+            ->groupBy(DB::raw('DATE(waktu)'))
+            ->orderBy('tanggal', 'asc')
+            ->get();
+
+        // $file = $request->file;
+        $prompt = "Baca report yang akan saya kirim dan berikan analisa lengkap dan saran untuk report suhu ruang server tersebut.
+
+                    Keterangan kolom report :
+
+                    0. Date = Tanggal pengecekan
+                    1. Time = Jam pengecekan
+
+                    Untuk kolom dibawah di buat rata-rata dari pengukuran yang dilakukan setiap 5 menit oleh arduino.
+                    2. Temperature Average : Rata-rata suhu pengecekan
+                    3. Temperature Lowest : Suhu terendah
+                    4. Temperature Highest : Suhu tertinggi
+                    5. Humidity Average : Rata-rata Kelembaban
+                    6. Humidity Lowest : Kelembaban terendah
+                    7. Humidity Highest : Kelembaban tertinggi";
+
+        $stringdata = '';
+        foreach($sensorData as $row){
+        $stringdata .= "Tanggal: {$row->tanggal}, Suhu: {$row->average_temperature}°C, Kelembaban: {$row->average_humidity}%\n";
+        }
+
+        $combinedPrompt = $prompt . "\n\n" . $stringdata;
+
+        Log::info('API Key Used for Claude', ['key' => env('OPENROUTER_API_KEY')]);
+
+
+        // $response = Http::withHeaders([
+        //     'Content-Type' => 'application/json',
+        //     'Authorization' => 'Bearer ' . config('services.openrouter.key'),
+        // ])->post('https://openrouter.ai/api/v1/chat/completions', [
+        //     'model' => 'anthropic/claude-3.5-haiku',
+        //     'messages' => [
+        //         [
+        //             'role' => 'user',
+        //             'content' => [
+        //                 [
+        //                     'type' => 'text',
+        //                     'text' => $combinedPrompt
+        //                 ]
+        //             ]
+        //         ]
+        //     ]
+        // ]);
+
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+            'Authorization' => 'Bearer ' . config('services.groq.key'),
+        ])->post('https://api.groq.com/openai/v1/chat/completions', [
+            'model' => 'llama-3.1-8b-instant',
+            'messages' => [
+                [
+                    'role' => 'user',
+                    'content' => [
+                        [
+                            'type' => 'text',
+                            'text' => $combinedPrompt
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        Log::info('claude Prompt: ', ['prompt' => $combinedPrompt]);
+
+        if (!$response->successful()) {
+        Log::error('Claude API Failed', [
+            'status' => $response->status(),
+            'body' => $response->body()
+        ]);
+
+        return response()->json([
+            'error' => 'Claude API failed',
+            'status' => $response->status(),
+            'response' => $response->json()
+        ]);
+    }
+
+        $result = $response->json();
+        $text = $result['choices'][0]['message']['content'] ?? null;
+
+        if (!$text || trim($text) === '') {
+        return response()->json([
+            'error' => 'Claude returned empty response',
+            'raw_response' => $result
+        ]);
+    }
+
+
+    $filename = "Temperature_Report_Analysis_{$request->start_date}_To_{$request->end_date}.docx";
+    $phpWord = new PhpWord();
+    $section = $phpWord->addSection();
+    $lines = explode("\n", $text);
+    $section->addTitle('Hasil Analisis', 1);
+
+    foreach ($lines as $line) {
+        $trimmed = trim($line);
+        if (str_starts_with($trimmed, '-')) {
+            $section->addListItem(ltrim($trimmed, '- '), 0, null, 'bullet');
+        } else {
+            $section->addText($trimmed);
+        }
+    }
+
+    $wordPath = storage_path("app/{$filename}");
+    $phpWord->save($wordPath, 'Word2007');
+
+    return response()->download($wordPath)->deleteFileAfterSend(true);
+
+
+
+
+
     }
 }

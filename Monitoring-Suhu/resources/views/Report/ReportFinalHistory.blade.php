@@ -87,7 +87,6 @@
 
 
 
-        <!-- Tabel Data Suhu & Kelembaban Per Hari -->
         <table>
             <thead>
                 <tr>
@@ -115,8 +114,7 @@
                         <td>{{ number_format($data->average_humidity, 2) }}</td>
                         <td>{{ number_format($data->lowest_humidity, 2) }}</td>
                         <td>{{ number_format($data->highest_humidity, 2) }}</td>
-                        {{-- <td>{{ number_format($data->rata_rata_suhu,2) }}</td>
-                    <td>{{ number_format($data->rata_rata_kelembaban, 2) }}</td> --}}
+
                     </tr>
                 @endforeach
             </tbody>

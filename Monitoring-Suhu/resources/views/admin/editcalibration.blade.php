@@ -9,19 +9,27 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-
-
 
     <title></title>
+
+    <style>
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            opacity: 1;
+            appearance: auto;
+        }
+    </style>
 </head>
 
 <body>
-    <div class="login-dark">
-        <form method="POST" action="{{ route('register') }}">
-            @csrf
-            <div class="illustration"><i class="bi bi-person-add"></i></div>
 
+    <div class="login-dark">
+        <form method="POST" action="{{ route('calibration.update', $calibrations->id) }}">
+            @csrf
+            @method('PUT')
+
+            <div class="illustration"><i class="icon ion-settings"></i></div>
+            <h5 class="text-center mb-3">Edit Calibrations</h5>
 
             @if (session('success'))
                 <div class="alert alert-success text-center">
@@ -30,47 +38,36 @@
             @endif
 
             @if ($errors->any())
-                <div>
+                <div style="background: #0f0f0f;color:red;margin-bottom: 5%">
                     <ul class="list-unstyled mb-0">
                         @foreach ($errors->all() as $error)
-                            <li style="background: #0f0f0f; color:red "><i>{{ "* $error " }}</i></li>
+                            <li>{{ $error }}</li>
                         @endforeach
                     </ul>
                 </div>
             @endif
 
-
             <div class="form-group">
-                <input type="text" class="form-control" name="name" placeholder="Username" required>
+                <input type="text" class="form-control" id="id_mesin" name="id_mesin"
+                    value="{{ $calibrations->id_mesin }}" placeholder="ID Mesin" required>
+            </div>
+            <div class="form-group">
+                <input type="number" step="any" class="form-control" name="temperature_calibration" value="{{ $calibrations->temperature_calibration }}"
+                    placeholder="Temperature Calibration ({{ $calibrations->temperature_calibration }})" required>
+            </div>
+            <div class="form-group">
+                <input type="number" step="any" class="form-control" name="humidity_calibration" value="{{ $calibrations->humidity_calibration }}"
+                    placeholder="Humidity Calibration ({{ $calibrations->humidity_calibration }})" required>
             </div>
 
-            <div class="form-group">
-                <input type="email" class="form-control" name="email" placeholder="Email" required>
-            </div>
+
 
             <div class="form-group">
-                <input type="password" class="form-control" name="password" placeholder="Password" required>
-            </div>
+                <button type="submit" class="btn btn-primary btn-block" onclick="alert('Please Restart Your Machine')">Update</button>
 
+            </div>
             <div class="form-group">
-                <input type="password" class="form-control" name="password_confirmation"
-                    placeholder="Password Confirmation" required>
-            </div>
-
-            <div class="form-group custom-dropdown">
-                <div class="dropdown-selected"><span class="selected-text">Choose Role</span><span
-                        class="dropdown-arrow">&#9660;</span></div>
-
-                <ul class="dropdown-options">
-                    @foreach ($roles as $role)
-                        <li data-value="{{ $role->id }}">{{ $role->role }}</li>
-                    @endforeach
-                </ul>
-                <input type="hidden" name="role_id" id="role_id">
-            </div>
-
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                <a href="{{ route('calibration.list') }}" class="btn btn-primary btn-block">Cancel</a>
             </div>
         </form>
     </div>
@@ -84,14 +81,14 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: black;
+            background: #000000;
         }
 
         .login-dark form {
             width: 100%;
             max-width: 350px;
             background-color: #0f0f0f;
-            padding: 40px;
+            padding: 20px 40px 20px 40px;
             border-radius: 5px;
             text-align: center;
             color: #fff;
@@ -188,6 +185,13 @@
 
         .dropdown-options li:hover {
             background-color: #333;
+        }
+
+        h6 {
+            text-align: left;
+            padding: 10px;
+            border-bottom: 1px solid #434a52;
+            width: 100%;
         }
     </style>
 

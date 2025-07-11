@@ -1,12 +1,50 @@
 @extends('component.dashboard')
 @section('main')
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<style>
+
+#chartContainer.hidden{
+    display: none;
+}
+
+@media (max-width: 800px){
+    .container{
+    margin:150px auto 0 auto;
+    }
+
+}
+
+@media (max-width: 600px){
+    #chartContainer{
+        max-width: 400px !important;
+    }
+}
+
+@media (max-width: 500px){
+    #chartContainer{
+        max-width: 290px !important;
+    }
+
+    input{
+        max-width: 100px;
+    }
+}
+
+@media (max-width:350px){
+    #chartContainer{
+        max-width: 220px !important;
+    }
+}
+</style>
+
+<div class="container">
     <div style="margin-bottom: 30px; text-align: center; margin-top: 10%;">
         <input type="hidden" id="id_mesin" value="{{ $id_mesin }}">
-        {{-- <input type="hidden" id="ip_address" value="{{ $ip_address }}">  IP address dari halaman sebelumnya --}}
         <div style="margin-top:7%">
-            <input type="date" id="start_date">
+            <input type="date" id="start_date" placeholder="Select Start Date">
             <label for="end_date" style="padding-left: 1%;padding-right:1%"> - </label>
-            <input type="date" id="end_date">
+            <input type="date" id="end_date" placeholder="Select End Date">
         </div>
     </div>
 
@@ -24,17 +62,29 @@
         <hr id="chartDivider" style="border: solid black 1px; display: none;">
         <canvas id="humidityChart" style="margin-top: 30px;"></canvas>
     </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <script>
+
+        flatpickr("#start_date",{
+            dateFormat: "Y-m-d",
+            disableMobile:true
+        })
+
+        flatpickr("#end_date",{
+            dateFormat: "Y-m-d",
+            disableMobile:true
+        })
+
         let temperatureChart = null;
         let humidityChart = null;
 
         function fetchDataHistory(startDate = '', endDate = '') {
             let id_mesin = document.getElementById("id_mesin").value;
 
-            // Jika ingin update berdasarkan tanggal, pastikan kedua tanggal dipilih
             if ((startDate && !endDate) || (!startDate && endDate)) {
-                return; // Stop jika hanya satu tanggal yang dipilih
+                return;
             }
 
             if (!id_mesin) {
@@ -54,18 +104,21 @@
                 success: function(data) {
                     if (data.length === 0) {
                         alert("There is no data in the selected time range.");
+                        document.getElementById("chartContainer").classList.add("hidden");
                         return;
                     }
 
+                    document.getElementById("chartContainer").classList.remove("hidden");
+
+
                     const labels = data.map(item =>
-                        `${item.hari.slice(0,3)} ${item.tanggal.slice(8,12)}-${item.tanggal.slice(2,4)}`);
+                    `${item.hari.slice(0,3)} ${item.tanggal.slice(8,12)}-${item.tanggal.slice(2,4)}`);
                     const tempData = data.map(item => parseFloat(item.rata_rata_suhu));
                     const humData = data.map(item => parseFloat(item.rata_rata_kelembaban));
 
                     let ctxTemp = document.getElementById("temperatureChart").getContext('2d');
                     let ctxHum = document.getElementById("humidityChart").getContext('2d');
 
-                    // 🔥 Hancurkan chart jika sudah ada sebelumnya
                     if (temperatureChart) {
                         temperatureChart.destroy();
                     }
@@ -73,13 +126,12 @@
                         humidityChart.destroy();
                     }
 
-                    // 🎨 Buat chart baru setelah menghancurkan yang lama
                     temperatureChart = new Chart(ctxTemp, {
                         type: 'line',
                         data: {
                             labels: labels,
                             datasets: [{
-                                label: 'Suhu (°C)',
+                                label: 'Temperature (°C)',
                                 data: tempData,
                                 borderColor: 'red',
                                 fill: false
@@ -92,7 +144,7 @@
                         data: {
                             labels: labels,
                             datasets: [{
-                                label: 'Kelembaban (%)',
+                                label: 'Humidity (%)',
                                 data: humData,
                                 borderColor: 'blue',
                                 fill: false

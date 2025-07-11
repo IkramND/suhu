@@ -9,7 +9,6 @@
             padding: 20px;
             margin-top: 75px;
             margin-left: 25%;
-            /* background: red; */
         }
 
         .card {
@@ -70,25 +69,21 @@
     </style>
 
     <div class="container">
-        @foreach ($configurations as $configuration)
+        @foreach ($calibrations as $calibration)
             <div class="card">
-                <h5 class="card-title">{{ $configuration->id_mesin }}</h5>
-                <p class="card-text">Upper Limit Temperature : <span
-                        style="color:solid black; font-weight:bold ">{{ $configuration->batas_atas_suhu }}</span></p>
-                <p class="card-text">Lower Limit Temperature : <span
-                        style="color:solid black; font-weight:bold ">{{ $configuration->batas_bawah_suhu }}</span></p>
-                <p class="card-text">Upper Limit Humadity : <span
-                        style="color:solid black; font-weight:bold ">{{ $configuration->batas_atas_kelembaban }}</span></p>
-                <p class="card-text"> Lower Limit Humadity : <span
-                        style="color:solid black; font-weight:bold ">{{ $configuration->batas_bawah_kelembaban }}</span></p>
+                <h5 class="card-title">{{ $calibration->id_mesin }}</h5>
+                <p class="card-text">Temperature Calibration: <span
+                        style="color:solid black; font-weight:bold ">{{ $calibration->temperature_calibration }}</span></p>
+                    <p class="card-text">Humidity Calibration: <span
+                        style="color:solid black; font-weight:bold ">{{ $calibration->humidity_calibration }}</span></p>
 
-                <a href="{{ route('configuration.edit', $configuration->id) }}" class="btn btn-warning">Edit</a>
-                <form action="{{ route('configuration.destroy', $configuration->id) }}" method="POST"
+                <a href="{{ route('calibration.edit', $calibration->id) }}" class="btn btn-warning">Edit</a>
+                <form action="{{ route('calibration.destroy', $calibration->id) }}" method="POST"
                     style="display:inline;">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="btn btn-danger"
-                        onclick="return confirm('Delete')">Delete</button>
+                        onclick="return confirm('Delete?')">Delete</button>
                 </form>
             </div>
         @endforeach

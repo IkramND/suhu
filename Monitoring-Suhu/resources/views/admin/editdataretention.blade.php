@@ -5,23 +5,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 
     <title></title>
+
+    <style>
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            appearance:unset;
+        }
+    </style>
 </head>
 
 <body>
-    <div class="login-dark">
-        <form method="POST" action="{{ route('register') }}">
-            @csrf
-            <div class="illustration"><i class="bi bi-person-add"></i></div>
 
+    <div class="login-dark">
+        <form method="POST" action="{{ route('dataretention.update', $dataretention ->id) }}">
+            @csrf
+            @method('PUT')
+            <div class="illustration"><i class="fa fa-calendar"></i></div>
+            <h5 class="text-center mb-3">Add Data Retention</h5>
 
             @if (session('success'))
                 <div class="alert alert-success text-center">
@@ -30,44 +37,20 @@
             @endif
 
             @if ($errors->any())
-                <div>
+                <div style="background: #0f0f0f;color:red;margin-bottom: 5%">
                     <ul class="list-unstyled mb-0">
                         @foreach ($errors->all() as $error)
-                            <li style="background: #0f0f0f; color:red "><i>{{ "* $error " }}</i></li>
+                            <li>{{ $error }}</li>
                         @endforeach
                     </ul>
                 </div>
             @endif
 
-
             <div class="form-group">
-                <input type="text" class="form-control" name="name" placeholder="Username" required>
+                <input type="number" class="form-control" name="year" placeholder="Year" required>
             </div>
 
-            <div class="form-group">
-                <input type="email" class="form-control" name="email" placeholder="Email" required>
-            </div>
 
-            <div class="form-group">
-                <input type="password" class="form-control" name="password" placeholder="Password" required>
-            </div>
-
-            <div class="form-group">
-                <input type="password" class="form-control" name="password_confirmation"
-                    placeholder="Password Confirmation" required>
-            </div>
-
-            <div class="form-group custom-dropdown">
-                <div class="dropdown-selected"><span class="selected-text">Choose Role</span><span
-                        class="dropdown-arrow">&#9660;</span></div>
-
-                <ul class="dropdown-options">
-                    @foreach ($roles as $role)
-                        <li data-value="{{ $role->id }}">{{ $role->role }}</li>
-                    @endforeach
-                </ul>
-                <input type="hidden" name="role_id" id="role_id">
-            </div>
 
             <div class="form-group">
                 <button type="submit" class="btn btn-primary btn-block">Submit</button>
@@ -84,14 +67,14 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: black;
+            background: #000000;
         }
 
         .login-dark form {
             width: 100%;
             max-width: 350px;
             background-color: #0f0f0f;
-            padding: 40px;
+            padding: 20px 40px 20px 40px;
             border-radius: 5px;
             text-align: center;
             color: #fff;

@@ -130,10 +130,6 @@
                     </ul>
                     <input type="hidden" name="email" id="email">
                 </div>
-
-                {{-- <div class="form-group">
-                <input class="form-control" type="email" name="email" placeholder="Send To Email" required>
-            </div> --}}
                 <div class="form-group">
                     <button class="btn btn-primary btn-block" style="background: blue">Send Email</button>
                 </div>
@@ -207,15 +203,15 @@
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
-        // Inisialisasi flatpickr untuk dua input
         flatpickr("#startDateInput", {
-            dateFormat: "Y-m-d"
+            dateFormat: "Y-m-d",
+            disableMobile: true
         });
         flatpickr("#endDateInput", {
-            dateFormat: "Y-m-d"
+            dateFormat: "Y-m-d",
+            disableMobile: true
         });
 
-        // Dropdown Custom
         document.addEventListener('DOMContentLoaded', function() {
             const dropdowns = document.querySelectorAll('.custom-dropdown');
 
