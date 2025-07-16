@@ -21,22 +21,6 @@ Route::post('/register-otp', [AuthController::class, 'otpvalidation'])->name('re
 Route::get('/register-acess', [AuthController::class, 'acess'])->name('acess');
 Route::post('/register-acess-submit', [AuthController::class, 'acesssubmit'])->name('acess.submit');
 
-// Route::get('calibration/{id_mesin}', function ($id_mesin) {
-// $data = Calibration::where('id_mesin', $id_mesin)->first();
-// if (!$data){
-//     return response()->json([
-//             'offset_suhu' => 0,
-//             'offset_kelembaban' => 0,
-//             'message' => 'Data tidak ditemukan'
-//         ], 404);
-// }
-
-// return response()->json([
-//     'temperature_calibration' => floatval($data->temperature_calibration),
-//     'humidity_calibration' => floatval($data->humidity_calibration)
-// ]);
-// });
-
 Route::get('/login', function () {
     return view('auth.login');
 })->name('login');
@@ -129,13 +113,12 @@ Route::middleware([CheckAdminRole::class])->group(function () {
 });
 
 
-// Middleware untuk memastikan user login sebelum mengakses routes berikutnya
 Route::middleware(['auth'])->group(
     function () {
 
         Route::get('/', [CardController::class, 'dashboard'])->name('dashboard');
 
-        Route::get('/sensor/fetch-data/{id_mesin}', [SensorController::class, 'fetchDataHistory'])->where('id_mesin', '[A-Za-z0-9]+')->name('fetchDataHistory');
+        // Route::get('/sensor/fetch-data/{id_mesin}', [SensorController::class, 'fetchDataHistory'])->where('id_mesin', '[A-Za-z0-9]+')->name('fetchDataHistory');
 
         Route::get('/get-alats', [CardController::class, 'getAlats']);
 

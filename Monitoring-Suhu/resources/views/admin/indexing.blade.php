@@ -154,7 +154,7 @@
                                 oninput="validateInput(this)" style="width: 11%; margin-left:5%;margin-top:5%">
                             <button onclick="fetchData{{ $alat->id_mesin }}()"
                                 style="background-color: blue; color: white; padding: 4px 8px; border: none; border-radius: 5px; cursor: pointer;margin-top:5%;margin-left:2%">Update</button>
-                            <span class="max" style="color:grey;margin-left:2%;margin-top:4%"> <i
+                            <span class="max" style="color:grey;margin-left:2%;margin-top:4%;font-family:Arial, Helvetica, sans-serif"> <i
                                     style="font-weight:normal" id="maxdata"></i></span>
                         </div>
                         <div style="display:flex;align-items:center;">
@@ -164,7 +164,7 @@
                                 style="width: 11%;margin-left:12px;margin-top:5%">
                             <button onclick="fetchData{{ $alat->id_mesin }}"
                                 style="background-color: blue; color: white; padding: 4px 8px; border: none; border-radius: 5px; cursor: pointer;margin-top:5%;margin-left:2%">Update</button>
-                            <span class="max" style="color:grey;margin-left:2%;margin-top:4%"> <i
+                            <span class="max" style="color:grey;margin-left:2%;margin-top:4%;font-family:Arial, Helvetica, sans-serif"><i
                                     style="font-weight:normal" id="defsec"></i></span>
 
                         </div>

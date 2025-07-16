@@ -184,7 +184,7 @@
                                 style="width: 10%;margin-left:12px;margin-top:3%" class="input-maxdata" placeholder="">
                             <button onclick="fetchData{{ $alat->id_mesin }}()"
                                 style="background-color: blue; color: white; padding: 4px 8px; border: none; border-radius: 5px; cursor: pointer;margin-left:2%;margin-top:3%">Update</button>
-                            <span style="color:grey;margin-left:1%;margin-top:3%" class="max"> <i
+                            <span style="color:grey;margin-left:1%;margin-top:3%;font-family: Arial, Helvetica, sans-serif" class="max"> <i
                                     style="font-weight:normal;" id="maxdata"></i></span>
                         </div>
 
@@ -195,8 +195,9 @@
                                 placeholder="">
                             <button onclick="fetchData{{ $alat->id_mesin }}()"
                                 style="background-color: blue; color: white; padding: 4px 8px; border: none; border-radius: 5px; cursor: pointer;margin-left:2%;margin-top:3%">Update</button>
-                            <span style="color:grey;margin-left:1%;margin-top:3%"> <i style="font-weight:normal;"
+                            <span style="color:grey;margin-left:1%;margin-top:3%;font-family:Arial, Helvetica, sans-serif"> <i style="font-weight:normal;"
                                     id="defsec" class="max"></i></span>
+
 
                         </div>
 

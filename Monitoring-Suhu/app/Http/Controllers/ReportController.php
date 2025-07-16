@@ -429,49 +429,27 @@ class ReportController extends Controller
             ->orderBy('tanggal', 'asc')
             ->get();
 
-        // $file = $request->file;
-        $prompt = "Baca report yang akan saya kirim dan berikan analisa lengkap dan saran untuk report suhu ruang server tersebut.
+        $prompt = "Berikut adalah laporan harian suhu dan kelembaban ruang server. Setiap data mencakup suhu terendah, suhu tertinggi, rata-rata suhu, serta kelembaban terendah, kelembaban tertinggi, dan rata-rata kelembaban per tanggal pada ID mesin {$request->id_mesin}.
 
-                    Keterangan kolom report :
+                    Tolong lakukan analisa lengkap dan detail serta saran untuk report suhu ruang server tersebut.
 
-                    0. Date = Tanggal pengecekan
-                    1. Time = Jam pengecekan
+                    Jawaban harus:
+                    - Ditulis dalam bahasa formal laporan teknis
+                    - Dalam bentuk teks biasa saja
+                    - Tanpa menyisipkan grafik, gambar, markdown, simbol markdown, atau format seperti bold, gambar, atau tautan apapun
+                    - Cocok untuk langsung dimasukkan ke dokumen Word
 
-                    Untuk kolom dibawah di buat rata-rata dari pengukuran yang dilakukan setiap 5 menit oleh arduino.
-                    2. Temperature Average : Rata-rata suhu pengecekan
-                    3. Temperature Lowest : Suhu terendah
-                    4. Temperature Highest : Suhu tertinggi
-                    5. Humidity Average : Rata-rata Kelembaban
-                    6. Humidity Lowest : Kelembaban terendah
-                    7. Humidity Highest : Kelembaban tertinggi";
+                    Berikut datanya:";
 
         $stringdata = '';
-        foreach($sensorData as $row){
-        $stringdata .= "Tanggal: {$row->tanggal}, Suhu: {$row->average_temperature}°C, Kelembaban: {$row->average_humidity}%\n";
+        foreach ($sensorData as $row) {
+            $stringdata .= "Tanggal: {$row->tanggal}, Suhu Terendah: {$row->lowest_temperature}°C, Suhu Tertinggi: {$row->highest_temperature},Rata-Rata suhu: {$row->average_temperature},Kelembaban Terendah: {$row->lowest_humidity},Kelembaban Tertinggi: {$row->highest_humidity} Rata-Rata Kelembaban: {$row->average_humidity}%\n";
         }
 
         $combinedPrompt = $prompt . "\n\n" . $stringdata;
 
-        Log::info('API Key Used for Claude', ['key' => env('OPENROUTER_API_KEY')]);
+        // Log::info('API Key Used for AI', ['key' => env('GROQ_API_KEY')]);
 
-
-        // $response = Http::withHeaders([
-        //     'Content-Type' => 'application/json',
-        //     'Authorization' => 'Bearer ' . config('services.openrouter.key'),
-        // ])->post('https://openrouter.ai/api/v1/chat/completions', [
-        //     'model' => 'anthropic/claude-3.5-haiku',
-        //     'messages' => [
-        //         [
-        //             'role' => 'user',
-        //             'content' => [
-        //                 [
-        //                     'type' => 'text',
-        //                     'text' => $combinedPrompt
-        //                 ]
-        //             ]
-        //         ]
-        //     ]
-        // ]);
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
@@ -491,55 +469,67 @@ class ReportController extends Controller
             ]
         ]);
 
-        Log::info('claude Prompt: ', ['prompt' => $combinedPrompt]);
+        Log::info('AI Prompt: ', ['prompt' => $combinedPrompt]);
 
         if (!$response->successful()) {
-        Log::error('Claude API Failed', [
-            'status' => $response->status(),
-            'body' => $response->body()
-        ]);
+            Log::error('AI API Failed', [
+                'status' => $response->status(),
+                'body' => $response->body()
+            ]);
 
-        return response()->json([
-            'error' => 'Claude API failed',
-            'status' => $response->status(),
-            'response' => $response->json()
-        ]);
-    }
+            return response()->json([
+                'error' => 'AI API failed',
+                'status' => $response->status(),
+                'response' => $response->json()
+            ]);
+        }
 
         $result = $response->json();
         $text = $result['choices'][0]['message']['content'] ?? null;
 
         if (!$text || trim($text) === '') {
-        return response()->json([
-            'error' => 'Claude returned empty response',
-            'raw_response' => $result
-        ]);
-    }
-
-
-    $filename = "Temperature_Report_Analysis_{$request->start_date}_To_{$request->end_date}.docx";
-    $phpWord = new PhpWord();
-    $section = $phpWord->addSection();
-    $lines = explode("\n", $text);
-    $section->addTitle('Hasil Analisis', 1);
-
-    foreach ($lines as $line) {
-        $trimmed = trim($line);
-        if (str_starts_with($trimmed, '-')) {
-            $section->addListItem(ltrim($trimmed, '- '), 0, null, 'bullet');
-        } else {
-            $section->addText($trimmed);
+            return response()->json([
+                'error' => 'AI returned empty response',
+                'raw_response' => $result
+            ]);
         }
+
+
+        $filename = "Temperature_Report_Analysis_{$request->start_date}_To_{$request->end_date}.docx";
+        $phpWord = new PhpWord();
+        $section = $phpWord->addSection();
+        $lines = explode("\n", $text);
+        $section->addTitle('Hasil Analisis', 1);
+
+        foreach ($lines as $line) {
+            $trimmed = trim($line);
+            $textRun = $section->addTextRun();
+
+            if (str_starts_with($trimmed, '-')) {
+                $this->addMarkdownFormattedText($textRun, ltrim($trimmed, '- '));
+            } else {
+                $this->addMarkdownFormattedText($textRun, $trimmed);
+            }
+        }
+
+        $wordPath = storage_path("app/{$filename}");
+        $phpWord->save($wordPath, 'Word2007');
+
+        return response()->download($wordPath)->deleteFileAfterSend(true);
     }
 
-    $wordPath = storage_path("app/{$filename}");
-    $phpWord->save($wordPath, 'Word2007');
 
-    return response()->download($wordPath)->deleteFileAfterSend(true);
+    private function addMarkdownFormattedText($textRun, $text)
+    {
+        // Pisahkan berdasarkan **bold**
+        $segments = preg_split('/(\*\*.*?\*\*)/', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
 
-
-
-
-
+        foreach ($segments as $segment) {
+            if (preg_match('/\*\*(.*?)\*\*/', $segment, $match)) {
+                $textRun->addText($match[1], ['bold' => true]);
+            } else {
+                $textRun->addText($segment);
+            }
+        }
     }
 }

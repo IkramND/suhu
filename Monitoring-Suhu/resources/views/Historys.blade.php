@@ -8,22 +8,43 @@
     display: none;
 }
 
+.container {
+            width: 70%;
+            padding: 20px;
+            margin-left: 25%;
+            margin-top: 40px;
+        }
+
+#chartContainer{
+            border: 1px solid #ccc;
+            border-radius: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            margin: 0 auto;
+}
+
+canvas{
+/* background: green; */
+padding: 20px;
+}
+
 @media (max-width: 800px){
     .container{
     margin:150px auto 0 auto;
+    width: 100% !important;
     }
 
 }
 
 @media (max-width: 600px){
     #chartContainer{
-        max-width: 400px !important;
+        max-width: 600px !important;
     }
 }
 
 @media (max-width: 500px){
     #chartContainer{
-        max-width: 290px !important;
+        max-width: 490px !important;
     }
 
     input{
@@ -33,7 +54,7 @@
 
 @media (max-width:350px){
     #chartContainer{
-        max-width: 220px !important;
+        max-width: 420px !important;
     }
 }
 </style>
@@ -48,8 +69,7 @@
         </div>
     </div>
 
-    <div id="chartContainer"
-        style="width: 500px; padding: 30px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); margin: 0 auto;margin-bottom:5%">
+    <div id="chartContainer">
         <div style="margin-top: 5%;">
             <center>
                 <h2>{{ $id_mesin }}</h2>
