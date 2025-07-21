@@ -1,5 +1,6 @@
 @extends('component.navbar')
 @section('mains')
+
     <style>
         input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button {
@@ -7,253 +8,347 @@
             margin: 0;
         }
 
-        body {
-            overflow-x: hidden;
+        .navbar-teks {
+            margin-left: 0;
+        }
+        main {
+            margin-bottom: 40px
         }
 
-        canvas {
+        .left {
+            display: flex;
             width: 100%;
+        }
+
+
+        hr {
+            border: 1px solid black;
+            width: 80%;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .top3 span {
+            margin-bottom: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 95%;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 35px auto 20px auto;
+            background: white;
+
+        }
+
+        .container2 {
+            width: 95%;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            /* margin-left: 25%;
+            margin-top: 5pxpx; */
+            margin: 5px auto 10px auto;
+
+
         }
 
         .card {
-            width: 100%;
             padding: 30px;
             border: 1px solid #ccc;
-            border-radius: 30px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin: 20px;
+            border-radius: 5px;
+        }
+
+
+        #p {
+            margin: 0;
+            padding: 5px 5px 5px 0px;
+
+            /* background: fuchsia */
+        }
+
+        .mi {
+            max-width: 80px;
+            display: flex;
+            flex-direction: row-reverse;
+            align-items:flex-start;
+            width: 100%;
+            /* height: 150px; */
+        }
+
+        .left p,
+        .center p {
+            color: grey;
+        }
+
+        .input-container {
+            /* background: green */
+        }
+
+
+
+
+
+
+        a.tooltip-svg {
+            display: flex;
+            flex-direction: row-reverse;
+        }
+
+        a.tooltip-svg::after {
+            content: "History Report";
+            position: absolute;
+            right: 10%;
+            transform: translateX(-50%);
+            background-color: black;
+            color: white;
+            padding: 5px 8px;
+            border-radius: 5px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            font-size: 12px;
+            z-index: 100;
+        }
+
+
+
+        a.tooltip-svg:hover::after {
+            opacity: 1;
+        }
+
+        #icon-history {
+            color: black;
+        }
+
+        .rd {
+            min-width: 70px;
+
+        }
+
+        .dd {
+            min-width: 70px;
         }
 
         input {
-                min-width: 70px;
-            }
+            min-width: 50px;
+            width: 50%;
+            border-radius: 5px;
+            border: 1px solid black
+                /* font-weight:bold; */
+        }
 
-        @media (max-width:1024px) {
+
+
+        .wrapper-flex>div {
+            flex: 1 1 30%;
+        }
+
+        .pisah2 {
+            display: flex;
+        }
+
+        .charts {
+            display: flex;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+
+        .chart-box {
+            width: 50%;
+        }
+
+        .bottom2 input,
+        .bottom3 input {
+            padding: 8px;
+        }
+
+        button {
+            background-color: blue;
+            color: white;
+            padding: 9px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .data-update {
+            border: 1px #ccc solid;
+            border-radius: 10px;
+            box-shadow: #ccc 1px 2px 5px 0px;
+            text-align: center;
+            margin-top: 10px;
+            max-width: 55px;
+            width: 100%;
+            min-width: 80px;
+        }
 
 
 
-            .pisah {
-                grid-template-columns: 7fr 1fr !important;
-            }
-
-            .pisah2 {
-                grid-template-columns: 1fr !important;
-            }
-
-            .left {
-                grid-column: 1;
-            }
-
-            .center {
-                grid-column: 1 / 3;
-            }
-
-            .right {
-                grid-column: 2;
-                grid-row: 1;
-            }
-
-            input {
-                margin-top: 20px !important
-            }
-
-            button {
-                margin-top: 20px !important
-            }
+        .card h4 {
+            font-size: 1em;
+            font-weight: bold;
 
         }
 
-        @media (max-width:800px) {
+
+
+
+        @media (max-width: 1024px) {
+            .wrapper-flex>div {
+                flex: 1 1 45%;
+            }
+
+            .chart-box {
+                width: 100%;
+            }
+
+            .data-update {
+                margin-left: 0;
+            }
+        }
+
+
+        @media (max-width: 800px) {
+            .wrapper-flex>div {
+                flex: 1 1 45%;
+            }
+
+            .mi {
+                min-width: 55px;
+            }
+
             .container {
-
-                margin: 85px auto 0 auto;
+                margin: 35px auto 20px auto;
             }
 
-            .card {
-                width: 65%;
-                padding: 30px;
-                border: 1px solid #ccc;
-                border-radius: 30px;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-                margin: 20px;
+            .container2 {
+                margin: 10px auto auto auto;
             }
-
-
-
-
         }
 
-        @media (max-width:630px) {
-            .dd {
-                min-width: 100px;
+        @media (max-width: 600px){
+            .wrapper-flex>div {
+                flex: 1 1 100%;
             }
-
-            .rd {
-                min-width: 100px;
-            }
-
-
-
-            .lastupdate{
-                font-size: 16px;
-            }
-
-            .left{
-                max-width:200px
-            }
-
-
-
-
-
-
         }
-
-        @media (max-width:425px) {
-
-            .container {
-                margin-top: 115px;
-            }
-
-            .rd {
-                max-width: 63px;
-                min-width: 30px;
-            }
-
-            .dd {
-                max-width: 63px;
-                min-width: 30px;
-
-            }
-
-            button {
-                margin-top: 20px !important
-            }
-
-            .left{
-                max-width:150px
-            }
-
-            .card{
-                width: 100%
-            }
-
-                        .input-durationdata{
-                margin-top: 38px !important
-            }
-
-            .input-maxdata{
-                margin-top:38px !important
-            }
-
-            button{
-                 margin-top:38px !important
-            }
-
-
-        }
-
     </style>
 
+    <br>
+
     @foreach ($alats as $alat)
-        <div style=";width: 94%;
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        padding: 20px;
-        margin-top: 3%;
-        margin-left: 2%;"
-            class="container">
+        <div class="container">
             <div class="card">
-                <div class="pisah" style="grid-template-columns: 7fr 7fr 1fr; display:grid;">
-                    <div class="left">
-                        <h4>Machine ID : {{ $alat->id_mesin }} ({{ $alat->lokasi }})</h4>
-                        <h4>Status : <span id="status_{{ $alat->id_mesin }}"
-                                style="color: {{ $alat->status == 'Active' ? 'green' : 'red' }}">{{ $alat->status }}</span>
-                        </h4>
-                        <h4>Last update : <span id="lastUpdate_{{ $alat->id_mesin }}">Loading...</span></h4>
-
-                    </div>
-                    <div class="center">
-                        <h4 style="margin-bottom:0 ">IP : {{ $alat->ip_address }} </h4>
-                        <div style="display:flex;align-items:center;">
-
-                            <h4 style="margin-bottom:0 " class="rd">Range data : </h4>
-                            <input type="number" id="limit_{{ $alat->id_mesin }}" name="limit_{{ $alat->id_mesin }}"
-                                min="1" max="16" required oninput="validateInput(this)"
-                                style="width: 10%;margin-left:12px;margin-top:3%" class="input-maxdata" placeholder="">
-                            <button onclick="fetchData{{ $alat->id_mesin }}()"
-                                style="background-color: blue; color: white; padding: 4px 8px; border: none; border-radius: 5px; cursor: pointer;margin-left:2%;margin-top:3%">Update</button>
-                            <span style="color:grey;margin-left:1%;margin-top:3%;font-family: Arial, Helvetica, sans-serif" class="max"> <i
-                                    style="font-weight:normal;" id="maxdata"></i></span>
+                <div class="left" style="">
+                    <div style="width:100%; display:flex;flex-wrap:wrap;gap:10px;" class="wrapper-flex">
+                        <div class="top1">
+                            <p id="p">Machine ID</p>
+                            <h4 id="p">{{ $alat->id_mesin }} ({{ $alat->lokasi }})</h4>
                         </div>
-
-                        <div style="display:flex;align-items:center;">
-                            <h4 style="margin-bottom:0 " class="dd">Duration data : </h4>
-                            <input type="number" id="second_{{ $alat->id_mesin }}" name="second_{{ $alat->id_mesin }}"
-                                required style="width: 10%;margin-left:10px;margin-top:3%" class="input-durationdata"
-                                placeholder="">
-                            <button onclick="fetchData{{ $alat->id_mesin }}()"
-                                style="background-color: blue; color: white; padding: 4px 8px; border: none; border-radius: 5px; cursor: pointer;margin-left:2%;margin-top:3%">Update</button>
-                            <span style="color:grey;margin-left:1%;margin-top:3%;font-family:Arial, Helvetica, sans-serif"> <i style="font-weight:normal;"
-                                    id="defsec" class="max"></i></span>
-
-
+                        <div class="top2">
+                            <p id="p">Status</p>
+                            <h4 id="p">
+                                <span id="status_{{ $alat->id_mesin }}"
+                                    style="color: {{ $alat->status == 'Active' ? 'green' : 'red' }}">{{ $alat->status }}</span>
+                            </h4>
                         </div>
-
+                        <div class="top3">
+                            <p id="p">Last update</p>
+                            <h4 id="p"><span id="lastUpdate_{{ $alat->id_mesin }}">Loading...</span></h4>
+                        </div>
+                        <div class="bottom1">
+                            <p id="p">IP</p>
+                            <h4 id="p">{{ $alat->ip_address }} </h4>
+                        </div>
+                        <div class="bottom2">
+                            <p id="p" class="rd">Range data</p>
+                            <div style="" class="input-container">
+                                <input type="number" class="input-maxdata" id="limit_{{ $alat->id_mesin }}"
+                                    name="limit_{{ $alat->id_mesin }}" min="1" max="18" required
+                                    oninput="validateInput(this)">
+                                <button onclick="fetchData{{ $alat->id_mesin }}()">Update</button>
+                                <span class="max" style="color:grey;">
+                                    <i style="font-weight:normal" id="maxdata_{{ $alat->id_mesin }}"></i></span>
+                            </div>
+                        </div>
+                        <div class="bottom3">
+                            <p id="p" class="dd">Duration data</p>
+                            <div class="input-container">
+                                <input type="number" class="input-durationdata" id="second_{{ $alat->id_mesin }}"
+                                    name="second_{{ $alat->id_mesin }}" required>
+                                <button onclick="fetchData{{ $alat->id_mesin }}">Update</button>
+                                <span class="max" style="color:grey;font-weight:bold"><i style="font-weight:bold"
+                                        id="defsec_{{ $alat->id_mesin }}"></i></span>
+                            </div>
+                        </div>
                     </div>
-                    <div style="min-width:50px; justify-content:center;display:block;text-align:center;border:1px solid#ccc;border-radius:20px;box-shadow:#ccc 1px 2px 5px 0px;height:120px"
-                        class="right">
-                        <h4><span id="lastUpdateTemperature_{{ $alat->id_mesin }}" class="lastupdate"></span></h4>
-                        <hr style="border: 1px solid black;width:70%;">
-                        <h4><span id="lastUpdateHumidity_{{ $alat->id_mesin }}" class="lastupdate"></span></h4>
+                    <div class="mi" style="">
+                        <div class="data-update">
+                            <br>
+                            <span id="lastUpdateTemperature_{{ $alat->id_mesin }}"></span>
+                            <hr class="line">
+                            <span id="lastUpdateHumidity_{{ $alat->id_mesin }}"></span>
+                            <br>
+                            <br>
+                        </div>
                     </div>
                 </div>
+                <div>
+                </div>
 
-                <hr style="border: solid black 1px;margin-top:0;padding-top:0">
-
-                <div class="pisah2" style="grid-template-columns: 1fr 1fr; display:grid;">
-                    <div>
-                        <canvas id="temperatureChart_{{ $alat->id_mesin }}"></canvas>
-                    </div>
-                    <div>
-                        <canvas id="humidityChart_{{ $alat->id_mesin }}"></canvas>
+            </div>
+        </div>
+        <div class="container2">
+            <div class="card">
+                <div class="pisah2">
+                    <div class="charts">
+                        <div class="chart-box">
+                            <canvas id="temperatureChart_{{ $alat->id_mesin }}"></canvas>
+                        </div>
+                        <div class="chart-box">
+                            <canvas id="humidityChart_{{ $alat->id_mesin }}"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    @endforeach
-    @foreach ($alats as $alat)
+        <br>
+        <br>
+
         <script>
             let temperatureChart_{{ $alat->id_mesin }};
             let humidityChart_{{ $alat->id_mesin }};
 
+
+
             function getmaxlimit() {
                 const width = window.innerWidth;
-                if (width < 390) return 7;
+                if (width < 450) return 7;
                 if (width < 600) return 10;
                 if (width < 768) return 15;
-                if (width < 900) return 18;
-                return 24
+                return 18;
             }
 
             function getsec() {
                 const width = window.innerWidth;
+                if (width < 450) return "Def 60 S"
                 if (width < 630) return "Def 60 Sec";
-                if (width > 630) return " ( Default 60 Second ) ";
+                if (width > 630) return "Default 60 Second";
             }
 
 
-            function getdata() {
+
+            function getdata{{ $alat->id_mesin }}() {
                 const inputsrd = document.querySelectorAll('.input-maxdata');
                 const inputsdd = document.querySelectorAll('.input-durationdata');
-                const defsec = document.getElementById("defsec");
-                const maxdata = document.getElementById("maxdata");
+                const defsec = document.getElementById("defsec_{{ $alat->id_mesin }}");
+                const maxdata = document.getElementById("maxdata_{{ $alat->id_mesin }}");
 
                 const width = window.innerWidth;
 
-                const placeholderText = (width < 630) ? `Max ${getmaxlimit()}` : '';
-                const placeholderTexts = (width < 630) ? `${getsec()}` : '';
+                const placeholderText = `Max ${getmaxlimit()}`;
+                const placeholderTexts = `${getsec()}`;
 
                 inputsrd.forEach(input => {
                     input.placeholder = placeholderText;
@@ -263,13 +358,6 @@
                     input.placeholder = placeholderTexts;
                 });
 
-                if (width > 630) {
-                    defsec.innerText = `${getsec()}`
-                    maxdata.innerText = `( MAX ${getmaxlimit()} ) `
-                } else {
-                    defsec.innerText = ""
-                    maxdata.innerText = ""
-                }
             }
 
             function validateInput(input) {
@@ -281,11 +369,11 @@
             }
 
             window.addEventListener('DOMContentLoaded', () => {
-                getdata();
+                getdata{{ $alat->id_mesin }}();
             });
 
             window.addEventListener('resize', () => {
-                getdata();
+                getdata{{ $alat->id_mesin }}();
             });
 
             function fetchData{{ $alat->id_mesin }}() {
@@ -307,12 +395,12 @@
                     dataType: 'json',
                     success: function(data) {
                         if (data.length === 0) {
-                            document.getElementById("lastUpdate_{{ $alat->id_mesin }}").textContent = "No data";
+                            document.getElementById("lastUpdate_{{ $alat->id_mesin }}").textContent =
+                                " - ";
                             document.getElementById("lastUpdateTemperature_{{ $alat->id_mesin }}").textContent =
                                 " - ";
                             document.getElementById("lastUpdateHumidity_{{ $alat->id_mesin }}").textContent =
                                 " - ";
-
                             return;
                         }
 
@@ -327,15 +415,15 @@
                         document.getElementById("lastUpdate_{{ $alat->id_mesin }}").textContent = labels[labels
                             .length - 1];
                         document.getElementById("lastUpdateTemperature_{{ $alat->id_mesin }}").textContent =
-                            tempData[tempData.length - 1] + " °C";
+                            tempData[tempData.length - 1] + " C";
                         document.getElementById("lastUpdateHumidity_{{ $alat->id_mesin }}").textContent = humData[
                             humData.length - 1] + " %";
 
-
-
                         if (temperatureChart_{{ $alat->id_mesin }}) {
-                            temperatureChart_{{ $alat->id_mesin }}.data.labels = labels;
-                            temperatureChart_{{ $alat->id_mesin }}.data.datasets[0].data = tempData;
+                            temperatureChart_{{ $alat->id_mesin }}.data.labels =
+                                labels;
+                            temperatureChart_{{ $alat->id_mesin }}.data.datasets[0].data =
+                                tempData;
                             temperatureChart_{{ $alat->id_mesin }}.update();
                         } else {
                             temperatureChart_{{ $alat->id_mesin }} = new Chart(document.getElementById(
@@ -347,8 +435,31 @@
                                         label: 'Temperature (°C)',
                                         data: tempData,
                                         borderColor: 'red',
-                                        fill: false
+                                        fill: false,
                                     }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    scales: {
+                                        x: {
+                                            grid: {
+                                                color: 'grey',
+                                                lineWidth: 0.4
+                                            },
+                                            ticks: {
+                                                color: 'grey'
+                                            }
+                                        },
+                                        y: {
+                                            grid: {
+                                                color: 'grey',
+                                                lineWidth: 0.4
+                                            },
+                                            ticks: {
+                                                color: 'grey'
+                                            }
+                                        }
+                                    }
                                 }
                             });
                         }
@@ -370,12 +481,43 @@
                                         borderColor: 'blue',
                                         fill: false
                                     }]
-                                }
+                                },
+                                options: {
+                                    responsive: true,
+                                    scales: {
+                                        x: {
+                                            grid: {
+                                                color: 'grey',
+                                                lineWidth: 0.4
+                                            },
+                                            ticks: {
+                                                color: 'grey'
+                                            }
+                                        },
+                                        y: {
+                                            grid: {
+                                                color: 'grey',
+                                                lineWidth: 0.4
+                                            },
+                                            ticks: {
+                                                color: 'grey'
+                                            }
+                                        }
+                                    },
+                                    plugins: {
+                                        legend: {
+                                            labels: {
+                                                color: 'grey',
+                                            }
+                                        }
+                                    }
+                                },
                             });
                         }
                     }
                 });
             }
+
 
             function updateAlats() {
                 $.ajax({
@@ -385,7 +527,7 @@
                     success: function(data) {
                         data.forEach(alat => {
                             let statusElement = document.querySelector(`#status_${alat.id_mesin}`);
-                            let lastUpdateElement = document.querySelector(`#last_update_${alat.id_mesin}`);
+                            let lastUpdateElement = document.querySelector(`#lastUpdate_${alat.id_mesin}`);
                             let suhuElement = document.querySelector(`#suhu_${alat.id_mesin}`);
                             let kelembabanElement = document.querySelector(`#kelembaban_${alat.id_mesin}`);
 
@@ -413,11 +555,12 @@
                 });
             }
 
-            updateAlats();
-            setInterval(updateAlats, 300000);
 
+            updateAlats();
+            setInterval(updateAlats, 30000);
             fetchData{{ $alat->id_mesin }}();
             setInterval(fetchData{{ $alat->id_mesin }}, 5000);
         </script>
     @endforeach
 @endsection
+

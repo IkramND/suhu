@@ -17,7 +17,7 @@
 
 #chartContainer{
             border: 1px solid #ccc;
-            border-radius: 30px;
+            border-radius: 10px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             width: 100%;
             margin: 0 auto;
@@ -77,7 +77,8 @@ padding: 20px;
                 <h2>{{ $ip_address }}</h2>
             </center>
         </div>
-        <hr style="border:1px solid black">
+        {{-- <hr style="border:1px solid black"> --}}
+        <br>
         <canvas id="temperatureChart"></canvas>
         <hr id="chartDivider" style="border: solid black 1px; display: none;">
         <canvas id="humidityChart" style="margin-top: 30px;"></canvas>

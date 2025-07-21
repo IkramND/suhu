@@ -7,18 +7,13 @@
     <title></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
     <style>
-        body {
-            margin: 0;
-            font-family: "Arial", sans-serif;
-        }
-
         .sidebar {
             position: fixed;
             left: 0;
             top: 0;
             width: 17%;
             height: 100%;
-            background-color: #0f0f0f;
+            background-color: #020016;
             color: white;
             padding: 16px;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
@@ -26,6 +21,7 @@
             overflow-y: auto;
             scrollbar-width: thin;
             scrollbar-color: #888 #252d37;
+            z-index: 1002;
         }
 
         .sidebar::-webkit-scrollbar {
@@ -52,15 +48,16 @@
             background: none;
             border: none;
             position: fixed;
-            top: 90px;
+            top: 25px;
             left: 15px;
             cursor: pointer;
             z-index: 3000;
         }
 
         .menu-toggle.white-bg {
-            /* background-color: white; */
             color: white;
+            transition: 0.3ms;
+
         }
 
 
@@ -69,7 +66,8 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
-            margin-top: 85px;
+            /* margin-top: 85px; */
+            margin-top: 13px;
             margin-bottom: 30%;
         }
 
@@ -126,6 +124,22 @@
             transform: rotate(180deg);
         }
 
+        .material-symbols-outlined {
+            font-variation-settings:
+                'FILL' 0,
+                'wght' 300,
+                'GRAD' 100,
+                'opsz' 24;
+            display: inline-block;
+            width: 100%;
+            height: 90px;
+            font-size: 60px;
+            line-height: 90px;
+            text-align: center;
+            cursor: default;
+        }
+
+
         @media (max-width: 800px) {
             .sidebar {
                 transform: translateX(-100%);
@@ -133,9 +147,6 @@
                 min-width: 120px;
             }
 
-            .sidebar-menu {
-                margin-top: 140px;
-            }
 
             .sidebar.open {
                 transform: translateX(0);
@@ -144,13 +155,16 @@
             .menu-toggle {
                 display: block;
             }
+
+            .sidebar-menu{
+            margin-top: 65px;
+            }
         }
     </style>
 </head>
 
 <body>
     <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
-
     <aside class="sidebar">
         <div class="sidebar-menu">
             <a onclick="goToDashboard()">Dashboard</a>
@@ -165,7 +179,7 @@
                 <a href="{{ route('admin.emailnotification.list') }}">Email Configuration List</a>
                 <a href="{{ route('add.calibration') }}">Add Calibration</a>
                 <a href="{{ route('calibration.list') }}">Calibration List</a>
-                <a href="{{route('add.dataretention')}}">Data Retention</a>
+                <a href="{{ route('add.dataretention') }}">Data Retention</a>
                 <a href="{{ route('register') }}">Register</a>
                 <a href="{{ route('operator.list') }}">Operator List</a>
                 <a href="/change-password">Change Password</a>
@@ -175,7 +189,7 @@
             <div class="dropdown-container">
                 <a href="{{ route('admin.report') }}">Real Time Summary Report </a>
                 <a href="{{ route('reportdaily') }}">Real Time Daily Report </a>
-                <a href="{{ route('report.analyze')}}">Temperature Report Analysis (AI)</a>
+                <a href="{{ route('report.analyze') }}">Temperature Report Analysis (AI)</a>
                 <a href="{{ route('report.export') }}">Send to Email</a>
                 <a href="{{ route('index.report') }}">Archive Report</a>
             </div>
@@ -220,7 +234,6 @@
             const toggleBtn = document.querySelector(".menu-toggle");
 
             sidebar.classList.toggle("open");
-
             toggleBtn.classList.toggle("white-bg");
 
         }

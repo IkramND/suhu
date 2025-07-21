@@ -14,8 +14,8 @@
     </style>
 <body>
 <main>
-    @extends('component.sidebar')
-    @extends('component.navbar')
+    @include('component.sidebar')
+    @include('component.navbar')
     @yield('main')
 </main>
 @yield('script')

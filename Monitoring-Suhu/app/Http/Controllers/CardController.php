@@ -53,11 +53,35 @@ class CardController extends Controller
             ) b ON a.id_mesin = b.id_mesin;
         ");
 
-
-
-
         return view('admin.indexing', compact('alats'));
     }
+
+       public function index2()
+    {
+
+        $alats = DB::select("
+            SELECT a.*,
+                   CASE
+                       WHEN b.id_mesin IS NOT NULL THEN 'Active'
+                       ELSE 'Inactive'
+                   END AS status
+            FROM alat a
+            LEFT JOIN (
+                SELECT id_mesin, MAX(id) AS latest_id
+                FROM data_sensor
+                WHERE waktu BETWEEN NOW() - INTERVAL 5 MINUTE AND NOW() + INTERVAL 5 MINUTE
+                GROUP BY id_mesin
+            ) b ON a.id_mesin = b.id_mesin;
+        ");
+
+
+
+
+        return view('admin.indexing2', compact('alats'));
+    }
+
+
+
 
     public function lastupdate()
     {
@@ -195,5 +219,10 @@ class CardController extends Controller
     {
         $alats = Alat::all();
         return view('admin.Alatlist', compact('alats'));
+    }
+
+    public function utama2(){
+    $alats = Alat::all();
+    return view('utama2', compact('alats'));
     }
 }
